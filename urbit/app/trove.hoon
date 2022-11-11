@@ -79,7 +79,9 @@
   |=  =path
   ~>  %bout.[0 '%trove +on-watch']
   ^-  (quip card _this)
-  `this
+  =^  cards  state
+    abet:(peer:eng path)
+  [cards this]
   ::
   ++  on-fail
     ~>  %bout.[0 '%trove +on-fail']
@@ -98,13 +100,17 @@
 ++  abet
   ^-  (quip card _state)
   [(flop dek) state]
+::  +show: send web-ui fact
+::
+++  show  |=(cag=cage (emit %give %fact [/web-ui]~ cag))
+::  +init: handle on-init
 ::
 ++  init
   ^+  dat
   =^  cards  state
     sa-abet:sa-peer:sa
-  ~&  >  cards
   (emil cards)
+::  +load: handle on-load
 ::
 ++  load
   |=  vaz=vase
@@ -112,6 +118,25 @@
   ?>  ?=([%0 *] q.vaz)
   =.  state  !<(state-0 vaz)
   dat
+::  +peer: handle on-watch
+::
+++  peer
+  |=  pol=(pole knot)
+  ^+  dat
+  ?+    pol  ~|(bad-watch-path/pol !!)
+      [%web-ui ~]
+    (show trove-state-0+!>(state))
+  ::
+      [%trove host=@ name=@ rest=*]
+    =+  host=(slav %p host.pol)
+    =+  name=(slav %t name.pol)
+    ?+    rest.pol  ~|(bad-trove-watch/pol !!)
+      ~               dat
+      [%admin ~]      dat
+      [%moderator ~]  dat
+    ==
+  ==
+::  +dude: handle on-agent
 ::
 ++  dude
   |=  [pol=(pole knot) sig=sign:agent:gall]
@@ -144,7 +169,7 @@
   ++  sa-emit  |=(c=card sa(caz [c caz]))
   ++  sa-emil  |=(lc=(list card) sa(caz (welp lc caz)))
   ++  sa-abet  ^-((quip card _state) [(flop caz) state])
-  ::  +sa-show: send json to fe
+  ::  +sa-show: send web-ui fact
   ++  sa-show
     |=(cag=cage (sa-emit %give %fact [/web-ui]~ cag))
   ::  +sa-peer: watch spaces on /updates
@@ -307,35 +332,4 @@
       ==
     ==
   --
-::
-:: ++  pm
-::   |_  $:  spaz=space
-::           trov=trove
-::         ::
-::           query=trail
-::           basis=perm
-::           teams=team
-::         ::
-::           crumb=trail
-::           perms=perm
-::       ==
-::   +*  pim  .
-::   ++  pm-dip
-::     ^-  [tuk=(unit track) sub=(map @ta trove)]
-::     (~(dip of trov) query)
-::   ++  pm-able
-::     |=  [sap=space que=trail]
-::     =+  tor=(~(got by troves) sap)
-::     %=  pim
-::       spaz   sap
-::       trov   trove.tor
-::     ::
-::       basis  perm.tor
-::       teams  team.tor
-::     ::
-::       query  que
-::     ==
-::   ++  pm-kids
-::     pim
-::   --
 --
