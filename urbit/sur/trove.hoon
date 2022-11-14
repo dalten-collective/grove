@@ -4,7 +4,7 @@
 ::
 +$  id      @uvTROVE
 +$  team    [admins=(set @p) moderators=(set @p) members=(set @p)]
-+$  regs    (map path perm)
++$  regs    (map trail perm)
 +$  role    ?(%member %admin %moderator)
 ::
 +$  node    [?(%remote %record) url=cord dat=data:meta]
@@ -49,43 +49,40 @@
     ==
   --
 ::
-+$  action
-  (pair spat poke:poke)
 ++  poke
   |%
-  +$  poke
-    $%(mix-up record remote folder)
+  +$  action  (pair spat poke:poke)
+  +$  poke    $%(admin redo nodes folder)
   ::
   +$  admin
     $%  [%add-moderators (set @p)]
         [%rem-moderators (set @p)]
     ==
   ::
-  +$  mix-up
+  +$  redo
     $%  [%rehome =id =trail]
         [%repeat =id from=trail to=(pair spat trail)]
     ==
   ::
-  +$  record
-    $%  [%add-record =trail url=cord meta=data:meta]
-        [%edit-record =id =trail meta=data:meta]
-        [%move-record =id from=trail to=trail]
-        [%delete-record =id =trail]
-    ==
-  ::
-  +$  remote
-    $%  [%add-remote =trail url=cord meta=data:meta]
-        [%edit-remote =id =trail meta=data:meta]
-        [%move-remote =id from=trail to=trail]
-        [%delete-remote =id =trail]
+  +$  nodes
+    $%  [%add-node =trail =node]
+        [%rem-node =id =trail]
+        [%edit-node =id =trail tut=(unit @t) dus=(unit @t)]
+        [%move-node =id from=trail to=trail]
     ==
   ::
   +$  folder
     $%  [%add-folder =trail nam=cord pur=(unit perm)]
-        [%delete-folder =id =trail]
-        [%permission-folder pur=(unit perm)]
-        [%edit-folder =id =trail nam=(unit cord)]
-        [%move-folder =id from=trail to=trail]
+        [%rem-folder =trail]
+        [%move-folder from=trail to=trail]
+        [%permission-folder =trail pur=(unit perm)]
     ==
+  --
+++  fact
+  =<  (pair spat facts)
+  |%
+  +$  facts  $%(new start poke:poke)
+  +$  new    [%new =id =trail =node]
+  +$  start  [%start (pair regs trove)]
   --
 --

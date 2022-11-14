@@ -114,5 +114,43 @@
           ch-mod+(roles ch-mod.folder.p)
       ==
     ==
+  ++  fact
+    ^-  $-(fact:t json)
+    |=  f=fact:t
+    ?+    -.q.f  !!
+        %start
+      =-  (frond add+-)
+      %-  pairs
+      :~  space+s/(spat p.f)
+          regs+(regs p.q.f)
+          trove+(trove q.q.f)
+      ==
+    ::
+        %new
+      %-  pairs
+      :~  space+s/(spat p.f)
+          id+s/(scot %uv id.q.f)
+          trail+s/(trail trail.q.f)
+          node+(node node.q.f)
+      ==
+    ::
+        %add-moderators
+      %-  pairs
+      :~  space+s/(spat p.f)
+          :-  %add
+          %+  frond  %team
+          %+  frond  %moderators
+          a/(turn ~(tap in +.q.f) ships)
+      ==
+    ::
+        %rem-moderators
+      %-  pairs
+      :~  space+s/(spat p.f)
+          :-  %rem
+          %+  frond  %team
+          %+  frond  %moderators
+          a/(turn ~(tap in +.q.f) ships)
+      ==
+    ==
   --
 --
