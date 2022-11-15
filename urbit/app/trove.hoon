@@ -367,12 +367,12 @@
             &  o
           ==
       ?.  =(our.bol p.sap)
-        ?:  =(our.bol src.bol)  !!  :: these are %new
+        ?.  =(our.bol src.bol)  !!  :: these are %new
           ::  an instruction to a remote trove
         %-  to-show:(to-send p.f q.f)
         :-  %trove-fact
         !>([p.f [%new 0v0 trail.q.f node.q.f]])
-      ::  an instruction to our trove      
+      ::  an instruction to our trove
       =+  uvt=`@uvTROVE`(sham trail.q.f node.q.f)
       =.  troves
         %+  ~(put by troves)  sap
