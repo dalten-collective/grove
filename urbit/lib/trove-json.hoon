@@ -22,7 +22,6 @@
   ++  tract
     ^-  $-(tract:t json)
     |=  tat=tract:t
-    ^-  json
     =-  o/(malt -)
     %+  turn  ~(tap by tat)
     |=  [k=@uv v=node:t]
@@ -171,6 +170,22 @@
             trail+s/(trail trail.q.f)
         ==
       ==
+    ::
+        %edit-node
+      %-  pairs
+      :~  space+s/(spat p.f)
+      ::
+        :-  %upd
+        %+  frond  %node
+        %-  pairs
+        :~  id+s/(scot %uv id.q.f)
+            trail+s/(trail trail.q.f)
+            title+?~(tut.q.f ~ s/u.tut.q.f)
+            description+?~(dus.q.f ~ s/u.dus.q.f)
+        ==
+      ==
+    ::
+      %move-node  !!
     ::
         %add-folder
       %-  pairs

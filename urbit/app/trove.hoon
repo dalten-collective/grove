@@ -52,7 +52,9 @@
     |=  [mar=mark vaz=vase]
     ~>  %bout.[0 '%trove +on-poke']
     ^-  (quip card _this)
-    `this
+    =^  cards  state
+      abet:(poke:eng mar vaz)
+    [cards this]
   ::
   ++  on-peek
     |=  =path
@@ -296,18 +298,8 @@
     |=  f=fact
     ^+  to
     =+  sap=(need sup)
-    ?>  =(p.f p.sap)
+    ?>  =(p.f sap)
     ?-    -.q.f
-        %new
-      ?>  =(p.p.f src.bol)
-      =/  ole=tract
-        ?~(g=(~(get of `trove`tov) trail.q.f) *tract u.g)
-      =.  tov
-        %-  ~(put of `trove`tov)
-        [trail.q.f (~(put by ole) id.q.f node.q.f)]
-      =.  troves  (~(put by troves) p.f [tam rag tov])
-      (to-show trove-fact+!>(f))
-    ::
         %start
       ?>  =(p.p.f src.bol)
       %.  trove-fact+!>(f)
@@ -352,8 +344,44 @@
           (to-cher `*path trove-fact+!>(f))
       ==
     ::
-      %rehome  to
-      %repeat  to
+        %reperm  to
+    ::
+        %repeat  to
+      :: =+  hav=(need (~(get of `trove`tov) from.q.f))
+      :: =+  dov=(~(got by troves) `spat`p.to.q.f)
+      :: =+  des=(~(get of `trove`trove.dov) q.to.q.f)
+      :: =+  fer=(to-perm from.q.f)
+      :: =+  ter=(to-perm(rag regs.dov) q.to.q.f)
+      :: =+  nod=(~(got by hav) id.q.f)
+      :: ?>  ?|  =(our.bol src.bol)
+      ::         =(p.sap src.bol)
+      ::     ::
+      ::       %-  ~(any in ewe)
+      ::       |=  r=role
+      ::       ?&  (~(has in read.folder.fer) r)
+      ::           (~(has in add.files.ter) r)
+      ::       ==
+      ::     ==
+      :: ?.  =(our.bol p.sap)
+      ::   ?.  =(our.bol src.bol)  !!  :: these are %new
+      ::   ::  an instruction to a remote trove
+      ::   %-  to-show:(to-send p.f q.f)
+      ::   trove-fact+!>([p.f [%new 0v0 to.q.f nod]])
+      :: ::  an instruction to our trove
+      :: =+  uvt=`@uvTROVE`(sham to.q.f nod)
+      :: =.  troves
+      ::   %+  ~(put by troves)  sap
+      ::   :+  tam  rag
+      ::   %+  ~(put of `trove`tov)  q.to.q.f
+      ::   (~(put by ?~(des *tract u.des)) [uvt nod])
+      :: =;  tu=_to
+      ::   %-  to-show:tu
+      ::   trove-fact+!>([p.f [%new uvt to.q.f nod]])
+      :: %-  ~(rep in read.folder.ter)
+      :: |=  [r=role o=_tu]
+      :: %-  to-cher:tu
+      :: :-  ?:(?=(%member r) `*path ``path`/[r])
+      :: trove-fact+!>([p.f [%new uvt to.q.f nod]])        
     ::
         %add-node
       =+  hav=(~(get of `trove`tov) trail.q.f)
@@ -369,23 +397,31 @@
             ==
           ==
       ?.  =(our.bol p.sap)
-        ?.  =(our.bol src.bol)  !!  :: these are %new
+        ?:  =(our.bol src.bol)
           ::  an instruction to a remote trove
-        %-  to-show:(to-send p.f q.f)
-        :-  %trove-fact
-        !>([p.f [%new 0v0 trail.q.f node.q.f]])
+          (to-show:(to-send p.f q.f) trove-fact+!>(f))
+        ::  an instruction about their trove
+        =+  ole=?~(h=hav *tract u.h)
+        =.  troves
+          %+  ~(put by troves)  p.f
+          :+  tam  rag
+          %-  ~(put of `trove`tov)
+          [trail.q.f (~(put by ole) id.q.f node.q.f)]
+        (to-show trove-fact+!>(f))
       ::  an instruction to our trove
-      =+  uvt=`@uvTROVE`(sham trail.q.f node.q.f)
+      =?    id.q.f
+          ?=(%0v0 id.q.f)
+        `@uvTROVE`(sham trail.q.f node.q.f)
       =.  troves
         %+  ~(put by troves)  sap
         :+  tam  rag
         %+  ~(put of `trove`tov)  trail.q.f
-        (~(put by ?~(hav *tract u.hav)) [uvt node.q.f])
+        (~(put by ?~(hav *tract u.hav)) [id.q.f node.q.f])
       %-  ~(rep in read.folder.perms)
       |=  [r=role o=_to]
       %-  to-cher
       :-  ?:(?=(%member r) `*path ``path`/[r])
-      trove-fact+!>([p.f [%new uvt trail.q.f node.q.f]])
+      trove-fact+!>([p.f [%add-node id.q.f trail.q.f node.q.f]])
     ::
         %rem-node
       =+  hav=(need (~(get of `trove`tov) trail.q.f))
@@ -420,6 +456,7 @@
         %edit-node
       =+  hav=(need (~(get of `trove`tov) trail.q.f))
       =+  perms=(to-perm trail.q.f)
+      =+  fil=(~(got by hav) id.q.f)
       ?>  ?|  =(our.bol src.bol)
               =(p.sap src.bol)
               (~(any in ewe) ~(has in edit.files.perms))
@@ -429,7 +466,6 @@
           ::  an instruction to a remote trove
           (to-show:(to-send p.f q.f) trove-fact+!>(f))
         ::  an instruction about their trove
-        =+  fil=(~(got by hav) id.q.f)
         =.  dat.fil
           %=    dat.fil
               title
@@ -447,7 +483,6 @@
           (~(put by hav) id.q.f fil)
         ==
       ::  an instruction to our trove
-      =+  fil=(~(got by hav) id.q.f)
       =.  dat.fil
         %=    dat.fil
             title
@@ -467,7 +502,58 @@
       :_  trove-fact+!>(f)
       ?:(?=(%member r) `*path ``path`/[r])
     ::
-      %move-node  to
+        %move-node
+      =+  hav=(need (~(get of `trove`tov) from.q.f))
+      =+  des=(~(get of `trove`tov) to.q.f)
+      =+  fer=(to-perm from.q.f)
+      =+  ter=(to-perm to.q.f)
+      =+  nod=(~(got by hav) id.q.f)
+      ?>  ?|  =(our.bol src.bol)
+              =(p.sap src.bol)
+            ::
+              %-  ~(any in ewe)
+              |=  r=role
+              ?&  (~(has in move.files.fer) r)
+                  (~(has in add.files.ter) r)
+          ==  ==
+      ?.  =(our.bol p.sap)
+        ?.  =(our.bol src.bol)  !!  :: uses rem, new
+        ::  an instruction to a remote trove
+        =~
+          :-  [f=f nod=nod]  
+          %-  to-show:(to-send p.f q.f)
+          trove-fact+!>([p.f [%rem-node id.q.f from.q.f]])
+        ::
+          %-  to-show
+          trove-fact+!>([p.f [%new 0v0 to.q.f nod]])
+        ==
+      ::  an instruction to our trove
+      =+  uvt=`@uvTROVE`(sham to.q.f nod)
+      =.  troves
+        %+  ~(put by troves)  sap
+        :+  tam  rag
+        %.  [from.q.f (~(del by hav) id.q.f)]
+        %~  put  of
+        ^-  trove
+        %+  ~(put of `trove`tov)  to.q.f
+        (~(put by ?~(des *tract u.des)) [uvt nod])
+      =/  tu=_to
+        %-  ~(rep in read.folder.fer)
+        |=  [r=role o=_to]
+        %-  to-cher:o    :::  XX: SEE?
+        :-  ?:(?=(%member r) `*path ``path`/[r])
+        trove-fact+!>([p.f [%rem-node id.q.f from.q.f]])
+      =.  tu
+        %-  ~(rep in read.folder.ter)
+        |=  [r=role o=_tu]
+        %-  to-cher:o   ::::  XXX::  BE CAREFUL STUPID
+        :-  ?:(?=(%member r) `*path ``path`/[r])
+        trove-fact+!>([p.f [%new uvt to.q.f nod]])
+      =.  tu
+        %-  to-show:tu
+        trove-fact+!>([p.f [%new uvt to.q.f nod]])
+      %-  to-show:tu
+      trove-fact+!>([p.f [%rem-node id.q.f from.q.f]])  
     ::
         %add-folder
       =+  hav=(~(get of `trove`tov) trail.q.f)
@@ -563,7 +649,7 @@
         :-  ?:(?=(%member r) `*path ``path`/[r])
         trove-fact+!>([p.f [%new i to.q.f n]])
       =~
-        :^  f=f  fer=fer  ter=ter
+        :-  [f=f fer=fer ter=ter]
         %-  ~(rep in read.folder.fer)
         |=  [r=role _to]
         %-  to-cher
@@ -583,8 +669,6 @@
         :^  %add-folder  to.q.f  ''
         ?.((fits fer ter) ~ ?:(=(fer ter) ~ `ter))
       ==
-    ::
-      %permission-folder  to
     ==
   ::  +to-peer: handle on-watch for trove data
   ::

@@ -23,11 +23,14 @@
         title=cord
         description=cord
         extension=cord
+        ::  hash?
+        ::  type? <video, text, image, etc>
     ==
   --
 ::  
 ++  perm
   =<  perms
+  ::  should be heirarchical?
   |%
   +$  perms
     $:  %0
@@ -60,12 +63,12 @@
     ==
   ::
   +$  redo
-    $%  [%rehome =id =trail]
-        [%repeat =id from=trail to=(pair spat trail)]
+    $%  [%repeat =id from=trail to=(pair spat trail)]
+        [%reperm =trail pur=(unit perm)]
     ==
   ::
   +$  nodes
-    $%  [%add-node =trail =node]
+    $%  [%add-node =id =trail =node]
         [%rem-node =id =trail]
         [%edit-node =id =trail tut=(unit @t) dus=(unit @t)]
         [%move-node =id from=trail to=trail]
@@ -75,14 +78,12 @@
     $%  [%add-folder =trail nam=cord pur=(unit perm)]
         [%rem-folder =trail]
         [%move-folder from=trail to=trail]
-        [%permission-folder =trail pur=(unit perm)]
     ==
   --
 ++  fact
   =<  (pair spat facts)
   |%
-  +$  facts  $%(new start poke:poke)
-  +$  new    [%new =id =trail =node]
+  +$  facts  $%(start poke:poke)
   +$  start  [%start (pair regs trove)]
   --
 --
