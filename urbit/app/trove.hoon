@@ -346,7 +346,7 @@
     ::
         %reperm  to
     ::
-        %repeat  ::  to
+        %repeat
       =+  hav=(need (~(get of `trove`tov) from.q.f))
       =+  dov=(~(got by troves) `spat`p.to.q.f)
       =+  des=(~(get of `trove`trove.dov) q.to.q.f)
@@ -875,8 +875,8 @@
             ?&  &(=(our.bol ship.act) is-admin)
             ::
               ?!  %-  ~(has in wex.bol)
-              :_  [%.y trove+(snoc pat %admin)]
-              [from+(snoc pat %admin) p.sap dap.bol]
+                  :_  [%.y trove+(snoc pat %admin)]
+                  [from+(snoc pat %admin) p.sap dap.bol]
             ==
           %-  sa-emit
           :+  %pass  from+(snoc pat %admin)

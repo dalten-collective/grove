@@ -139,7 +139,18 @@
           a/(turn ~(tap in +.q.f) ships)
       ==
     ::
-      %add-node  !!
+        %add-node
+      %-  pairs
+      :~  space+s/(spat p.f)
+      ::
+        :-  %add
+        %+  frond  %node
+        %-  pairs
+        :~  id+s/(scot %uv id.q.f)
+            trail+s/(trail trail.q.f)
+            node+(node node.q.f)
+        ==
+      ==
     ::
         %rem-node
       %-  pairs
