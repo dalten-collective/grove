@@ -129,9 +129,15 @@
         %new
       %-  pairs
       :~  space+s/(spat p.f)
-          id+s/(scot %uv id.q.f)
-          trail+s/(trail trail.q.f)
-          node+(node node.q.f)
+      ::
+        :-  %add
+        %+  frond  %node
+        %-  pairs
+        :~  id+s/(scot %uv id.q.f)
+            trail+s/(trail trail.q.f)
+            node+(node node.q.f)
+            fake+b/?=(%0v0 id.q.f)
+        ==
       ==
     ::
         %add-moderators
@@ -151,6 +157,54 @@
           %+  frond  %moderators
           a/(turn ~(tap in +.q.f) ships)
       ==
+    ::
+      %add-node  !!
+    ::
+        %rem-node
+      %-  pairs
+      :~  space+s/(spat p.f)
+      ::
+        :-  %rem
+        %+  frond  %node
+        %-  pairs
+        :~  id+s/(scot %uv id.q.f)
+            trail+s/(trail trail.q.f)
+        ==
+      ==
+    ::
+        %add-folder
+      %-  pairs
+      :~  space+s/(spat p.f)
+      ::
+        :-  %add
+        %+  frond  %folder
+        %-  pairs
+        :~  trail+s/(trail trail.q.f)
+            perms+?~(pur.q.f ~ (perm u.pur.q.f))
+        ==
+      ==
+    ::
+        %rem-folder
+      %-  pairs
+      :~  space+s/(spat p.f)
+      ::
+        :-  %add
+        %-  frond
+        folder+(frond trail+s/(trail trail.q.f))
+      ==
+    ::
+        %move-folder
+      %-  pairs
+      :~  space+s/(spat p.f)
+      ::
+        :-  %move
+        %+  frond  %folder
+        %-  pairs
+        :~  from+(frond trail+s/(trail from.q.f))
+            to+(frond trail+s/(trail to.q.f))
+        ==
+      ==
+
     ==
   --
 --

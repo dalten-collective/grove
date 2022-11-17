@@ -5,7 +5,7 @@
 ++  grow
   |%
   ++  noun  pact
-  ++  json  (fact:enjs:t-j `fact`fuct)
+  ++  json  (fact:enjs:t-j `fact:t`pact)
   --
 ++  grab
   |%
