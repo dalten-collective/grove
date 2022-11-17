@@ -362,10 +362,11 @@
                   (~(has in add.files.ter) r)
           ==  ==
       ?.  =(our.bol p.sap)
-        ?.  =(our.bol src.bol)  !!  :: these are %new
+        ?.  =(our.bol src.bol)  !!  :: these are add
         ::  an instruction to a remote trove
+        =+  uvt=`@uvTROVE`(sham to.q.f nod)
         %-  to-show:(to-send p.f q.f)
-        trove-fact+!>([p.f [%new 0v0 to.q.f nod]])
+        trove-fact+!>([p.f [%add-node uvt to.q.f nod]])
       ::  an instruction to our trove
       =+  uvt=`@uvTROVE`(sham to.q.f nod)
       =.  troves
@@ -375,12 +376,12 @@
         (~(put by ?~(des *tract u.des)) [uvt nod])
       =;  tu=_to
         %-  to-show:tu
-        trove-fact+!>([p.f [%new uvt to.q.f nod]])
+        trove-fact+!>([p.f [%add-node uvt to.q.f nod]])
       %-  ~(rep in read.folder.ter)
       |=  [r=role o=_to]
       %-  to-cher:o
       :-  ?:(?=(%member r) `*path ``path`/[r])
-      trove-fact+!>([p.f [%new uvt to.q.f nod]])        
+      trove-fact+!>([p.f [%add-node uvt to.q.f nod]])        
     ::
         %add-node
       =+  hav=(~(get of `trove`tov) trail.q.f)
@@ -515,7 +516,7 @@
                   (~(has in add.files.ter) r)
           ==  ==
       ?.  =(our.bol p.sap)
-        ?.  =(our.bol src.bol)  !!  :: uses rem, new
+        ?.  =(our.bol src.bol)  !!  :: uses rem, add
         ::  an instruction to a remote trove
         =~
           :-  [f=f nod=nod]  
@@ -523,7 +524,7 @@
           trove-fact+!>([p.f [%rem-node id.q.f from.q.f]])
         ::
           %-  to-show
-          trove-fact+!>([p.f [%new 0v0 to.q.f nod]])
+          trove-fact+!>([p.f [%add-node 0v0 to.q.f nod]])
         ==
       ::  an instruction to our trove
       =+  uvt=`@uvTROVE`(sham to.q.f nod)
@@ -538,18 +539,18 @@
       =/  tu=_to
         %-  ~(rep in read.folder.fer)
         |=  [r=role o=_to]
-        %-  to-cher:o    :::  XX: SEE?
+        %-  to-cher:o
         :-  ?:(?=(%member r) `*path ``path`/[r])
         trove-fact+!>([p.f [%rem-node id.q.f from.q.f]])
       =.  tu
         %-  ~(rep in read.folder.ter)
         |=  [r=role o=_tu]
-        %-  to-cher:o   ::::  XXX::  BE CAREFUL STUPID
+        %-  to-cher:o
         :-  ?:(?=(%member r) `*path ``path`/[r])
-        trove-fact+!>([p.f [%new uvt to.q.f nod]])
+        trove-fact+!>([p.f [%add-node uvt to.q.f nod]])
       =.  tu
         %-  to-show:tu
-        trove-fact+!>([p.f [%new uvt to.q.f nod]])
+        trove-fact+!>([p.f [%add-node uvt to.q.f nod]])
       %-  to-show:tu
       trove-fact+!>([p.f [%rem-node id.q.f from.q.f]])  
     ::
