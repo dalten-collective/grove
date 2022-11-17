@@ -1,7 +1,7 @@
 /-  t=trove
 /+  t-j=trove-json
 =/  state-0
-  $:(%0 (map spat.t [team.t regs.t trove.t]) [@t @t])
+  $:(%0 (map spat.t [team.t regs.t trove.t]))
 |_  state=state-0
 ++  grad  %noun
 ++  grow
