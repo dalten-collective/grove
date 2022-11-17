@@ -3,33 +3,31 @@
 ++  enjs
   =,  enjs:format
   |%
-  ++  trail  ^-($-(^path @t) ^spat)  ::  XX: don't do the fuckin cast.
-  ++  ships  `$-(@p json)`|=(p=@p ((lead %s) (scot %p p)))
+  ++  trail  ^spat
+  ++  ships  |=(p=@p `json`((lead %s) (scot %p p)))
   ::
   ++  roles
-    ^-  $-((set role:t) json)
-    |=(a=(set role:t) a/(turn ~(tap in a) (lead %s)))
+    |=(a=(set role:t) `json`a/(turn ~(tap in a) (lead %s)))
   ::
   ++  spat
-    ^-  $-(path:s-p @t)
-    |=(s=path:s-p (rap 3 (scot %p -.s) '/' +.s ~))
+    |=(s=path:s-p `@t`(rap 3 (scot %p -.s) '/' +.s ~))
   ::
   ++  node
-    ^-  $-(node:t json)
     |=  n=node:t
+    ^-  json
     (pairs ~[type+s/-.n url+s/url.n dat+(data dat.n)])
   ::
   ++  tract
-    ^-  $-(tract:t json)
     |=  tat=tract:t
+    ^-  json
     =-  o/(malt -)
     %+  turn  ~(tap by tat)
     |=  [k=@uv v=node:t]
     [(scot %uv k) `json`(node v)]
   ::
   ++  trove
-    ^-  $-((axal tract:t) json)
     |=  axe=(axal tract:t)
+    ^-  json
     =-  o/(malt -)
     ^-  (list [@t json])
     %+  turn  ~(tap by ~(tar of axe))
@@ -37,8 +35,8 @@
     [(trail k) (tract v)]
   ::
   ++  regs
-    ^-  $-((map ^path perm:t) json)
     |=  mp=(map ^path perm:t)
+    ^-  json
     =-  o/(malt -)
     ^-  (list [@t json])
     %+  turn  ~(tap by mp)
@@ -46,8 +44,8 @@
     [(trail k) (perm v)]
   ::
   ++  team
-    ^-  $-([(set @p) (set @p) (set @p)] json)
     |=  [p=(set @p) q=(set @p) r=(set @p)]
+    ^-  json
     %-  pairs
     :~  admins+a/(turn ~(tap in p) ships)
         moderators+a/(turn ~(tap in q) ships)
@@ -55,20 +53,18 @@
     ==
   ::
   ++  state
-    ^-  $-([%0 (map spat.t [team.t regs.t trove.t]) @t @t] json)
     |=  $:  %0 
             t=(map spat.t [team.t regs.t trove.t])
-            ipfs=[@t @t]
         ==
+    ^-  json
     %-  pairs
     :~  version+s/'0'
         troves+(troves t)
-        ipfs+(pairs ~[node+s/-.ipfs creds+s/+.ipfs])
     ==
   ::
   ++  data
-    ^-  $-(data:meta:t json)
     |=  dat=data:meta:t
+    ^-  json
     %-  pairs
     :~  from+(sect from.dat)
         by+(ships by.dat)
@@ -78,8 +74,8 @@
     ==
   ::
   ++  troves
-    ^-  $-((map spat:t [team:t regs:t trove:t]) json)
     |=  tov=(map spat:t [team:t regs:t trove:t])
+    ^-  json
     =-  o/(malt -)
     %+  turn  ~(tap by tov)
     |=  [k=spat:t v=[t=team:t r=regs:t tr=trove:t]]
@@ -91,8 +87,8 @@
     ==
   ::
   ++  perm
-    ^-  $-(perm:t json)
     |=  p=perm:t
+    ^-  json
     %-  pairs
     :~
       :-  %files
@@ -114,8 +110,8 @@
       ==
     ==
   ++  fact
-    ^-  $-(fact:t json)
     |=  f=fact:t
+    ^-  json
     ?+    -.q.f  !!
         %start
       =-  (frond add+-)
