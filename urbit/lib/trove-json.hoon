@@ -3,7 +3,7 @@
 ++  enjs
   =,  enjs:format
   |%
-  ++  trail  ^-($-(^path @t) ^spat)
+  ++  trail  ^-($-(^path @t) ^spat)  ::  XX: don't do the fuckin cast.
   ++  ships  `$-(@p json)`|=(p=@p ((lead %s) (scot %p p)))
   ::
   ++  roles
@@ -123,20 +123,6 @@
       :~  space+s/(spat p.f)
           regs+(regs p.q.f)
           trove+(trove q.q.f)
-      ==
-    ::
-        %new
-      %-  pairs
-      :~  space+s/(spat p.f)
-      ::
-        :-  %add
-        %+  frond  %node
-        %-  pairs
-        :~  id+s/(scot %uv id.q.f)
-            trail+s/(trail trail.q.f)
-            node+(node node.q.f)
-            fake+b/?=(%0v0 id.q.f)
-        ==
       ==
     ::
         %add-moderators
