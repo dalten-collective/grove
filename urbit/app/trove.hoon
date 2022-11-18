@@ -305,13 +305,17 @@
       %.  trove-fact+!>(f)
       %=    to-show
           troves
-        %+  ~(put by troves)  p.f
+        %+  ~(put by troves)  sap
         :+  tam
           (~(uni by rag) p.q.f)
         =/  neu=(list [p=path t=tract])
           ~(tap of `trove`q.q.f)
         =|  tew=_tov
-        |-  ?~  neu  tew
+        |-
+        ?~  neu
+        %-  ~(rep by ~(tar of `trove`tew))
+        |=  [[k=trail v=tract] o=_tew]
+        ?:((~(has of `trove`q.q.f) k) o (~(lop of `trove`o) k))
         %=    $
           neu  t.neu
         ::
@@ -344,7 +348,99 @@
           (to-cher `*path trove-fact+!>(f))
       ==
     ::
-        %reperm  to
+        %reperm
+      =+  perms=(to-perm trail.q.f)
+      ?>  ?|  =(our.bol src.bol)
+              =(p.sap src.bol)
+              (~(any in ewe) ~(has in ch-mod.folder.perms))
+          ==
+      |^  ^+  to
+        ?.  =(our.bol p.sap)
+          ?.  =(our.bol src.bol)
+            ::  an instruction to a remote trove
+            (to-show:(to-send p.f q.f) trove-fact+!>(f))
+          ::  an instruction about their trove
+          ?^  pur.q.f  !!  ::  uses start
+          %.  trove-fact+!>(f)
+          %=    to-show
+              troves
+            %+  ~(put by troves)  sap
+            [tam (~(del by rag) trail.q.f) tov]
+          ==
+        ::  an instruction to our trove
+        ?~  pur.q.f
+          =.  rag  (~(del by rag) trail.q.f)
+          =+  neu=(to-perm trail.q.f)
+          ?:  =(perms neu)  to
+          =~  (to-peer ~)
+              (to-peer [%admin ~])
+              (to-peer [%moderator ~])
+          ==
+        =.  troves
+          %+  ~(put by troves)  sap
+          [tam (chopped trail.q.f u.pur.q.f) tov]
+        =~  (to-peer ~)
+            (to-peer [%admin ~])
+            (to-peer [%moderator ~])
+        ==
+      ::  +prefix: is list prefix
+      ::
+      ++  prefix
+        |=  [p=trail q=trail]
+        ^-  ?
+        =+  test=p
+        ?~  test  %.y
+        =|  r=_|
+        |-
+        ?~(p r ?~(q %.n ?.(=(i.p i.q) %.n $(p t.p, q t.q))))
+      ::  +choped: give trail, perms, check subordinates
+      ::
+      ++  chopped
+        |=  [t=trail p=perm]
+        ^+  rag
+        %-
+          %~  put  by
+          ^+  rag
+          %-  ~(rut by rag)
+          |=  [k=trail v=perm]
+          ?.  (prefix t k)  v             ::  (ง ͡° ͜ʖ ͡°)ง
+          ?:((fits p v) v (screwed p v))  ::  (   ͡° ͜ʖ ͡°)
+        [`trail`t `perm`p]
+      ::  +screwed: parent perms, kid perms, make em fit
+      ::
+      ++  screwed
+        |=  [p=perm q=perm]
+        ^-  perm
+        :+  %0
+          ::
+          :^    %-  ~(del in add.files.q)
+                (~(dif in add.files.q) add.files.p)
+              %-  ~(del in edit.files.q)
+              (~(dif in edit.files.q) edit.files.p)
+            %-  ~(del in move.files.q)
+            (~(dif in move.files.q) move.files.p)
+          %-  ~(del in delete.files.q)
+          (~(dif in delete.files.q) delete.files.p)
+        ::
+        :*    %-  ~(del in read.folder.q)
+              (~(dif in read.folder.q) read.folder.p)
+            ::
+              %-  ~(del in add.folder.q)
+              (~(dif in add.folder.q) add.folder.p)
+            ::
+              %-  ~(del in edit.folder.q)
+              (~(dif in edit.folder.q) edit.folder.p)
+            ::
+              %-  ~(del in move.folder.q)
+              (~(dif in move.folder.q) move.folder.p)
+            ::
+              %-  ~(del in delete.folder.q)
+              (~(dif in delete.folder.q) delete.folder.p)
+            ::
+              %-  ~(del in ch-mod.folder.q)
+              (~(dif in ch-mod.folder.q) ch-mod.folder.p)
+        ==
+      --
     ::
         %repeat
       =+  hav=(need (~(get of `trove`tov) from.q.f))
@@ -402,7 +498,7 @@
         ::  an instruction about their trove
         =+  ole=?~(h=hav *tract u.h)
         =.  troves
-          %+  ~(put by troves)  p.f
+          %+  ~(put by troves)  sap
           :+  tam  rag
           %-  ~(put of `trove`tov)
           [trail.q.f (~(put by ole) id.q.f node.q.f)]
@@ -644,7 +740,7 @@
       ?>  ?=(~ (~(get of `trove`tov) to.q.f))
       =;  tu=_to
         =.  troves
-          %+  ~(put by troves)  p.f
+          %+  ~(put by troves)  sap
           :+  tam  rag
           (~(put of `trove`tov) to.q.f hav)
         %-  ~(rep in read.folder.ter)
