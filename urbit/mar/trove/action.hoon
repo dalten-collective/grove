@@ -10,5 +10,6 @@
 ++  grab
   |%
   ++  noun  action:poke:t
+  ++  json  action:dejs:t-j
   --
 --

@@ -290,30 +290,35 @@
         ==
     ==
   ::
-  ++  poke
-    ^-  $-(json poke:poke:t)
-    %-  of
-    :~  add-moderators+(as (se %p))
-        rem-moderators+(as (se %p))
+  ++  action
+    ^-  $-(json action:poke:t)
+    %-  ot
+    :~  space+spat
       ::
-        repeat+repeat
-        reperm+(ot ~[trail+pa pur+perm])
-      ::
-        add-node+add-node
-        rem-node+(ot ~[id+(se %uv) trail+pa])
-        move-node+(ot ~[id+(se %uv) from+pa to+pa])
-      ::
-        :-  %edit-node
-        %-  ot
-        :~  id+(se %uv)
-            trail+pa
-            tut+so:dejs-soft:format
-            dus+so:dejs-soft:format
+        :-  %poke
+        %-  of
+        :~  add-moderators+(as (se %p))
+            rem-moderators+(as (se %p))
+          ::
+            repeat+repeat
+            reperm+(ot ~[trail+pa pur+perm])
+          ::
+            add-node+add-node
+            rem-node+(ot ~[id+(se %uv) trail+pa])
+            move-node+(ot ~[id+(se %uv) from+pa to+pa])
+          ::
+            :-  %edit-node
+            %-  ot
+            :~  id+(se %uv)
+                trail+pa
+                tut+so:dejs-soft:format
+                dus+so:dejs-soft:format
+            ==
+          ::
+            add-folder+(ot ~[trail+pa nam+so pur+perm])
+            rem-folder+pa
+            move-folder+(ot ~[from+pa to+pa])
         ==
-      ::
-        add-folder+(ot ~[trail+pa nam+so pur+perm])
-        rem-folder+pa
-        move-folder+(ot ~[from+pa to+pa])
     ==
   --
 --
