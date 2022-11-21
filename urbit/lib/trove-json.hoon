@@ -3,8 +3,10 @@
 ++  enjs
   =,  enjs:format
   |%
-  ++  trail  ^spat
   ++  ships  |=(p=@p `json`((lead %s) (scot %p p)))
+  ::
+  ++  trail
+    |=(t=trail:t =+(p=(path t) ?>(?=([%s *] p) p.p)))
   ::
   ++  roles
     |=(a=(set role:t) `json`a/(turn ~(tap in a) (lead %s)))
@@ -212,6 +214,106 @@
             to+(frond trail+s/(trail to.q.f))
         ==
       ==
+    ==
+  --
+++  dejs
+  =,  dejs:format
+  |%
+  ++  role
+    ^-  $-(json role:t)
+    (cu |=(r=@t ;;(role:t r)) so)
+  ++  node
+    ^-  $-(json node:t)
+    %+  cu
+      |=([u=@t d=data:meta:t] [%record u d])
+    (ot ~[url+so dat+data])
+  ::
+  ++  spat
+    ^-  $-(json path:s-p)
+    |=  j=json
+    ?>  ?=([%s @] j)
+    =;  [who=dime wat=@tas]
+      ?>  ?=(%p -.who)
+      `path:s-p`[+.who wat]
+    (rash +.j ;~((glue fas) ;~(pfix sig crub:^so) sym))
+  ::
+  ++  add-node
+    ^-  $-(json $:(id:t trail:t node:t))
+    %+  cu
+      |=([tr=trail:t no=node:t] [0v0 tr no])
+    (ot ~[trail+pa node+node])
+  ::
+  ++  repeat
+    ^-  $-(json $:(id:t trail:t (pair spat:t trail:t)))
+    %-  ot
+    :~  id+(se %uv)
+        trail+pa
+        to+(ot ~[space+spat trail+pa])
+    ==
+  ::
+  ++  data
+    ^-  $-(json data:meta:t)
+    %+  cu
+      |=  [fr=@da by=@p ti=@t de=@t ex=@t]
+      [%0 fr by ti de ex]
+    %-  ot
+    :~  from+du
+        by+(se %p)
+        title+so
+        description+so
+        extension+so
+    ==
+  ::
+  ++  perm
+    ^-  $-(json (unit perm:t))
+    |=  j=json
+    ?~  json  ~
+    :+  ~  %0
+    %.  j
+    %-  ot
+    :~  :-  %files
+        %-  ot
+        :~  add+(as role)
+            edit+(as role)
+            move+(as role)
+            delete+(as role)
+        ==
+      ::
+        :-  %folder
+        %-  ot
+        :~  read+(as role)
+            add+(as role)
+            edit+(as role)
+            move+(as role)
+            delete+(as role)
+            ch-mod+(as role)
+        ==
+    ==
+  ::
+  ++  poke
+    ^-  $-(json poke:poke:t)
+    %-  of
+    :~  add-moderators+(as (se %p))
+        rem-moderators+(as (se %p))
+      ::
+        repeat+repeat
+        reperm+(ot ~[trail+pa pur+perm])
+      ::
+        add-node+add-node
+        rem-node+(ot ~[id+(se %uv) trail+pa])
+        move-node+(ot ~[id+(se %uv) from+pa to+pa])
+      ::
+        :-  %edit-node
+        %-  ot
+        :~  id+(se %uv)
+            trail+pa
+            tut+so:dejs-soft:format
+            dus+so:dejs-soft:format
+        ==
+      ::
+        add-folder+(ot ~[trail+pa nam+so pur+perm])
+        rem-folder+pa
+        move-folder+(ot ~[from+pa to+pa])
     ==
   --
 --

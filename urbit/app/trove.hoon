@@ -1,4 +1,10 @@
 ::
+::  TODO: 
+::  + scries
+::    - permission @ depth
+::    - list of possible permission strings
+::    - 
+::  + dejs
 /-  *trove, m=membership, s=spaces-store, v=visas
 /+   dbug, default-agent, verb
 |%
@@ -124,9 +130,28 @@
 ++  peek
   |=  pol=(pole knot)
   ^-  (unit (unit cage))
+  =*  get-trove  ~(got by troves)
   ?+    pol  !!
       [%x %state ~]
     ``trove-state-0+!>(state)
+  ::
+      [%x %hosts ~]
+    ``trove-spaces+!>(`(list spat)`~(tap in ~(key by troves)))
+  ::
+      [%x %team host=@ space=@ ~]
+    ``trove-team+!>(team:(get-trove [(slav %p host.pol) space.pol]))
+  ::
+      [%x %regs host=@ space=@ ~]
+    ``trove-regs+!>(regs:(get-trove [(slav %p host.pol) space.pol]))
+  ::
+      [%x %folder host=@ space=@ rest=*]
+    =+  tov=trove:(get-trove [(slav %p host.pol) space.pol])
+    ``trove-trecht+!>(`(unit tract)`(~(get of `trove`tov) rest.pol))
+  ::
+      [%x %node host=@ space=@ id=@ rest=*]
+    =+  tov=trove:(get-trove [(slav %p host.pol) space.pol])
+    ?~  hav=(~(get of `trove`tov) rest.pol)  !!
+    ``trove-node+!>(`node`(~(got by u.hav) (slav %uv id.pol)))
   ==
 ::  +peer: handle on-watch
 ::
@@ -187,6 +212,192 @@
       to-abet:(to-poke:to-your:(to-abed:to p.act) act)
     ==
   (emil cards)
+::  +sa: space engine
+::
+++  sa
+  |_  $:  sup=(unit spat)
+          mem=members:m
+          caz=(list card)
+      ==
+  +*  sa   .
+      dok  [our.bol %spaces]
+      adm  (silt `(list role)`[%admin]~)
+      mam  (silt `(list role)`~[%admin %moderator %member])
+  ++  sa-emit  |=(c=card sa(caz [c caz]))
+  ++  sa-emil  |=(lc=(list card) sa(caz (welp lc caz)))
+  ++  sa-abet  ^-((quip card _state) [(flop caz) state])
+  ::  +sa-show: send web-ui fact
+  ++  sa-show
+    |=(cag=cage (sa-emit %give %fact [/web-ui]~ cag))
+  ::  +sa-view: watch spaces on /updates
+  ::
+  ++  sa-view
+    ^+  sa
+    %-  sa-emit
+    [%pass /spaces/updates %agent dok %watch /updates]
+  ::  +sa-init: handle initial load from spaces
+  ::
+  ++  sa-init
+    |=  [spa=spaces:s mep=membership:m *]
+    ^+  sa
+    =+  sal=~(tap by spa)
+    |-  ?~  sal  sa
+    %=    $
+      sal  t.sal
+    ::
+        sa
+      sa-make(sup `-.i.sal, mem (~(got by mep) -.i.sal))
+    ==
+  ::  +sa-kill: delete a trove, the space was removed
+  ::
+  ++  sa-kill
+    ^+  sa
+    =+  sap=(need sup)
+    =+  wir=`path`/(scot %p p.sap)/[q.sap]
+    =/  wires=[path path path]
+      =+  head=?:(=(our.bol p.sap) %trove %from)
+      :+  head^wir
+        head^(snoc wir %admin)
+      head^(snoc wir %moderator)
+    ?:  =(our.bol p.sap)
+      =.  troves  (~(del by troves) sap)
+      %-  sa-emit:(sa-show spaces-reaction+!>([%remove sap]))
+      [%give %kick [-.wires +<.wires +>.wires ~] ~]
+    =*  cad
+      |=(p=path [%pass p %agent [p.sap %trove] %leave ~])
+    =.  troves  (~(del by troves) sap)
+    %-  sa-emil:(sa-show spaces-reaction+!>([%remove sap]))
+    [(cad -.wires) (cad +<.wires) (cad +>.wires) ~]
+  ::  +sa-make: subscribe to remote spaces, create local
+  ::
+  ++  sa-make
+    ^+  sa
+    =+  sap=(need sup)
+    ?:  &(=(our.bol p.sap) (~(has by troves) sap))  sa
+    =;  tru=[team regs trove]
+      ?:  =(our.bol p.sap)
+        sa(troves (~(put by troves) sap tru))
+      =+  der=[p.sap %trove]
+      =*  pem  ~(has in roles:(~(got by mem) our.bol))
+      =/  pat=path  /(scot %p p.sap)/[q.sap]
+      =?    sa
+          ?&  (pem %admin)
+          ::
+            ?!  %-  ~(has in wex.bol)
+            :_  [%.y trove+(snoc pat %admin)]
+            [from+(snoc pat %admin) p.sap dap.bol]
+          ==
+        %-  sa-emit
+        :+  %pass  from+(snoc pat %admin)
+        [%agent der %watch trove+(snoc pat %admin)]
+      ::
+      ?.  ?&  |((pem %member) (pem %admin))
+          ::
+            ?!  %-  ~(has in wex.bol)
+            [[from+pat p.sap dap.bol] [%.y trove+pat]]
+          ==
+        sa
+      %-  sa-emit
+      [%pass from+pat %agent der %watch trove+pat]
+    ::
+    :*
+      ^-  team
+      %-  ~(rep by mem)
+      |=  [[s=ship m=member:m] t=team]
+      ?:  &(=(our.bol p.sap) =(our.bol s))  t
+      ?:  (~(has in roles.m) %admin)
+        %=  t
+          admins   (~(put in admins.t) s)
+          members  (~(put in members.t) s)
+        ==
+      ?.  (~(has in roles.m) %member)  t
+      t(members (~(put in members.t) s))
+    ::
+      ^-  regs
+      ?.  =(our.bol p.sap)  *regs
+      %-  ~(put by *regs)
+      [/ [%0 [adm adm adm adm] [mam adm adm adm adm ~]]]
+    ::
+      *trove
+    ==
+  ::  +sa-dude: handle spaces-reaction marks
+  ::
+  ++  sa-dude
+    |=  [mar=mark vaz=vase]
+    ?+    mar  ~|(bad-dude-mark/mar !!)
+        %spaces-reaction
+      =/  act=reaction:s  !<(reaction:s vaz)
+      ?+    -.act  sa
+        %initial  (sa-init +.act)
+        %remove   sa-kill(sup `+.act)
+      ::
+          %add
+        sa-make(sup `path.space.act, mem members.act)
+      ==
+    ::
+        %visa-reaction
+      =/  act=reaction:v  !<(reaction:v vaz)
+      ?+    -.act  sa
+          %kicked
+        ?:  =(our.bol ship.act)
+          sa(troves (~(del by troves) path.act))
+        =+  tov=(~(got by troves) path.act)
+        %=    sa
+            troves
+          %+  ~(put by troves)  path.act
+          %=  tov
+              admins.team
+            (~(del in admins.team.tov) ship.act)
+          ::
+              members.team
+            (~(del in members.team.tov) ship.act)
+          ::
+              moderators.team
+            (~(del in moderators.team.tov) ship.act)
+          ==
+        ==
+      ::
+          %invite-accepted
+        =/  sap=(pair ship cord)  path.act
+        =/  pat=path  /(scot %p p.sap)/[q.sap]
+        =+  der=[p.sap %trove]
+        =+  tov=(~(got by troves) path.act)
+        =+  is-admin=(~(has in roles.member.act) %admin)
+        =+  is-member=(~(has in roles.member.act) %member)
+        =?    sa
+            ?&  &(=(our.bol ship.act) is-admin)
+            ::
+              ?!  %-  ~(has in wex.bol)
+                  :_  [%.y trove+(snoc pat %admin)]
+                  [from+(snoc pat %admin) p.sap dap.bol]
+            ==
+          %-  sa-emit
+          :+  %pass  from+(snoc pat %admin)
+          [%agent der %watch trove+(snoc pat %admin)]
+        =?    sa
+            ?&  &(=(our.bol ship.act) |(is-member is-admin))
+            ::
+              ?!  %-  ~(has in wex.bol)
+              [[from+pat p.sap dap.bol] [%.y trove+pat]]
+            ==
+          %-  sa-emit
+          [%pass from+pat %agent der %watch trove+pat]
+        %=    sa
+            troves
+          %+  ~(put by troves)  sap
+          %=  tov
+              admins.team
+            ?.  is-admin  admins.team.tov
+            (~(put in admins.team.tov) ship.act)
+          ::
+              members.team
+            ?.  |(is-admin is-member)  members.team.tov
+            (~(put in members.team.tov) ship.act)
+          ==
+        ==
+      ==
+    ==
+  --
 ::  +to: trove engine
 ::
 ++  to
@@ -315,7 +526,7 @@
         ?~  neu
         %-  ~(rep by ~(tar of `trove`tew))
         |=  [[k=trail v=tract] o=_tew]
-        ?:((~(has of `trove`q.q.f) k) o (~(lop of `trove`o) k))
+        ?:((~(has of q.q.f) k) o (~(lop of `trove`o) k))
         %=    $
           neu  t.neu
         ::
@@ -398,14 +609,12 @@
       ++  chopped
         |=  [t=trail p=perm]
         ^+  rag
-        %-
-          %~  put  by
-          ^+  rag
-          %-  ~(rut by rag)
-          |=  [k=trail v=perm]
-          ?.  (prefix t k)  v             ::  (ง ͡° ͜ʖ ͡°)ง
-          ?:((fits p v) v (screwed p v))  ::  (   ͡° ͜ʖ ͡°)
-        [`trail`t `perm`p]
+        %.  [`trail`t `perm`p]
+        %~  put  by
+        %-  ~(rut by rag)
+        |=  [k=trail v=perm]
+        ?.  (prefix t k)  v             ::  ( ͡° ͜ʖ( ͡° ͜ʖ͡°)
+        ?:((fits p v) v (screwed p v))  ::  ( ͡° ͜ʖ  ͡°)
       ::  +screwed: parent perms, kid perms, make em fit
       ::
       ++  screwed
@@ -507,6 +716,11 @@
       =?    id.q.f
           ?=(%0v0 id.q.f)
         `@uvTROVE`(sham trail.q.f node.q.f)
+      =?    node.q.f
+          ?=(%0v0 id.q.f)
+        ?:  =(our.bol src.bol)
+          [%record +.node.q.f]
+        [%remote +.node.q.f]
       =.  troves
         %+  ~(put by troves)  sap
         :+  tam  rag
@@ -620,7 +834,8 @@
           trove-fact+!>([p.f [%rem-node id.q.f from.q.f]])
         ::
           %-  to-show
-          trove-fact+!>([p.f [%add-node 0v0 to.q.f nod]])
+          :-  %trove-fact
+          !>([p.f [%add-node (sham to.q.f nod) to.q.f nod]])
         ==
       ::  an instruction to our trove
       =+  uvt=`@uvTROVE`(sham to.q.f nod)
@@ -813,192 +1028,5 @@
         (~(put of `trove`truv) i.leto)
       ==
     --
-  --
-
-::  +sa: space engine
-::
-++  sa
-  |_  $:  sup=(unit spat)
-          mem=members:m
-          caz=(list card)
-      ==
-  +*  sa   .
-      dok  [our.bol %spaces]
-      adm  (silt `(list role)`[%admin]~)
-      mam  (silt `(list role)`~[%admin %moderator %member])
-  ++  sa-emit  |=(c=card sa(caz [c caz]))
-  ++  sa-emil  |=(lc=(list card) sa(caz (welp lc caz)))
-  ++  sa-abet  ^-((quip card _state) [(flop caz) state])
-  ::  +sa-show: send web-ui fact
-  ++  sa-show
-    |=(cag=cage (sa-emit %give %fact [/web-ui]~ cag))
-  ::  +sa-view: watch spaces on /updates
-  ::
-  ++  sa-view
-    ^+  sa
-    %-  sa-emit
-    [%pass /spaces/updates %agent dok %watch /updates]
-  ::  +sa-init: handle initial load from spaces
-  ::
-  ++  sa-init
-    |=  [spa=spaces:s mep=membership:m *]
-    ^+  sa
-    =+  sal=~(tap by spa)
-    |-  ?~  sal  sa
-    %=    $
-      sal  t.sal
-    ::
-        sa
-      sa-make(sup `-.i.sal, mem (~(got by mep) -.i.sal))
-    ==
-  ::  +sa-kill: delete a trove, the space was removed
-  ::
-  ++  sa-kill
-    ^+  sa
-    =+  sap=(need sup)
-    =+  wir=`path`/(scot %p p.sap)/[q.sap]
-    =/  wires=[path path path]
-      =+  head=?:(=(our.bol p.sap) %trove %from)
-      :+  head^wir
-        head^(snoc wir %admin)
-      head^(snoc wir %moderator)
-    ?:  =(our.bol p.sap)
-      =.  troves  (~(del by troves) sap)
-      %-  sa-emit:(sa-show spaces-reaction+!>([%remove sap]))
-      [%give %kick [-.wires +<.wires +>.wires ~] ~]
-    =*  cad
-      |=(p=path [%pass p %agent [p.sap %trove] %leave ~])
-    =.  troves  (~(del by troves) sap)
-    %-  sa-emil:(sa-show spaces-reaction+!>([%remove sap]))
-    [(cad -.wires) (cad +<.wires) (cad +>.wires) ~]
-  ::  +sa-make: subscribe to remote spaces, create local
-  ::
-  ++  sa-make
-    ^+  sa
-    =+  sap=(need sup)
-    ?:  &(=(our.bol p.sap) (~(has by troves) sap))  sa
-    =;  tru=[team regs trove]
-      ?:  =(our.bol p.sap)
-        sa(troves (~(put by troves) sap tru))
-      =+  der=[p.sap %trove]
-      =*  pem  ~(has in roles:(~(got by mem) our.bol))
-      =/  pat=path  /(scot %p p.sap)/[q.sap]
-      =?    sa
-          ?&  (pem %admin)
-          ::
-            ?!  %-  ~(has in wex.bol)
-            :_  [%.y trove+(snoc pat %admin)]
-            [from+(snoc pat %admin) p.sap dap.bol]
-          ==
-        %-  sa-emit
-        :+  %pass  from+(snoc pat %admin)
-        [%agent der %watch trove+(snoc pat %admin)]
-      ::
-      ?.  ?&  |((pem %member) (pem %admin))
-          ::
-            ?!  %-  ~(has in wex.bol)
-            [[from+pat p.sap dap.bol] [%.y trove+pat]]
-          ==
-        sa
-      %-  sa-emit
-      [%pass from+pat %agent der %watch trove+pat]
-    ::
-    :*
-      ^-  team
-      %-  ~(rep by mem)
-      |=  [[s=ship m=member:m] t=team]
-      ?:  &(=(our.bol p.sap) =(our.bol s))  t
-      ?:  (~(has in roles.m) %admin)
-        %=  t
-          admins   (~(put in admins.t) s)
-          members  (~(put in members.t) s)
-        ==
-      ?.  (~(has in roles.m) %member)  t
-      t(members (~(put in members.t) s))
-    ::
-      ^-  regs
-      ?.  =(our.bol p.sap)  *regs
-      %-  ~(put by *regs)
-      [/ [%0 [adm adm adm adm] [mam adm adm adm adm ~]]]
-    ::
-      *trove
-    ==
-  ::  +sa-dude: handle spaces-reaction marks
-  ::
-  ++  sa-dude
-    |=  [mar=mark vaz=vase]
-    ?+    mar  ~|(bad-dude-mark/mar !!)
-        %spaces-reaction
-      =/  act=reaction:s  !<(reaction:s vaz)
-      ?+    -.act  sa
-        %initial  (sa-init +.act)
-        %remove   sa-kill(sup `+.act)
-      ::
-          %add
-        sa-make(sup `path.space.act, mem members.act)
-      ==
-    ::
-        %visa-reaction
-      =/  act=reaction:v  !<(reaction:v vaz)
-      ?+    -.act  sa
-          %kicked
-        ?:  =(our.bol ship.act)
-          sa(troves (~(del by troves) path.act))
-        =+  tov=(~(got by troves) path.act)
-        %=    sa
-            troves
-          %+  ~(put by troves)  path.act
-          %=  tov
-              admins.team
-            (~(del in admins.team.tov) ship.act)
-          ::
-              members.team
-            (~(del in members.team.tov) ship.act)
-          ::
-              moderators.team
-            (~(del in moderators.team.tov) ship.act)
-          ==
-        ==
-      ::
-          %invite-accepted
-        =/  sap=(pair ship cord)  path.act
-        =/  pat=path  /(scot %p p.sap)/[q.sap]
-        =+  der=[p.sap %trove]
-        =+  tov=(~(got by troves) path.act)
-        =+  is-admin=(~(has in roles.member.act) %admin)
-        =+  is-member=(~(has in roles.member.act) %member)
-        =?    sa
-            ?&  &(=(our.bol ship.act) is-admin)
-            ::
-              ?!  %-  ~(has in wex.bol)
-                  :_  [%.y trove+(snoc pat %admin)]
-                  [from+(snoc pat %admin) p.sap dap.bol]
-            ==
-          %-  sa-emit
-          :+  %pass  from+(snoc pat %admin)
-          [%agent der %watch trove+(snoc pat %admin)]
-        =?    sa
-            ?&  &(=(our.bol ship.act) |(is-member is-admin))
-            ::
-              ?!  %-  ~(has in wex.bol)
-              [[from+pat p.sap dap.bol] [%.y trove+pat]]
-            ==
-          %-  sa-emit
-          [%pass from+pat %agent der %watch trove+pat]
-        %=    sa
-            troves
-          %+  ~(put by troves)  sap
-          %=  tov
-              admins.team
-            ?.  is-admin  admins.team.tov
-            (~(put in admins.team.tov) ship.act)
-          ::
-              members.team
-            ?.  |(is-admin is-member)  members.team.tov
-            (~(put in members.team.tov) ship.act)
-          ==
-        ==
-      ==
-    ==
   --
 --
