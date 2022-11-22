@@ -148,6 +148,10 @@
     =+  tov=trove:(get-trove [(slav %p host.pol) space.pol])
     ``trove-trecht+!>(`(unit tract)`(~(get of `trove`tov) rest.pol))
   ::
+      [%x %folder %perms host=@ space=@ rest=*]
+    =+  spa=[(slav %p host.pol) space.pol]
+    ``trove-perm+!>(`perm`(to-perm:(to-abed:to spa) rest.pol))
+  ::
       [%x %node host=@ space=@ id=@ rest=*]
     =+  tov=trove:(get-trove [(slav %p host.pol) space.pol])
     ?~  hav=(~(get of `trove`tov) rest.pol)  !!
@@ -523,10 +527,7 @@
           ~(tap of `trove`q.q.f)
         =|  tew=_tov
         |-
-        ?~  neu
-        %-  ~(rep by ~(tar of `trove`tew))
-        |=  [[k=trail v=tract] o=_tew]
-        ?:((~(has of q.q.f) k) o (~(lop of `trove`o) k))
+        ?~  neu  tew
         %=    $
           neu  t.neu
         ::
@@ -587,13 +588,32 @@
               (to-peer [%admin ~])
               (to-peer [%moderator ~])
           ==
+        =+  (chopped trail.q.f u.pur.q.f)
         =.  troves
-          %+  ~(put by troves)  sap
-          [tam (chopped trail.q.f u.pur.q.f) tov]
-        =~  (to-peer ~)
+          (~(put by troves) sap [tam r tov])
+        =~  [(combine p.f l %member to) p=p.f l=l combine=combine]
+            [(combine p l %admin to) p=p l=l combine=combine]
+            (combine p l %moderator to)
+            (to-peer ~)
             (to-peer [%admin ~])
             (to-peer [%moderator ~])
         ==
+      ::  +combine: make unit cards, give em to to-cher
+      ::
+      ++  combine
+        |=  [s=spat l=(list trail) r=role tu=_to]
+        ^+  tu
+        =/  lel=(list [p=(unit path) c=cage])
+          %-  murn  :_  same
+          %+  turn  l
+          |=  t=trail
+          ?.  (~(has in read:folder:(to-perm t)) r)  ~
+          =-  `[?:(?=(%member r) `/ `/[r]) -]
+          trove-fact+!>([p.f [%rem-folder t]])
+        |-  ^+  tu
+        ?~(lel tu $(lel t.lel, tu (to-cher:tu p.i.lel c.i.lel)))
+
+
       ::  +prefix: is list prefix
       ::
       ++  prefix
@@ -608,13 +628,14 @@
       ::
       ++  chopped
         |=  [t=trail p=perm]
-        ^+  rag
-        %.  [`trail`t `perm`p]
-        %~  put  by
-        %-  ~(rut by rag)
-        |=  [k=trail v=perm]
-        ?.  (prefix t k)  v             ::  ( ͡° ͜ʖ( ͡° ͜ʖ͡°)
-        ?:((fits p v) v (screwed p v))  ::  ( ͡° ͜ʖ  ͡°)
+        ^-  [l=(list trail) r=_rag]
+        =;  [l=(list trail) r=_rag]
+          [l (~(put by r) [`trail`t `perm`p])]
+        %+  ~(rib by rag)  *(list trail)
+        |=  [[k=trail v=perm] o=(list trail)]
+        ?.  (prefix t k)  [o k v]   ::  ( ͡° ͜ʖ( ͡° ͜ʖ ͡°)
+        ?:  (fits p v)    [o k v]   ::    ( ͡°( ͡° ͜ʖ ͡°) ͡°)
+        [`(list trail)`[k o] k (screwed p v)]     ::       ( ͡° ͜ʖ ͡°)
       ::  +screwed: parent perms, kid perms, make em fit
       ::
       ++  screwed
