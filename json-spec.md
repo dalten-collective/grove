@@ -97,7 +97,7 @@
 - `/x/folder/<host-ship>/<space-name>/<folder-path>/json`
   * you must provide the ship name, space name **AND** folder path
   * response:
-  
+
     either:
 
     ```json
@@ -375,7 +375,6 @@ mark: `trove-action`
       "trail" : "/path/for/file",
       "tut" : null || "new file title",
       "dus" : null || "new file description"
-      }
     }
   }
 }
@@ -412,13 +411,13 @@ mark: `trove-action`
       "id" : "0v12345.abcde",
       "from" : "/path/to/file",
       "to" : "/new/folder/path"
-      }
     }
   }
 }
 ```
 
 Returns Add Nodes and Remove Nodes as appropriate.
+
 ---
 
 ### Add folder
@@ -512,4 +511,5 @@ mark: `trove-action`
 ```
 
 Returns `add-node` `rem-folder` and `add-folder` as appropriate
+
 ---
