@@ -117,7 +117,7 @@
     ^-  json
     ?+    -.q.f  !!
         %start
-      =-  (frond add+-)
+      =-  (frond add+(frond trove+-))
       %-  pairs
       :~  space+s/(spat p.f)
           regs+(regs p.q.f)

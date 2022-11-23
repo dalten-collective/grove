@@ -170,7 +170,7 @@ Just the one, at `/web-ui`
 > NOTE: Responses may be received, from time to time, "unprompted", as a result of OTHER USERS' ACTIONS. This is to be expected and should be interpreted as canonical.
 
 
-### `start` / initial state
+### initial state
 
 On initial subscription:
 
@@ -197,6 +197,29 @@ On initial subscription:
     }
 }
 ```
+
+> NOTE: From time to time you may receive updates to underlying data about a space that are "radical" and require just simply replacing the data you have - these are called `start`s. These happen when someone creates a new trove after installing, or when someone repermissions some deep folder. They look like this:
+
+```json
+{
+  "add" : {
+    "trove" : {
+      "space" : "~zod/new-trove",
+      "regs" : 
+        {
+          "/" : { <permission object> },
+          "/folder-one" : {<permisison object>},
+          "/folder-one/sub-folder" : {<permission object>}
+        },
+      "trove" : 
+        {
+          "0v12345.abcde" : { <node object> }
+        }
+    }
+  }
+}
+```
+
 
 ## Spaces Removed
 
@@ -517,4 +540,51 @@ mark: `trove-action`
 
 Returns `add-node` `rem-folder` and `add-folder` as appropriate
 
+---
+
+### Repeat - duplicate a node
+
+> Must have `add:files` permissions in the destination
+
+mark: `trove-action`
+
+```json
+{
+  "space" : "~sampel-palnet/some-space-name",
+  "poke" : {
+    "repeat" : {
+      "id" : "0v12345.abcde",
+      "trail" : "/path/to/file",
+      "to" : {
+        "space" : "~zod/other-space",
+        "trail" : "/some/path/here"
+      }
+    }
+  }
+}
+```
+
+Returns `add-node`s as appropriate.
+
+---
+
+### Reperm - change the permisisons on a folder
+
+> Must have `ch-mode:folder` permissions (by default, only owner)
+
+mark: `trove-action`
+
+```json
+{
+  "space" : "~sampel-palnet/some-space-name",
+  "poke" : {
+    "reperm" : {
+      "trail" : "/path/to/file",
+      "pur" : null || {<permission object>}
+    }
+  }
+}
+```
+
+Returns a `start` and maybe other actions above
 ---
