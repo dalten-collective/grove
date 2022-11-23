@@ -1,31 +1,35 @@
 # JSON responses and request structures
 
 ## General Overview
-- State Object:
-  - troves - a map of spaces (likes groups) to a tuple of [team (map path permission) trove], where a trove is the file structure
-    - team - an array of admin ships, member ships and moderator ships - members and admins are dictated by "spaces"
-    - (map path permission) - probably don't attempt to use this, intead use the permission scry detailed later
-    - trove - You can think of this as a map of nesting path keyss (e.g. /this and /this/that) each of which should resolve to a map of `id`s to `node`s
-    - id - a string of an unsigned base32 number (urbit style so `0v12345.67890`)
-    - node - a `{type: "record" | "remote", url: "http://link.me", data: {<data>}}`
-      - data - file metadata: `{from: "32223100", by: "~zod", title: "a file", description "some file", extension ".pdf"}`
+- Trove State
+  * Trove maintains, per Space (read group) you're aware of, the following:
+    - **Moderators** - a set of ships who are members w/ elevated permissions
+      > NOTE: "Administrators" and "Members" are defined by Spaces, and get scried in for front end display
+    - **Regulations** - a series of rules for who can do what, per file (see permission object)
+    - **Trove** - A folder/file structure
 
-- Available Pokes:
-> Note - All pokes are [space poke] - you must specify to which space's trove this poke applies. For the poke part of things you have the following options. For spaces, scry `hosts`
+- Trove Pokes
+  * Pokes all take a `trove-action` mark, and are sent as a `[space poke]` pair.
+  * To identify which spaces are available, review the initial state or scry `/x/hosts/json`
 
   - Moderation - These must be members, just another permission class
     - `add-moderators` adds moderators to the trove, these must be members
     - `rem-moderators` removes moderators from a trove
+
   - Errata
     - `repeat` copy one file to another space/folder location (or same space, different folder)
     - `reperm` repermissions a folder and handles cascade effects
-    - `rehome` take a `"remote"` type node, resubmit it as a `"record"` type (by sending the file to your own S3/IPFS node).
-      - This one needs to be done on the front end, only - and just sent as a `rem-node` and `add-node` to the back end
+    - `rehome` 
+      * REHOME is a Front End Activity.
+      * This is low priority.
+      * Activity: Take a `"remote"` type node, resubmit it as a `"record"` type (by sending the file to your own S3/IPFS node).
+
   - Files
     - `add-node` adds a file to a folder
     - `rem-node` removes a file from a folder
     - `edit-node` edits either the title, description or both of a file
     - `move-node` moves (delete, add elsewhere) a file from here to there
+
   - Folder
     - `add-folder` adds a folder to the system (with an empty map of files), maybe permissioned
     - `rem-folder` deletes a folder and its subfolders
@@ -84,8 +88,8 @@
 
   ```json
   {
-    "/" : { "files" : { <permissions> }, "folders" : { <permissions> }},
-    "/folder-one" : {<permisison object>},
+    "/" : {<permission object>},
+    "/folder-one" : {<permission object>},
     "/folder-one/sub-folder" : {<permission object>}
   }
   ```
@@ -103,8 +107,8 @@
     
     ```json
     {
-      "0v12345.abcde" : { <node details> },
-      "0v23456.bcdef" : { <node details> } // some files
+      "0v12345.abcde" : {<node objects>},  // some files
+      "0v23456.bcdef" : {<node objects>}
     }
     ```
 
@@ -138,7 +142,7 @@
 
 - `/x/node/<host-ship>/<space-name>/<file-id>/<folder-path>/json`
   > NOTE: AKA NODE OBJECT
-  
+
   * you have to provide all that shit
   * response:
 
