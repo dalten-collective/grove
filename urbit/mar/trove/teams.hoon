@@ -5,10 +5,10 @@
 ++  grow
   |%
   ++  noun  tam
-  ++  json  (team:enjs:t-j tam)
+  ++  json  a/(turn tam team:enjs:t-j)
   --
 ++  grab
   |%
-  ++  noun  tam
+  ++  noun  (list team:t)
   --
 --

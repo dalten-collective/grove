@@ -9,6 +9,6 @@
   --
 ++  grab
   |%
-  ++  noun  trecht
+  ++  noun  (unit tract:t)
   --
 --

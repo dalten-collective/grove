@@ -6,6 +6,11 @@
 +$  mods    (set @p)
 +$  regs    (map trail perm)
 +$  role    ?(%member %admin %moderator)
++$  team
+  %-  list
+  $:  spat
+      [(set @p) (set @p) (set @p)]
+  ==
 ::
 +$  node    [?(%remote %record) url=cord dat=data:meta]
 ::

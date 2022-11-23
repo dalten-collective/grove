@@ -9,6 +9,6 @@
   --
 ++  grab
   |%
-  ++  noun  nod
+  ++  noun  node:t
   --
 --

@@ -137,7 +137,16 @@
       [%x %team host=@ space=@ ~]
     =+  sap=[(slav %p host.pol) space.pol]
     =+  to-team:(to-abed:to sap)
-    ``trove-team+!>([admins mods:(get sap) members])
+    ``trove-team+!>(`team`[sap admins mods:(get sap) members]~)
+  ::
+      [%x %teams ~]
+    :+  ~  ~  :-  %trove-team
+    !>  ^-  team
+    %+  turn  ~(tap in ~(key by troves))
+    |=  sap=spat
+    =+  to-team:(to-abed:to sap)
+    ^-  [spat (set @p) (set @p) (set @p)]
+    [sap [admins mods:(get sap) members]]
   ::
       [%x %regs host=@ space=@ ~]
     ``trove-regs+!>(regs:(get [(slav %p host.pol) space.pol]))

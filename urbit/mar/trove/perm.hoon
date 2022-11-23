@@ -9,6 +9,6 @@
   --
 ++  grab
   |%
-  ++  noun  purm
+  ++  noun  perm:t
   --
 --

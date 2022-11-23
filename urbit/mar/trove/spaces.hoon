@@ -9,6 +9,6 @@
   --
 ++  grab
   |%
-  ++  noun  spaces
+  ++  noun  (list spat:t)
   --
 --

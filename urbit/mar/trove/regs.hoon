@@ -9,6 +9,6 @@
   --
 ++  grab
   |%
-  ++  noun  rag
+  ++  noun  regs:t
   --
 --

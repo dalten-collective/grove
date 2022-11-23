@@ -46,17 +46,18 @@
     [(trail k) (perm v)]
   ::
   ++  team
-    |=  [p=(set @p) q=(set @p) r=(set @p)]
+    |=  [p=spat:t q=(set @p) r=(set @p) s=(set @p)]
     ^-  json
+    %+  frond  (spat p)
     %-  pairs
-    :~  admins+a/(turn ~(tap in p) ships)
-        moderators+a/(turn ~(tap in q) ships)
-        members+a/(turn ~(tap in r) ships)
+    :~  admins+a/(turn ~(tap in q) ships)
+        moderators+a/(turn ~(tap in r) ships)
+        members+a/(turn ~(tap in s) ships)
     ==
   ::
   ++  state
     |=  $:  %0 
-            t=(map spat.t [team.t regs.t trove.t])
+            t=(map spat:t [mods:t regs:t trove:t])
         ==
     ^-  json
     %-  pairs
@@ -76,14 +77,14 @@
     ==
   ::
   ++  troves
-    |=  tov=(map spat:t [team:t regs:t trove:t])
+    |=  tov=(map spat:t [mods:t regs:t trove:t])
     ^-  json
     =-  o/(malt -)
     %+  turn  ~(tap by tov)
-    |=  [k=spat:t v=[t=team:t r=regs:t tr=trove:t]]
+    |=  [k=spat:t v=[m=mods:t r=regs:t tr=trove:t]]
     :-  (spat k)
     %-  pairs
-    :~  team+(team t.v)
+    :~  team+(frond moderators+a/(turn ~(tap in m.v) ships))
         regs+(regs r.v)
         trove+(trove tr.v)
     ==
