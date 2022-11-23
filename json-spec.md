@@ -110,6 +110,8 @@
 
 
 - `/x/folder/perms/<host-ship>/<space-name>/<folder-path>/json`
+  > NOTE: AKA PERMISSION OBJECT
+
   * you must provide the ship name, space name **AND** folder path
   * response:
 
@@ -135,6 +137,8 @@
   ```
 
 - `/x/node/<host-ship>/<space-name>/<file-id>/<folder-path>/json`
+  > NOTE: AKA NODE OBJECT
+  
   * you have to provide all that shit
   * response:
 
