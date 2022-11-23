@@ -39,27 +39,119 @@
 
 - `/x/hosts/json`
   * returns all spaces you know about that may or may not have active troves (they get bunted just to keep up to speed, but may not have files - I can change this to whether you have an active subscription - let me know if you need that)
+  * response:
+  
+  ```json
+  [ "~zod/test", "~wet/this", "~rabsef-bicrym/my-trove" ]
+  ```
 
 - `/x/team/<host-ship>/<space-name>/json`
   * you must provide the ship name and space name
-  * you get the team in return
+  * response:
+
+  ```json
+  [
+    {
+      "~zod/test" : {
+        "admins" : ["~zod", "~wet"],  // some array of ships
+        "moderators" : [],
+        "members" : ["~zod", "~wet", "~dys"]
+      }
+    }
+  ]
+  ```
+
+- `/x/teams/json`
+  * get all teams
+  * response:
+
+  ```json
+  [
+    {
+      "~zod/test" : {
+        "admins" : ["~zod"],
+        "moderators" : ["~dev"],
+        "members" : ["~zod", "~dev", "~rabsef-bicrym"]
+      }
+    }
+  ]
+  ```
 
 - `/x/regs/<host-ship>/<space-name>/json`
   * **NOTE:** Probably don't use this - just use /folder/perms, below
   * you must provide the ship name and space name
-  * you get the (map path permissions) in return
+  * response:
+
+  ```json
+  {
+    "/" : { "files" : { <permissions> }, "folders" : { <permissions> }},
+    "/folder-one" : {<permisison object>},
+    "/folder-one/sub-folder" : {<permission object>}
+  }
+  ```
 
 - `/x/folder/<host-ship>/<space-name>/<folder-path>/json`
   * you must provide the ship name, space name **AND** folder path
-  * you get in return a `<map of files> | NULL`, NULL if the folder doesn't exist.
+  * response:
+    either:
+
+    ```json
+    NULL
+    ```
+
+    or:
+    
+    ```json
+    {
+      "0v12345.abcde" : { <node details> },
+      "0v23456.bcdef" : { <node details> } // some files
+    }
+    ```
+
 
 - `/x/folder/perms/<host-ship>/<space-name>/<folder-path>/json`
   * you must provide the ship name, space name **AND** folder path
-  * you get the instant permissions at that folder, even if the folder doesn't exist (yet)
+  * response:
+
+  ```json
+  {
+    "files" :
+      {
+        "add" : ["admin", "member"],
+        "edit" : ["admin"],
+        "move" : ["admin"],
+        "delete" : ["admin"]
+      },
+    "folders" :
+      {
+        "read" : ["admin", "member", "moderator"],
+        "add" : ["admin"],
+        "edit" : ["admin"],
+        "move" : ["admin"],
+        "delete" : ["admin"],
+        "ch-mod" : ["admin"]
+      }
+  }
+  ```
 
 - `/x/node/<host-ship>/<space-name>/<file-id>/<folder-path>/json`
   * you have to provide all that shit
-  * you get NOTHING - no you get the node info
+  * response:
+
+  ```json
+  {
+    "type" : "remote" || "record",
+    "url" : "http://ipfs.node/path/to/file",
+    "data" :
+      {
+        "from" : "3112330",  //unix time
+        "by" : "~wet",
+        "title" : "a file",
+        "description" : "a really nice file, check it out",
+        "extension" : ".exe"
+      }
+  }
+  ```
 
 - Available Subscriptions
 Just the one, at `/web-ui`
@@ -76,74 +168,24 @@ On initial subscription:
 ```json
 // initial subscription / full state
 {
-  "start": {
-    "space": "~sampel-palnet/some-space-name",
-    "regs": [
-      {
-        "/some-folder": { // this is a 'perms' object
-          "files": {
-            "add": ["admin", "member"],
-            "edit": ["some", "role", "names"],
-            "move": ["some", "role", "names"],
-            "delete": ["some", "role", "names"]
-          },
-          "folders": {
-            "read": ["admin", "member"],
-            "add": ["admin", "member"],
-            "edit": ["some", "role", "names"],
-            "move": ["some", "role", "names"],
-            "delete": ["some", "role", "names"],
-            "ch-mod": ["some", "role", "names"]
-          }
-        },
-        "/some-other-folder": {
-          // perms object as above
-        },
-        // etc additional folders
-        "": { // default case / root - THIS ALWAYS EXISTS (even prior to the trove existing)
-          // perms object as above
+  "version" : "0"
+  "troves" : 
+    {
+      "~zod/test" : 
+        {
+          "team" : { "moderators" : ["~zod", "~wet"] },  // note, get admins and members, if you need them, using a scry
+          "regs" : 
+            {
+              "/" : { <permission object> },
+              "/folder-one" : {<permisison object>},
+              "/folder-one/sub-folder" : {<permission object>}
+            },
+          "trove" : 
+            {
+              "0v12345.abcde" : { <node object> }
+            }
         }
-    ],
-    "trove": [
-      "/some/path/some-folder": {
-        "0v12345.abcde": { // file/node id
-          "type": "remote",
-          "url": "https://aws.com/file/whatever",
-          "dat": {
-            "from": 32223100, // unix time in seconds
-            "by": "~sampel-palnet",
-            "title": "Readable Filename",
-            "description": "Long description of File...",
-            "extension": ".pdf"
-          }
-        },
-        "0v12345.cdefg": {
-          "type": "record",
-          "url": "https://aws.com/file/whatever",
-          "dat": {
-            "from": 32223100,
-            "by": "~sampel-palnet",
-            "title": "Readable Filename 2",
-            "description": "Long description of File...",
-            "extension": ".txt"
-          }
-        }
-      },
-      "/some/path/some-other-folder": {
-        "0v12345.defgh": {
-          "type": "remote",
-          "url": "https://aws.com/file/whatever",
-          "dat": {
-            "from": 32223100,
-            "by": "~sampel-palnet",
-            "title": "Readable Filename 3",
-            "description": "Long description of File...",
-            "extension": ".jpg"
-          }
-        }
-      }
-    ]
-  }
+    }
 }
 ```
 

@@ -9,7 +9,9 @@
 +$  team
   %-  list
   $:  spat
-      [(set @p) (set @p) (set @p)]
+      administrators=(set @p)
+      moderators=(set @p)
+      members=(set @p)
   ==
 ::
 +$  node    [?(%remote %record) url=cord dat=data:meta]

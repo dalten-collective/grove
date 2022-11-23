@@ -140,12 +140,11 @@
     ``trove-team+!>(`team`[sap admins mods:(get sap) members]~)
   ::
       [%x %teams ~]
-    :+  ~  ~  :-  %trove-team
-    !>  ^-  team
+    =;  tam=team
+      ``trove-team+!>(tam)
     %+  turn  ~(tap in ~(key by troves))
     |=  sap=spat
     =+  to-team:(to-abed:to sap)
-    ^-  [spat (set @p) (set @p) (set @p)]
     [sap [admins mods:(get sap) members]]
   ::
       [%x %regs host=@ space=@ ~]
@@ -606,8 +605,7 @@
         =+  test=p
         ?~  test  %.y
         =|  r=_|
-        |-
-        ?~(p r ?~(q %.n ?.(=(i.p i.q) %.n $(p t.p, q t.q))))
+        |-(?~(p r ?~(q %.n ?.(=(i.p i.q) %.n $(p t.p, q t.q)))))
       ::  +choped: give trail, perms > get changes, regs
       ::
       ++  chopped
