@@ -199,7 +199,7 @@
       %-  pairs
       :~  space+s/(spat p.f)
       ::
-        :-  %add
+        :-  %rem
         %-  frond
         folder+(frond trail+s/(trail trail.q.f))
       ==

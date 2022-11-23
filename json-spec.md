@@ -100,7 +100,7 @@
     either:
 
     ```json
-    NULL
+    null
     ```
 
     or:
@@ -196,6 +196,19 @@ On initial subscription:
     }
 }
 ```
+
+## Spaces Removed
+
+From time to time, a space may be removed - meaning you lost access or deleted it, if it was your own. This will be automatically handled by the backend. The frontend will get a:
+
+```json
+{
+  "remove" :
+    { "space-path" : "~sampel-palnet/test-space" }
+}
+```
+
+On this event, rescry the state or delete the trove or otherwise identify that this trove ceased to exist, for the user (be it their own or someone elses, same result).
 
 ## Requests / Pokes / Scries
 
@@ -360,8 +373,8 @@ mark: `trove-action`
     "edit-node" : {
       "id" : "0v12345.abcde",
       "trail" : "/path/for/file",
-      "tut" : NULL || "new file title",
-      "dus" : NULL || "new file description"
+      "tut" : null || "new file title",
+      "dus" : null || "new file description"
       }
     }
   }
@@ -377,8 +390,8 @@ Will return (on original subscription socket)
     "node" : {
       "id" : "0v12345.abcde",
       "trail" : "/path/for/file",
-      "title" : NULL || "new title", // if null, keep old title
-      "description" : NULL || "new description" // if null, keep old description
+      "title" : null || "new title", // if null, keep old title
+      "description" : null || "new description" // if null, keep old description
   }
 }
 ```
@@ -421,22 +434,7 @@ Include a `pur` object to set permissions on creation:
     "add-folder" : {
       "trail" : "/path/for/file",
       "nam" : "the-folder-name",
-      "pur" : {  // permissions object
-        "files" : {
-          "add" : ["admin", "owner"],
-          "edit" : ["some", "role", "names"],
-          "move" : ["some", "role", "names"],
-          "delete" : ["some", "role", "names"]
-        },
-        "folder" : {
-          "read" : ["admin", "owner"],
-          "add" : ["some", "role", "names"],
-          "edit" : ["some", "role", "names"],
-          "move" : ["some", "role", "names"],
-          "delete" : ["some", "role", "names"],
-          "ch-mod" : ["some", "role", "names"]
-        }
-      }
+      "pur" : { <permission object> }
     }
   }
 }
@@ -467,23 +465,51 @@ Will return
   "add" : {
     "folder" : {
       "trail" : "/path/for/file",
-      "perms" : {  // permissions object, or NULL
-        "files" : {
-          "add" : ["admin", "owner"],
-          "edit" : ["some", "role", "names"],
-          "move" : ["some", "role", "names"],
-          "delete" : ["some", "role", "names"]
-        },
-        "folder" : {
-          "read" : ["admin", "owner"],
-          "add" : ["some", "role", "names"],
-          "edit" : ["some", "role", "names"],
-          "move" : ["some", "role", "names"],
-          "delete" : ["some", "role", "names"],
-          "ch-mod" : ["some", "role", "names"]
-        }
-      }
+      "perms" : null || {<permission object>}
+  }
+}
+```
+---
+
+### Remove folder
+
+mark: `trove-action`
+
+```json
+{
+  "space" : "~sampel-palnet/some-space-name",
+  "poke" : {
+    "rem-folder" : "/path/to/delete"
   }
 }
 ```
 
+Will return
+
+```json
+{
+  "space" : "~sampel-palnet/some-space-name",
+  "rem" : {
+    "folder" : { "trail" : "/path/for/file" }
+}
+```
+---
+
+### Move folder
+
+mark: `trove-action`
+
+```json
+{
+  "space" : "~sampel-palnet/some-space-name",
+  "poke" : {
+    "rem-folder" : {
+      "from" : "/path/to/folder",
+      "to" : "/path/new/folder"  // cannot already exist
+    }
+  }
+}
+```
+
+Returns `add-node` `rem-folder` and `add-folder` as appropriate
+---
