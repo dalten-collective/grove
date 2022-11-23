@@ -148,7 +148,7 @@
 
   ```json
   {
-    "type" : "remote" || "record",
+    "type" : "remote" || "record",  // one or the other
     "url" : "http://ipfs.node/path/to/file",
     "data" :
       {
@@ -176,7 +176,7 @@ On initial subscription:
 ```json
 // initial subscription / full state
 {
-  "version" : "0"
+  "version" : "0",
   "troves" : 
     {
       "~zod/test" : 
@@ -212,22 +212,75 @@ urbitAPI      // however you've instantiated the object
 
 The `json` entry above should take one of the following forms:
 
+### Add Moderators
+
+mark: `trove-action`
+
+> User must be the host
+
+```json
+{
+  "space" : "~sampel-palnet/some-space-name",
+  "poke" : { "add-moderators" : ["~zod", "~wet"] }
+}
+```
+
+Will return (on original subscription socket)
+
+```json
+{
+  "space" : "~sampel-palnet/some-space-name",
+  "add" : {
+    "team" : {
+      "moderators" : ["~zod" "~wet"],  // NOTE: if you send me non-members, they will be removed here - so if you sent ~rabsef and ~rabsef wasn't part of this trove, he won't become a moderator and you'll get an empty set back.
+  }
+}
+```
+---
+
+### Rem Moderators
+
+mark: `trove-action`
+
+> User must be the host
+
+```json
+{
+  "space" : "~sampel-palnet/some-space-name",
+  "poke" : { "rem-moderators" : ["~zod", "~wet"] }
+}
+```
+
+Will return (on original subscription socket)
+
+```json
+{
+  "space" : "~sampel-palnet/some-space-name",
+  "rem" : {
+    "team" : {
+      "moderators" : ["~zod" "~wet"],
+  }
+}
+```
+---
+
+
 ### Add file (node == file)
 
 mark: `trove-action`
 
 ```json
 {
-  "space": "~sampel-palnet/some-space-name",
-  "poke": {
-    "add-node": {
-      "trail": "/path/for/file",
-      "node": {
-        "url": "https://aws.com/myfile",
-        "dat": {
-          "title": "the-filename",
-          "description": "Optional long description",
-          "extension": ".png"
+  "space" : "~sampel-palnet/some-space-name",
+  "poke" : {
+    "add-node" : {
+      "trail" : "/path/for/file",
+      "node" : {
+        "url" : "https://aws.com/myfile",
+        "dat" : {
+          "title" : "the-filename",
+          "description" : "Optional long description",
+          "extension" : ".png"
         }
       }
     }
@@ -239,20 +292,20 @@ Will return (on original subscription socket)
 
 ```json
 {
-  "space": "~sampel-palnet/some-space-name",
-  "add": {
-    "node": {
-      "trail": "/path/for/file",
-      "node": {
-        "0v23456.abcde": {
-          "type": "remote",
-          "url": "https://aws.com/myfile",
-          "dat": {
-            "from": 32223100,
-            "by": "~sampel-palnet",
-            "title": "the-filename",
-            "description": "Optional long description",
-            "extension": ".png"
+  "space" : "~sampel-palnet/some-space-name",
+  "add" : {
+    "node" : {
+      "trail" : "/path/for/file",
+      "node" : {
+        "0v23456.abcde" : {
+          "type" : "remote",
+          "url" : "https://aws.com/myfile",
+          "dat" : {
+            "from" : 32223100,
+            "by" : "~sampel-palnet",
+            "title" : "the-filename",
+            "description" : "Optional long description",
+            "extension" : ".png"
           }
         }
       }
@@ -260,20 +313,20 @@ Will return (on original subscription socket)
 }
 ```
 ---
+
 ### Remove file (node == file)
 
 mark: `trove-action`
 
-> Only send extant files, please.
-> Only send when you have delete files permissions @ that folder level, please.
+> ID must exist, User must have `delete:file` permissions @ that folder
 
 ```json
 {
-  "space": "~sampel-palnet/some-space-name",
-  "poke": {
-    "rem-node": {
-      "id": "0v12345.abcde",
-      "trail": "/path/for/file"
+  "space" : "~sampel-palnet/some-space-name",
+  "poke" : {
+    "rem-node" : {
+      "id" : "0v12345.abcde",
+      "trail" : "/path/for/file"  // this is a folder
       }
     }
   }
@@ -284,14 +337,75 @@ Will return (on original subscription socket)
 
 ```json
 {
-  "space": "~sampel-palnet/some-space-name",
-  "rem": {
-    "node": {
-      "trail": "/path/for/file",
-      "id": "0v12345.abcde"
+  "space" : "~sampel-palnet/some-space-name",
+  "rem" : {
+    "node" : {
+      "trail" : "/path/for/file",
+      "id" : "0v12345.abcde"
   }
 }
 ```
+---
+
+### Edit file (node == file)
+
+mark: `trove-action`
+
+> ID must exist, User must have `edit:file` permissions @ that folder
+
+```json
+{
+  "space" : "~sampel-palnet/some-space-name",
+  "poke" : {
+    "edit-node" : {
+      "id" : "0v12345.abcde",
+      "trail" : "/path/for/file",
+      "tut" : NULL || "new file title",
+      "dus" : NULL || "new file description"
+      }
+    }
+  }
+}
+```
+
+Will return (on original subscription socket)
+
+```json
+{
+  "space" : "~sampel-palnet/some-space-name",
+  "upd" : {
+    "node" : {
+      "id" : "0v12345.abcde",
+      "trail" : "/path/for/file",
+      "title" : NULL || "new title", // if null, keep old title
+      "description" : NULL || "new description" // if null, keep old description
+  }
+}
+```
+---
+
+### Move file (node == file)
+
+mark: `trove-action`
+
+> ID must exist, User must have `move:file` perms @ `from`, `add:file` perms @ `to`.
+> `to` must already exist
+
+```json
+{
+  "space" : "~sampel-palnet/some-space-name",
+  "poke" : {
+    "move-node" : {
+      "id" : "0v12345.abcde",
+      "from" : "/path/to/file",
+      "to" : "/new/folder/path"
+      }
+    }
+  }
+}
+```
+
+Returns Add Nodes and Remove Nodes as appropriate.
 ---
 
 ### Add folder
@@ -302,25 +416,25 @@ Include a `pur` object to set permissions on creation:
 
 ```json
 {
-  "space": "~sampel-palnet/some-space-name",
-  "poke": {
-    "add-folder": {
-      "trail": "/path/for/file",
-      "nam": "the-folder-name",
-      "pur": {  // permissions object
-        "files": {
-          "add": ["admin", "owner"],
-          "edit": ["some", "role", "names"],
-          "move": ["some", "role", "names"],
-          "delete": ["some", "role", "names"]
+  "space" : "~sampel-palnet/some-space-name",
+  "poke" : {
+    "add-folder" : {
+      "trail" : "/path/for/file",
+      "nam" : "the-folder-name",
+      "pur" : {  // permissions object
+        "files" : {
+          "add" : ["admin", "owner"],
+          "edit" : ["some", "role", "names"],
+          "move" : ["some", "role", "names"],
+          "delete" : ["some", "role", "names"]
         },
-        "folder": {
-          "read": ["admin", "owner"],
-          "add": ["some", "role", "names"],
-          "edit": ["some", "role", "names"],
-          "move": ["some", "role", "names"],
-          "delete": ["some", "role", "names"],
-          "ch-mod": ["some", "role", "names"]
+        "folder" : {
+          "read" : ["admin", "owner"],
+          "add" : ["some", "role", "names"],
+          "edit" : ["some", "role", "names"],
+          "move" : ["some", "role", "names"],
+          "delete" : ["some", "role", "names"],
+          "ch-mod" : ["some", "role", "names"]
         }
       }
     }
@@ -333,12 +447,12 @@ pass a `null` for `pur`:
 
 ```json
 {
-  "space": "~sampel-palnet/some-space-name",
-  "poke": {
-    "add-folder": {
-      "trail": "/path/for/file",
-      "nam": "the-folder-name",
-      "pur": null
+  "space" : "~sampel-palnet/some-space-name",
+  "poke" : {
+    "add-folder" : {
+      "trail" : "/path/for/file",
+      "nam" : "the-folder-name",
+      "pur" : null
     }
   }
 }
@@ -349,24 +463,24 @@ Will return
 
 ```json
 {
-  "space": "~sampel-palnet/some-space-name",
-  "add": {
-    "folder": {
-      "trail": "/path/for/file",
-      "perms": {  // permissions object, or NULL
-        "files": {
-          "add": ["admin", "owner"],
-          "edit": ["some", "role", "names"],
-          "move": ["some", "role", "names"],
-          "delete": ["some", "role", "names"]
+  "space" : "~sampel-palnet/some-space-name",
+  "add" : {
+    "folder" : {
+      "trail" : "/path/for/file",
+      "perms" : {  // permissions object, or NULL
+        "files" : {
+          "add" : ["admin", "owner"],
+          "edit" : ["some", "role", "names"],
+          "move" : ["some", "role", "names"],
+          "delete" : ["some", "role", "names"]
         },
-        "folder": {
-          "read": ["admin", "owner"],
-          "add": ["some", "role", "names"],
-          "edit": ["some", "role", "names"],
-          "move": ["some", "role", "names"],
-          "delete": ["some", "role", "names"],
-          "ch-mod": ["some", "role", "names"]
+        "folder" : {
+          "read" : ["admin", "owner"],
+          "add" : ["some", "role", "names"],
+          "edit" : ["some", "role", "names"],
+          "move" : ["some", "role", "names"],
+          "delete" : ["some", "role", "names"],
+          "ch-mod" : ["some", "role", "names"]
         }
       }
   }
