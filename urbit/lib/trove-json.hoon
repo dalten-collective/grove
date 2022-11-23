@@ -166,6 +166,8 @@
         ==
       ==
     ::
+      %move-node  !!
+    ::
         %edit-node
       %-  pairs
       :~  space+s/(spat p.f)
@@ -179,8 +181,6 @@
             description+?~(dus.q.f ~ s/u.dus.q.f)
         ==
       ==
-    ::
-      %move-node  !!
     ::
         %add-folder
       %-  pairs

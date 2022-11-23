@@ -3,7 +3,7 @@
 +$  spat    (pair ship cord)
 ::
 +$  id      @uvTROVE
-+$  team    [admins=(set @p) moderators=(set @p) members=(set @p)]
++$  mods    (set @p)
 +$  regs    (map trail perm)
 +$  role    ?(%member %admin %moderator)
 ::

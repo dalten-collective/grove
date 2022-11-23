@@ -1,10 +1,8 @@
 ::
 ::  TODO: 
-::  + scries
-::    - permission @ depth
-::    - list of possible permission strings
-::    - 
-::  + dejs
+::  + remove admin, member, from team
+::  + install scries to determine admin, member
+::  + update this everywhere and tell seth
 /-  *trove, m=membership, s=spaces-store, v=visas
 /+   dbug, default-agent, verb
 |%
@@ -13,7 +11,7 @@
 ::
 +$  state-0
   $:  %0
-      troves=(map spat [=team =regs =trove])
+      troves=(map spat [=mods =regs =trove])
   ==
 ::
 ::
@@ -104,9 +102,7 @@
     now  (scot %da now.bol)
 ++  emit  |=(=card dat(dek [card dek]))
 ++  emil  |=(lac=(list card) dat(dek (welp lac dek)))
-++  abet
-  ^-  (quip card _state)
-  [(flop dek) state]
+++  abet  ^-((quip card _state) [(flop dek) state])
 ::  +show: send web-ui fact
 ::
 ++  show  |=(cag=cage (emit %give %fact [/web-ui]~ cag))
@@ -130,7 +126,7 @@
 ++  peek
   |=  pol=(pole knot)
   ^-  (unit (unit cage))
-  =*  get-trove  ~(got by troves)
+  =*  get  ~(got by troves)
   ?+    pol  !!
       [%x %state ~]
     ``trove-state-0+!>(state)
@@ -139,21 +135,23 @@
     ``trove-spaces+!>(`(list spat)`~(tap in ~(key by troves)))
   ::
       [%x %team host=@ space=@ ~]
-    ``trove-team+!>(team:(get-trove [(slav %p host.pol) space.pol]))
+    =+  sap=[(slav %p host.pol) space.pol]
+    =+  to-team:(to-abed:to sap)
+    ``trove-team+!>([admins mods:(get sap) members])
   ::
       [%x %regs host=@ space=@ ~]
-    ``trove-regs+!>(regs:(get-trove [(slav %p host.pol) space.pol]))
+    ``trove-regs+!>(regs:(get [(slav %p host.pol) space.pol]))
   ::
       [%x %folder host=@ space=@ rest=*]
-    =+  tov=trove:(get-trove [(slav %p host.pol) space.pol])
-    ``trove-trecht+!>(`(unit tract)`(~(get of `trove`tov) rest.pol))
+    =+  tov=trove:(get [(slav %p host.pol) space.pol])
+    ``trove-trecht+!>((~(get of `trove`tov) rest.pol))
   ::
       [%x %folder %perms host=@ space=@ rest=*]
     =+  spa=[(slav %p host.pol) space.pol]
     ``trove-perm+!>(`perm`(to-perm:(to-abed:to spa) rest.pol))
   ::
       [%x %node host=@ space=@ id=@ rest=*]
-    =+  tov=trove:(get-trove [(slav %p host.pol) space.pol])
+    =+  tov=trove:(get [(slav %p host.pol) space.pol])
     ?~  hav=(~(get of `trove`tov) rest.pol)  !!
     ``trove-node+!>(`node`(~(got by u.hav) (slav %uv id.pol)))
   ==
@@ -196,6 +194,7 @@
       ::
           %watch-ack
         ?~  p.sig  `state
+        ~&  >>  ["watch-ack del" u.p.sig]
         `state(troves (~(del by troves) sap))
       ::
           %fact
@@ -204,6 +203,7 @@
         to-abet:(to-poke:(to-abed:to p.act) act)
       ==
     ==
+  ~&  >>>  [%dude-eng troves]
   (emil cards)
 ::  +poke: handle on-poke
 ::
@@ -230,7 +230,11 @@
   ++  sa-emit  |=(c=card sa(caz [c caz]))
   ++  sa-emil  |=(lc=(list card) sa(caz (welp lc caz)))
   ++  sa-abet  ^-((quip card _state) [(flop caz) state])
+  ::  +sa-tire: to-wire without the trouble of reaching.
+  ::  
+  ++  sa-tire  =+((need sup) `path`/(scot %p p)/(scot %t q))
   ::  +sa-show: send web-ui fact
+  ::
   ++  sa-show
     |=(cag=cage (sa-emit %give %fact [/web-ui]~ cag))
   ::  +sa-view: watch spaces on /updates
@@ -257,18 +261,20 @@
   ++  sa-kill
     ^+  sa
     =+  sap=(need sup)
-    =+  wir=`path`/(scot %p p.sap)/[q.sap]
+    =+  wir=sa-tire
     =/  wires=[path path path]
       =+  head=?:(=(our.bol p.sap) %trove %from)
       :+  head^wir
         head^(snoc wir %admin)
       head^(snoc wir %moderator)
     ?:  =(our.bol p.sap)
+      ~&  >>  "kill our-bol del"
       =.  troves  (~(del by troves) sap)
       %-  sa-emit:(sa-show spaces-reaction+!>([%remove sap]))
       [%give %kick [-.wires +<.wires +>.wires ~] ~]
     =*  cad
       |=(p=path [%pass p %agent [p.sap %trove] %leave ~])
+    ~&  >>  "kill not-our-bol del"
     =.  troves  (~(del by troves) sap)
     %-  sa-emil:(sa-show spaces-reaction+!>([%remove sap]))
     [(cad -.wires) (cad +<.wires) (cad +>.wires) ~]
@@ -277,58 +283,45 @@
   ++  sa-make
     ^+  sa
     =+  sap=(need sup)
+    =+  pat=sa-tire
     ?:  &(=(our.bol p.sap) (~(has by troves) sap))  sa
-    =;  tru=[team regs trove]
+    =;  tru=[regs trove]
       ?:  =(our.bol p.sap)
-        sa(troves (~(put by troves) sap tru))
+        sa(troves (~(put by troves) sap ~ tru))
       =+  der=[p.sap %trove]
       =*  pem  ~(has in roles:(~(got by mem) our.bol))
-      =/  pat=path  /(scot %p p.sap)/[q.sap]
       =?    sa
           ?&  (pem %admin)
-          ::
-            ?!  %-  ~(has in wex.bol)
-            :_  [%.y trove+(snoc pat %admin)]
-            [from+(snoc pat %admin) p.sap dap.bol]
+            ::
+              ?!  %-  ~(has in wex.bol)
+              :_  [%.y trove+(snoc pat %admin)]
+              [from+(snoc pat %admin) p.sap dap.bol]
           ==
         %-  sa-emit
         :+  %pass  from+(snoc pat %admin)
         [%agent der %watch trove+(snoc pat %admin)]
       ::
       ?.  ?&  |((pem %member) (pem %admin))
-          ::
-            ?!  %-  ~(has in wex.bol)
-            [[from+pat p.sap dap.bol] [%.y trove+pat]]
+            ::
+              ?!  %-  ~(has in wex.bol)
+              [[from+pat p.sap dap.bol] [%.y trove+pat]]
           ==
         sa
-      %-  sa-emit
+      %-  sa-emit(troves (~(put by troves) sap ~ tru))
       [%pass from+pat %agent der %watch trove+pat]
     ::
-    :*
-      ^-  team
-      %-  ~(rep by mem)
-      |=  [[s=ship m=member:m] t=team]
-      ?:  &(=(our.bol p.sap) =(our.bol s))  t
-      ?:  (~(has in roles.m) %admin)
-        %=  t
-          admins   (~(put in admins.t) s)
-          members  (~(put in members.t) s)
-        ==
-      ?.  (~(has in roles.m) %member)  t
-      t(members (~(put in members.t) s))
-    ::
-      ^-  regs
-      ?.  =(our.bol p.sap)  *regs
-      %-  ~(put by *regs)
-      [/ [%0 [adm adm adm adm] [mam adm adm adm adm ~]]]
-    ::
-      *trove
-    ==
+    :_  *trove
+    ^-  regs
+    ?.  =(our.bol p.sap)  *regs
+    %-  ~(put by *regs)
+    [/ [%0 [adm adm adm adm] [mam adm adm adm adm ~]]]
   ::  +sa-dude: handle spaces-reaction marks
   ::
   ++  sa-dude
     |=  [mar=mark vaz=vase]
     ?+    mar  ~|(bad-dude-mark/mar !!)
+      %visa-reaction  sa
+    ::
         %spaces-reaction
       =/  act=reaction:s  !<(reaction:s vaz)
       ?+    -.act  sa
@@ -337,68 +330,34 @@
       ::
           %add
         sa-make(sup `path.space.act, mem members.act)
-      ==
-    ::
-        %visa-reaction
-      =/  act=reaction:v  !<(reaction:v vaz)
-      ?+    -.act  sa
-          %kicked
-        ?:  =(our.bol ship.act)
-          sa(troves (~(del by troves) path.act))
-        =+  tov=(~(got by troves) path.act)
-        %=    sa
-            troves
-          %+  ~(put by troves)  path.act
-          %=  tov
-              admins.team
-            (~(del in admins.team.tov) ship.act)
-          ::
-              members.team
-            (~(del in members.team.tov) ship.act)
-          ::
-              moderators.team
-            (~(del in moderators.team.tov) ship.act)
-          ==
-        ==
       ::
-          %invite-accepted
+          %remote-space
         =/  sap=(pair ship cord)  path.act
-        =/  pat=path  /(scot %p p.sap)/[q.sap]
+        =+  pat=sa-tire(sup `sap)
         =+  der=[p.sap %trove]
-        =+  tov=(~(got by troves) path.act)
-        =+  is-admin=(~(has in roles.member.act) %admin)
-        =+  is-member=(~(has in roles.member.act) %member)
+        =+  neu=[*mods *regs *trove]
+        ?~  us=(~(get by members.act) our.bol)  sa
+        =+  roles=roles.u.us
+        =+  is-admin=(~(has in roles) %admin)
+        =+  is-member=(~(has in roles) %member)
         =?    sa
-            ?&  &(=(our.bol ship.act) is-admin)
-            ::
-              ?!  %-  ~(has in wex.bol)
-                  :_  [%.y trove+(snoc pat %admin)]
-                  [from+(snoc pat %admin) p.sap dap.bol]
-            ==
-          %-  sa-emit
-          :+  %pass  from+(snoc pat %admin)
-          [%agent der %watch trove+(snoc pat %admin)]
-        =?    sa
-            ?&  &(=(our.bol ship.act) |(is-member is-admin))
+            ?&  |(is-member is-admin)
             ::
               ?!  %-  ~(has in wex.bol)
               [[from+pat p.sap dap.bol] [%.y trove+pat]]
             ==
           %-  sa-emit
           [%pass from+pat %agent der %watch trove+pat]
-        %=    sa
-            troves
-          %+  ~(put by troves)  sap
-          %=  tov
-              admins.team
-            ?.  is-admin  admins.team.tov
-            (~(put in admins.team.tov) ship.act)
-          ::
-              members.team
-            ?.  |(is-admin is-member)  members.team.tov
-            (~(put in members.team.tov) ship.act)
-          ==
-        ==
+        ?.  ?&  is-admin
+            ::
+              ?!  %-  ~(has in wex.bol)
+                  :_  [%.y trove+(snoc pat %admin)]
+                  [from+(snoc pat %admin) p.sap dap.bol]
+            ==
+          sa(troves (~(put by troves) sap neu))
+        %-  sa-emit(troves (~(put by troves) sap neu))
+        :+  %pass  from+(snoc pat %admin)
+        [%agent der %watch trove+(snoc pat %admin)]
       ==
     ==
   --
@@ -406,24 +365,40 @@
 ::
 ++  to
   |_  $:  sup=(unit spat)
-          tam=team
+          mod=mods
           rag=regs
           tov=trove
           caz=(list card)
           ewe=(set role)
       ==
+  +*  space  /(scot %p our.bol)/spaces/(scot %da now.bol)
   ++  to  .
   ++  to-emit  |=(c=card to(caz [c caz]))
   ++  to-emil  |=(lc=(list card) to(caz (welp lc caz)))
   ++  to-abet  ^-((quip card _state) [(flop caz) state])
   ++  to-show  |=(cag=cage (to-emit %give %fact [/web-ui]~ cag))
+  ++  to-wire  =+((need sup) `path`/(scot %p p)/(scot %t q))
+  ::
+  ++  to-team
+    ^-  [admins=(set @p) members=(set @p)]
+    =+  (need sup)
+    =+  teath=/(scot %p p)/[q]/members/noun
+    %-  %~  rep  by
+        ^-  (map ship member:m)
+        =-  ?>(?=([%members *] -) members:-)
+        .^(view:m %gx (weld space teath))
+    |=  [[k=ship v=member:m] [adm=(set @p) mem=(set @p)]]
+    =+  has=~(has in roles.v)
+    ?.  |(?=(%joined status.v) ?=(%host status.v))  [adm mem]
+    :-  ?.(|((has %admin) (has %owner)) adm (~(put in adm) k))
+    ?.(|((has %admin) (has %owner) (has %member)) mem (~(put in mem) k))
   ::
   ++  to-abed
     |=  sap=spat
     =+  have=(~(got by troves) sap)
     %=  to
       sup  `sap
-      tam  team.have
+      mod  mods.have
       rag  regs.have
       tov  trove.have
     ==
@@ -432,7 +407,7 @@
     ^+  to
     =+  sap=(need sup)
     =+  dok=[p.sap %trove]
-    =+  wir=`path`/(scot %p p.sap)/[q.sap]
+    =+  wir=to-wire
     =/  mem=(list card)
       [%pass from+wir %agent dok %watch trove+wir]~
     =?    mem
@@ -471,7 +446,7 @@
         =(~ (~(dif in delete.folder.q) delete.folder.p))
         =(~ (~(dif in ch-mod.folder.q) ch-mod.folder.p))
     ==
-      ::
+  ::  
   ::  +to-cher: share with your subscribers
   ::
   ++  to-cher
@@ -479,7 +454,7 @@
     ^+  to
     ?~  how  (to-emit %give %fact ~ cag)
     =+  sap=(need sup)
-    =+  sal=/(scot %p p.sap)/[q.sap]
+    =+  sal=to-wire
     =+  wir=:(welp /trove sal (need how))
     (to-emit %give %fact [wir]~ cag)
   ::  +to-send: send instructions to the host
@@ -488,7 +463,8 @@
     |=  [p=spat q=poke:^poke]
     ^+  to
     =+  dok=[p.p %trove]
-    =+  wir=/action/(scot %p p.p)/[q.p]/[-.q]/(scot %da now.bol)
+    =/  wir=path
+      /action/(scot %p p.p)/(scot %t q.p)/[-.q]/(scot %da now.bol)
     %-  to-emit
     :^  %pass  wir  %agent
     [dok %poke %trove-action !>(`action:^poke`[p q])]
@@ -496,16 +472,16 @@
   ::
   ++  to-your
     =+  sap=(need sup)
+    =+  to-team
     %=  to
         ewe
       =?    ewe
-          (~(has in admins.tam) src.bol)
+          (~(has in admins) src.bol)
         (~(put in ewe) %admin)
       =?    ewe
-          (~(has in members.tam) src.bol)
+          (~(has in members) src.bol)
         (~(put in ewe) %member)
-      ?.  (~(has in moderators.tam) src.bol)  ewe
-      (~(put in ewe) %moderator)
+      ?.((~(has in mod) src.bol) ewe (~(put in ewe) %moderator))
     ==
   ::  +to-poke: handle pokes and facts, indiscriminately
   ::
@@ -521,7 +497,7 @@
       %=    to-show
           troves
         %+  ~(put by troves)  sap
-        :+  tam
+        :+  mod
           (~(uni by rag) p.q.f)
         =/  neu=(list [p=path t=tract])
           ~(tap of `trove`q.q.f)
@@ -534,30 +510,29 @@
             tew
           ?~  got=(~(get of `trove`tew) p.i.neu)
             (~(put of `trove`tew) p.i.neu t.i.neu)
-          %+  ~(put of `trove`tew)  p.i.neu
-          (~(uni by u.got) t.i.neu)
+          (~(put of `trove`tew) p.i.neu (~(uni by u.got) t.i.neu))
         ==
       ==
     ::
         %add-moderators
       ?>  =(p.sap src.bol)
-      =.  moderators.tam
-        (~(uni in moderators.tam) +.q.f)
-      =.  troves  (~(put by troves) sap [tam rag tov])
+      =.  +.q.f
+        =+  to-team
+        %-  sy  %+  murn
+          ~(tap in +.q.f)
+        |=(p=@p ?.((~(has in members) p) ~ `p))
+      =.  troves
+        (~(put by troves) sap [(~(uni in mod) +.q.f) rag tov])
       =~  [f=f sap=sap (to-show trove-fact+!>(f))]
-          ?.  =(our.bol p.sap)  to
-          (to-cher `*path trove-fact+!>(f))
+          ?.(=(our.bol p.sap) to (to-cher `*path trove-fact+!>(f)))
       ==
     ::
         %rem-moderators
       ?>  =(p.sap src.bol)
-      =.  moderators.tam
-        %-  ~(rep in +.q.f)
-        |=([p=ship m=_moderators.tam] (~(del in m) p))
-      =.  troves  (~(put by troves) sap [tam rag tov])
+      =.  troves
+        (~(put by troves) sap [(~(dif in mod) +.q.f) rag tov])
       =~  [f=f sap=sap (to-show trove-fact+!>(f))]
-          ?.  =(our.bol p.sap)  to
-          (to-cher `*path trove-fact+!>(f))
+          ?.(=(our.bol p.sap) to (to-cher `*path trove-fact+!>(f)))
       ==
     ::
         %reperm
@@ -577,7 +552,7 @@
           %=    to-show
               troves
             %+  ~(put by troves)  sap
-            [tam (~(del by rag) trail.q.f) tov]
+            [mod (~(del by rag) trail.q.f) tov]
           ==
         ::  an instruction to our trove
         ?~  pur.q.f
@@ -590,7 +565,7 @@
           ==
         =+  (chopped trail.q.f u.pur.q.f)
         =.  troves
-          (~(put by troves) sap [tam r tov])
+          (~(put by troves) sap [mod r tov])
         =~  [(combine p.f l %member to) p=p.f l=l combine=combine]
             [(combine p l %admin to) p=p l=l combine=combine]
             (combine p l %moderator to)
@@ -624,7 +599,7 @@
         =|  r=_|
         |-
         ?~(p r ?~(q %.n ?.(=(i.p i.q) %.n $(p t.p, q t.q))))
-      ::  +choped: give trail, perms, check subordinates
+      ::  +choped: give trail, perms > get changes, regs
       ::
       ++  chopped
         |=  [t=trail p=perm]
@@ -633,9 +608,9 @@
           [l (~(put by r) [`trail`t `perm`p])]
         %+  ~(rib by rag)  *(list trail)
         |=  [[k=trail v=perm] o=(list trail)]
-        ?.  (prefix t k)  [o k v]   ::  ( ͡° ͜ʖ( ͡° ͜ʖ ͡°)
-        ?:  (fits p v)    [o k v]   ::    ( ͡°( ͡° ͜ʖ ͡°) ͡°)
-        [`(list trail)`[k o] k (screwed p v)]     ::       ( ͡° ͜ʖ ͡°)
+        ?.  (prefix t k)  [o k v]                       ::  ( ͡° ͜ʖ( ͡° ͜ʖ ͡°)
+        ?:  (fits p v)    [o k v]                       ::    ( ͡°( ͡° ͜ʖ ͡°) ͡°)
+        [`(list trail)`[k o] k (screwed p v)]           ::       ( ͡° ͜ʖ ͡°)
       ::  +screwed: parent perms, kid perms, make em fit
       ::
       ++  screwed
@@ -643,32 +618,17 @@
         ^-  perm
         :+  %0
           ::
-          :^    %-  ~(del in add.files.q)
-                (~(dif in add.files.q) add.files.p)
-              %-  ~(del in edit.files.q)
-              (~(dif in edit.files.q) edit.files.p)
-            %-  ~(del in move.files.q)
-            (~(dif in move.files.q) move.files.p)
-          %-  ~(del in delete.files.q)
-          (~(dif in delete.files.q) delete.files.p)
+          :^    (~(del in add.files.q) (~(dif in add.files.q) add.files.p))
+              (~(del in edit.files.q) (~(dif in edit.files.q) edit.files.p))
+            (~(del in move.files.q) (~(dif in move.files.q) move.files.p))
+          (~(del in delete.files.q) (~(dif in delete.files.q) delete.files.p))
         ::
-        :*    %-  ~(del in read.folder.q)
-              (~(dif in read.folder.q) read.folder.p)
-            ::
-              %-  ~(del in add.folder.q)
-              (~(dif in add.folder.q) add.folder.p)
-            ::
-              %-  ~(del in edit.folder.q)
-              (~(dif in edit.folder.q) edit.folder.p)
-            ::
-              %-  ~(del in move.folder.q)
-              (~(dif in move.folder.q) move.folder.p)
-            ::
-              %-  ~(del in delete.folder.q)
-              (~(dif in delete.folder.q) delete.folder.p)
-            ::
-              %-  ~(del in ch-mod.folder.q)
-              (~(dif in ch-mod.folder.q) ch-mod.folder.p)
+        :*  (~(del in read.folder.q) (~(dif in read.folder.q) read.folder.p))
+            (~(del in add.folder.q) (~(dif in add.folder.q) add.folder.p))
+            (~(del in edit.folder.q) (~(dif in edit.folder.q) edit.folder.p))
+            (~(del in move.folder.q) (~(dif in move.folder.q) move.folder.p))
+            (~(del in delete.folder.q) (~(dif in delete.folder.q) delete.folder.p))
+            (~(del in ch-mod.folder.q) (~(dif in ch-mod.folder.q) ch-mod.folder.p))
         ==
       --
     ::
@@ -697,7 +657,7 @@
       =+  uvt=`@uvTROVE`(sham to.q.f nod)
       =.  troves
         %+  ~(put by troves)  sap
-        :+  tam  rag
+        :+  mod  rag
         %+  ~(put of `trove`tov)  q.to.q.f
         (~(put by ?~(des *tract u.des)) [uvt nod])
       =;  tu=_to
@@ -729,7 +689,7 @@
         =+  ole=?~(h=hav *tract u.h)
         =.  troves
           %+  ~(put by troves)  sap
-          :+  tam  rag
+          :+  mod  rag
           %-  ~(put of `trove`tov)
           [trail.q.f (~(put by ole) id.q.f node.q.f)]
         (to-show trove-fact+!>(f))
@@ -744,7 +704,7 @@
         [%remote +.node.q.f]
       =.  troves
         %+  ~(put by troves)  sap
-        :+  tam  rag
+        :+  mod  rag
         %+  ~(put of `trove`tov)  trail.q.f
         (~(put by ?~(hav *tract u.hav)) [id.q.f node.q.f])
       %-  ~(rep in read.folder.perms)
@@ -778,7 +738,7 @@
       %=    to-show
           troves
         %+  ~(put by troves)  sap
-        :+  tam  rag
+        :+  mod  rag
         %-  ~(put of `trove`tov)
         [trail.q.f (~(del by hav) id.q.f)]
       ==
@@ -808,7 +768,7 @@
         %=  to-show
             troves
           %+  ~(put by troves)  sap
-          :+  tam  rag
+          :+  mod  rag
           %+  ~(put of `trove`tov)  trail.q.f
           (~(put by hav) id.q.f fil)
         ==
@@ -823,7 +783,7 @@
         ==
       =.  troves
         %+  ~(put by troves)  sap
-        :+  tam  rag
+        :+  mod  rag
         %+  ~(put of `trove`tov)  trail.q.f
         (~(put by hav) id.q.f fil)
       %-  ~(rep in read.folder.perms)
@@ -834,7 +794,7 @@
     ::
         %move-node
       =+  hav=(need (~(get of `trove`tov) from.q.f))
-      =+  des=(~(get of `trove`tov) to.q.f)
+      =+  des=(need (~(get of `trove`tov) to.q.f))
       =+  fer=(to-perm from.q.f)
       =+  ter=(to-perm to.q.f)
       =+  nod=(~(got by hav) id.q.f)
@@ -862,12 +822,12 @@
       =+  uvt=`@uvTROVE`(sham to.q.f nod)
       =.  troves
         %+  ~(put by troves)  sap
-        :+  tam  rag
+        :+  mod  rag
         %.  [from.q.f (~(del by hav) id.q.f)]
         %~  put  of
         ^-  trove
         %+  ~(put of `trove`tov)  to.q.f
-        (~(put by ?~(des *tract u.des)) [uvt nod])
+        (~(put by des) [uvt nod])
       =/  tu=_to
         %-  ~(rep in read.folder.fer)
         |=  [r=role o=_to]
@@ -906,7 +866,7 @@
         %=    to-show
             troves
           %+  ~(put by troves)  sap
-          :+  tam
+          :+  mod
             ?~(p=pur.q.f rag (~(put by rag) trail.q.f u.p))
           (~(put of `trove`tov) trail.q.f *tract)
         ==
@@ -914,7 +874,7 @@
       ?>  ?~(p=pur.q.f %.y (fits perms u.p))
       =.  troves
         %+  ~(put by troves)  sap
-        :+  tam
+        :+  mod
           ?~(p=pur.q.f rag (~(put by rag) trail.q.f u.p))
         (~(put of `trove`tov) trail.q.f *tract)
       %-  %~  rep  in
@@ -943,13 +903,13 @@
         %=    to-show
             troves
           %+  ~(put by troves)  sap
-          :+  tam  (~(del by rag) trail.q.f)
+          :+  mod  (~(del by rag) trail.q.f)
           (~(lop of `trove`tov) trail.q.f)
         ==
       ::  an instruction to our trove
       =.  troves
         %+  ~(put by troves)  sap
-        :+  tam  (~(del by rag) trail.q.f)
+        :+  mod  (~(del by rag) trail.q.f)
         (~(lop of `trove`tov) trail.q.f)
       %-  ~(rep in read.folder.perms)
       |=  [r=role o=_to]
@@ -977,7 +937,7 @@
       =;  tu=_to
         =.  troves
           %+  ~(put by troves)  sap
-          :+  tam  rag
+          :+  mod  rag
           (~(put of `trove`tov) to.q.f hav)
         %-  ~(rep in read.folder.ter)
         |=  [r=role t=_to]
@@ -1019,9 +979,10 @@
         [%admin ~]      %admin
         [%moderator ~]  %moderator
       ==
-    ?>  ?|  ?.(=(%admin wat) | (~(has in admins.tam) src.bol))
-            ?.(=(%member wat) | (~(has in members.tam) src.bol))
-            ?.(=(%moderator wat) | (~(has in moderators.tam) src.bol))
+    =+  to-team
+    ?>  ?|  ?.(=(%admin wat) | (~(has in admins) src.bol))
+            ?.(=(%member wat) | (~(has in members) src.bol))
+            ?.(=(%moderator wat) | (~(has in mod) src.bol))
         ==
     |^  stat
     ::
