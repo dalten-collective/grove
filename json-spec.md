@@ -97,6 +97,7 @@
 - `/x/folder/<host-ship>/<space-name>/<folder-path>/json`
   * you must provide the ship name, space name **AND** folder path
   * response:
+  
     either:
 
     ```json
@@ -340,7 +341,6 @@ mark: `trove-action`
     "rem-node" : {
       "id" : "0v12345.abcde",
       "trail" : "/path/for/file"  // this is a folder
-      }
     }
   }
 }
