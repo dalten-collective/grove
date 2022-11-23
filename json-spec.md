@@ -247,6 +247,7 @@ Will return (on original subscription socket)
   "add" : {
     "team" : {
       "moderators" : ["~zod" "~wet"],  // NOTE: if you send me non-members, they will be removed here - so if you sent ~rabsef and ~rabsef wasn't part of this trove, he won't become a moderator and you'll get an empty set back.
+    }
   }
 }
 ```
@@ -323,6 +324,7 @@ Will return (on original subscription socket)
           }
         }
       }
+    }
   }
 }
 ```
@@ -355,6 +357,7 @@ Will return (on original subscription socket)
     "node" : {
       "trail" : "/path/for/file",
       "id" : "0v12345.abcde"
+    }
   }
 }
 ```
@@ -465,6 +468,7 @@ Will return
     "folder" : {
       "trail" : "/path/for/file",
       "perms" : null || {<permission object>}
+    }
   }
 }
 ```
@@ -490,6 +494,7 @@ Will return
   "space" : "~sampel-palnet/some-space-name",
   "rem" : {
     "folder" : { "trail" : "/path/for/file" }
+  }
 }
 ```
 ---
