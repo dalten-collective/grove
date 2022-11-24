@@ -1,20 +1,14 @@
 ::
-::  TODO: 
-::  + remove admin, member, from team
-::  + install scries to determine admin, member
-::  + update this everywhere and tell seth
+::  trove - a pirate's booty.
+::        - for holium, w/ love
+::        - by quartus
 /-  *trove, m=membership, s=spaces-store, v=visas
 /+   dbug, default-agent, verb
 |%
 ::
 +$  versioned-state  $%(state-0)
 ::
-+$  state-0
-  $:  %0
-      troves=(map spat [=mods =regs =trove])
-  ==
-::
-::
++$  state-0  [%0 troves=(map spat [=mods =regs =trove])]
 ::  boilerplate
 ::
 +$  card  card:agent:gall
@@ -35,8 +29,7 @@
   ++  on-init
     ^-  (quip card _this)
     ~>  %bout.[0 '%trove +on-init']
-    =^  cards  state
-      abet:init:eng
+    =^  cards  state  abet:init:eng
     [cards this]
   ::
   ++  on-save
@@ -48,16 +41,14 @@
     |=  ole=vase
     ~>  %bout.[0 '%trove +on-load']
     ^-  (quip card _this)
-    =^  cards  state
-      abet:(load:eng ole)
+    =^  cards  state  abet:(load:eng ole)
     [cards this]
   ::
   ++  on-poke
     |=  [mar=mark vaz=vase]
     ~>  %bout.[0 '%trove +on-poke']
     ^-  (quip card _this)
-    =^  cards  state
-      abet:(poke:eng mar vaz)
+    =^  cards  state  abet:(poke:eng mar vaz)
     [cards this]
   ::
   ++  on-peek
@@ -70,9 +61,7 @@
     |=  [wir=wire sig=sign:agent:gall]
     ~>  %bout.[0 '%trove +on-agent']
     ^-  (quip card _this)
-    =^  cards  state
-      abet:(dude:eng wir sig)
-    [cards this]
+    =^(cards state abet:(dude:eng wir sig) [cards this])
   ::
   ++  on-arvo
     |=  [wir=wire sig=sign-arvo]
@@ -84,8 +73,7 @@
   |=  =path
   ~>  %bout.[0 '%trove +on-watch']
   ^-  (quip card _this)
-  =^  cards  state
-    abet:(peer:eng path)
+  =^  cards  state  abet:(peer:eng path)
   [cards this]
   ::
   ++  on-fail
@@ -202,7 +190,6 @@
       ::
           %watch-ack
         ?~  p.sig  `state
-        ~&  >>  ["watch-ack del" u.p.sig]
         `state(troves (~(del by troves) sap))
       ::
           %fact
@@ -211,7 +198,6 @@
         to-abet:(to-poke:(to-abed:to p.act) act)
       ==
     ==
-  ~&  >>>  [%dude-eng troves]
   (emil cards)
 ::  +poke: handle on-poke
 ::
@@ -276,13 +262,11 @@
         head^(snoc wir %admin)
       head^(snoc wir %moderator)
     ?:  =(our.bol p.sap)
-      ~&  >>  "kill our-bol del"
       =.  troves  (~(del by troves) sap)
       %-  sa-emit:(sa-show spaces-reaction+!>([%remove sap]))
       [%give %kick [-.wires +<.wires +>.wires ~] ~]
     =*  cad
       |=(p=path [%pass p %agent [p.sap %trove] %leave ~])
-    ~&  >>  "kill not-our-bol del"
     =.  troves  (~(del by troves) sap)
     %-  sa-emil:(sa-show spaces-reaction+!>([%remove sap]))
     [(cad -.wires) (cad +<.wires) (cad +>.wires) ~]
@@ -725,8 +709,7 @@
       =+  perms=(to-perm trail.q.f)
       ?>  ?|  =(our.bol src.bol)
               =(p.sap src.bol)
-          ::
-            (~(any in ewe) ~(has in delete.files.perms))
+              (~(any in ewe) ~(has in delete.files.perms))
           ==
       ?:  =(our.bol p.sap)
         ::  an instruction to our trove
@@ -920,9 +903,8 @@
         (~(lop of `trove`tov) trail.q.f)
       %-  ~(rep in read.folder.perms)
       |=  [r=role o=_to]
-      %-  to-cher:o
-      :_  trove-fact+!>(f)
-      ?:(?=(%member r) `*path ``path`/[r])
+      %-  to-cher:o  
+      [?:(?=(%member r) `*path ``path`/[r]) trove-fact+!>(f)]
     ::
         %move-folder
       =+  hav=(need (~(get of `trove`tov) from.q.f))
@@ -1011,10 +993,7 @@
       =+  perms=~(has in read.folder:(to-perm -.i.leto))
       %=    $
         leto  t.leto
-      ::
-          truv
-        ?.  (perms wat)  truv
-        (~(put of `trove`truv) i.leto)
+        truv  ?.((perms wat) truv (~(put of `trove`truv) i.leto))
       ==
     --
   --
