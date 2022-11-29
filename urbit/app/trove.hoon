@@ -13,7 +13,7 @@
 +$  card  card:agent:gall
 --
 ::
-:: %+  verb  &                                             ::  comment when testing
+%+  verb  &                                             ::  comment when testing
 %-  agent:dbug
 =|  state-0
 =*  state  -
@@ -206,8 +206,8 @@
   =^  cards  state
     ?+    mar  ~|(bad-trove-mark/mar !!)
         %trove-action
-      :: =/  act=action:^poke  !<(action:^poke vaz)        ::  comment when testing
-      =/  act=fact:^poke  !<(fact:^poke vaz)         ::  use with tests
+      =/  act=action:^poke  !<(action:^poke vaz)        ::  comment when testing
+      :: =/  act=fact:^poke  !<(fact:^poke vaz)         ::  use with tests
       to-abet:(to-poke:to-your:(to-abed:to p.act) act)
     ==
   (emil cards)
@@ -354,10 +354,10 @@
   ::
   ++  to-abed
     |=  sap=spat
-    :: =+  have=(~(got by troves) sap)                     ::  comment when testing
-    =/  have                                         ::  use with tests
-      ?^  tuv=(~(get by troves) sap)  u.tuv
-      [mods=*mods regs=*regs trove=*trove]
+    =+  have=(~(got by troves) sap)                     ::  comment when testing
+    :: =/  have                                         ::  use with tests
+    ::   ?^  tuv=(~(get by troves) sap)  u.tuv
+    ::   [mods=*mods regs=*regs trove=*trove]
     %=  to
       sup  `sap
       mod  mods.have
@@ -367,18 +367,18 @@
   ::  +to-team: scry admins, members
   ++  to-team
     ^-  [admins=(set @p) members=(set @p)]
-     [(sy [~zod]~) (sy [~zod]~)]                     ::  use with tests
-    :: =+  (need sup)                                      ::  comment when testing
-    :: =+  teath=/(scot %p p)/[q]/members/noun
-    :: %-  %~  rep  by
-    ::     ^-  (map ship member:m)
-    ::     =-  ?>(?=([%members *] -) members:-)
-    ::     .^(view:m %gx (weld space teath))
-    :: |=  [[k=ship v=member:m] [adm=(set @p) mem=(set @p)]]
-    :: =+  has=~(has in roles.v)
-    :: ?.  |(?=(%joined status.v) ?=(%host status.v))  [adm mem]
-    :: :-  ?.(|((has %admin) (has %owner)) adm (~(put in adm) k))
-    :: ?.(|((has %admin) (has %owner) (has %member)) mem (~(put in mem) k))
+    ::  [(sy [~zod]~) (sy [~zod]~)]                     ::  use with tests
+    =+  (need sup)                                      ::  comment when testing
+    =+  teath=/(scot %p p)/[q]/members/noun
+    %-  %~  rep  by
+        ^-  (map ship member:m)
+        =-  ?>(?=([%members *] -) members:-)
+        .^(view:m %gx (weld space teath))
+    |=  [[k=ship v=member:m] [adm=(set @p) mem=(set @p)]]
+    =+  has=~(has in roles.v)
+    ?.  |(?=(%joined status.v) ?=(%host status.v))  [adm mem]
+    :-  ?.(|((has %admin) (has %owner)) adm (~(put in adm) k))
+    ?.(|((has %admin) (has %owner) (has %member)) mem (~(put in mem) k))
   ::  +to-view: watch someone's trove
   ::
   ++  to-view
@@ -542,8 +542,6 @@
         %-  ~(rep by sup.bol)
         |=  [(pair duct (pair ship path)) tu=_to]
         (to-peer:tu [/(scot %p p.q)] &)
-      ++  hold
-        (~(dip of `trove`tov) trail.q.f)
       ++  chopped
         |=  [t=trail p=perm]
         ^+  rag
@@ -559,7 +557,6 @@
         |=  [p=perm q=perm]
         ^-  perm
         :+  %0
-          ::
           :^    (~(del in add.files.q) (~(dif in add.files.q) add.files.p))
               (~(del in edit.files.q) (~(dif in edit.files.q) edit.files.p))
             (~(del in move.files.q) (~(dif in move.files.q) move.files.p))
