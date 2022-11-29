@@ -418,7 +418,8 @@
     |=  [[mem=? adm=? mud=?] cag=cage]
     ^+  to
     =;  paths=(list path)
-      (to-emit %give %fact paths cag)
+      ?~  paths  to
+      (to-emit ^-(card [%give %fact ;;((list path) paths) cag]))
     =/  subscribers=(set @p)
       %-  sy  %+  turn  ~(tap by sup.bol)
       |=((pair duct (pair ship path)) p.q)
