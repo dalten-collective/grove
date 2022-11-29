@@ -765,8 +765,8 @@
         ::  an instruction to a remote trove
         =~
           :-  [f=f nod=nod]  
-          %-  to-show:(to-send p.f q.f)
-          trove-fact+!>([p.f [%rem-node id.q.f from.q.f]])
+          %.  trove-fact+!>([p.f [%rem-node id.q.f from.q.f]])
+          to-show:(to-send p.f q.f(id `@uvTROVE`(sham to.q.f nod)))
         ::
           %-  to-show
           :-  %trove-fact
