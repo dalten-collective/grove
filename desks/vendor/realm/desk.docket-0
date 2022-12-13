@@ -1,0 +1,9 @@
+:~  title+'Realm'
+    info+'A desktop environment for DAOs and communities. Developed by Holium.'
+    color+0xce.bef0
+    glob-http+['https://holium-app-globs.nyc3.digitaloceanspaces.com/realm/glob-0v3.ijtsa.kqfsm.f71li.n99kg.etthr.glob' 0v3.ijtsa.kqfsm.f71li.n99kg.etthr]
+    base+'realm'
+    version+[0 1 0]
+    website+'https://holium.com'
+    license+'MIT'
+==
