@@ -138,13 +138,13 @@
       [%x %regs host=@ space=@ ~]
     ``trove-regs+!>(regs:(get [(slav %p host.pol) space.pol]))
   ::
-      [%x %folder host=@ space=@ rest=*]
-    =+  tov=trove:(get [(slav %p host.pol) space.pol])
-    ``trove-trecht+!>((~(get of `trove`tov) rest.pol))
-  ::
       [%x %folder %perms host=@ space=@ rest=*]
     =+  spa=[(slav %p host.pol) space.pol]
     ``trove-perm+!>(`perm`(to-perm:(to-abed:to spa) rest.pol))
+  ::
+      [%x %folder host=@ space=@ rest=*]
+    =+  tov=trove:(get [(slav %p host.pol) space.pol])
+    ``trove-trecht+!>((~(get of `trove`tov) rest.pol))
   ::
       [%x %node host=@ space=@ id=@ rest=*]
     =+  tov=trove:(get [(slav %p host.pol) space.pol])
@@ -501,8 +501,8 @@
         |=(p=@p ?.((~(has in members) p) ~ `p))
       =.  troves
         (~(put by troves) sap [(~(uni in mod) +.q.f) rag tov])
-      =~  [f=f sap=sap (to-show trove-fact+!>(f))]
-          ?.(=(our.bol p.sap) to (to-cher [& & &] trove-fact+!>(f)))
+      =~  [f=f sap=sap (to-show trove-fact+!>(`fact`f))]
+          ?.(=(our.bol p.sap) to (to-cher [& & &] trove-fact+!>(`fact`f)))
       ==
     ::
         %rem-moderators
@@ -534,7 +534,7 @@
           %-  ~(rep by sup.bol)
           |=  [(pair duct (pair ship path)) tu=_to]
           (to-peer:tu [/(scot %p p.q)] &)
-        :: to
+        ?>  |(=(/ trail.q.f) (fits perms u.pur.q.f))
         =.  troves
           %+  ~(put by troves)  sap
           [mod (chopped trail.q.f u.pur.q.f) tov]

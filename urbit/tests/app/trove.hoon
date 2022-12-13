@@ -35,7 +35,7 @@
   ::  add a moderator and capture snapshot
   =/  f1=(pair spat:tr $:(%add-moderators (set @p)))
     [spat %add-moderators (sy [~zod]~)]
-  =^  mov1  agent
+  =^  mov1=(list card:agent:gall)  agent
     (~(on-poke agent (bowl run)) trove-action+!>(f1))
   =/  state-1=state-0  !<(state-0 on-save:agent)
   =/  added-moderator=state-0
@@ -43,9 +43,7 @@
     %-  ~(put by +:*state-0)
     [spat [(~(put in mods) ~zod) regs trove]]
   =/  cards1=(list card:agent:gall)
-    :~  [%give %fact [wire]~ trove-fact+!>(f1)]
-        [%give %fact [/web-ui]~ trove-fact+!>(f1)]
-    ==
+    [%give %fact [/web-ui]~ trove-fact+!>(`fact:tr`f1)]~
   ::  remove the moderator, snapshot
   =.  run  +(run)
   =/  f2=(pair spat:tr $:(%rem-moderators (set @p)))
@@ -64,9 +62,10 @@
   :: ~&  >  [%add-moderator-cards mov1]
   :: ~&  >>  [%expected-cards2 cards2]
   :: ~&  >  [%rem-moderator-cards mov2]
+  ~&  >>  =(cards1 mov1)
   %+  expect-eq
-    !>([state-1 state-2])
-  !>([added-moderator removed-moderator])
+    !>([cards1])
+  !>([mov1])
 ++  test-node
   =|  run=@ud
   ::  setup as if subscribed to spaces
