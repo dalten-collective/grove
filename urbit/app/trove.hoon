@@ -123,13 +123,15 @@
     ``trove-spaces+!>(`(list spat)`~(tap in ~(key by troves)))
   ::
       [%x %team host=@ space=@ ~]
-    =+  sap=[(slav %p host.pol) space.pol]
+    =+  sap=[(slav %p host.pol) (slav %t space.pol)]
+    ~&  >>  sap
+    :: ``noun+!>(~)
     =+  to-team:(to-abed:to sap)
-    ``trove-team+!>(`team`[sap admins mods:(get sap) members]~)
+    ``trove-teams+!>(`team`[sap admins mods:(get sap) members]~)
   ::
       [%x %teams ~]
     =;  tam=team
-      ``trove-team+!>(tam)
+      ``trove-teams+!>(tam)
     %+  turn  ~(tap in ~(key by troves))
     |=  sap=spat
     =+  to-team:(to-abed:to sap)
@@ -139,15 +141,15 @@
     ``trove-regs+!>(regs:(get [(slav %p host.pol) space.pol]))
   ::
       [%x %folder %perms host=@ space=@ rest=*]
-    =+  spa=[(slav %p host.pol) space.pol]
+    =+  spa=[(slav %p host.pol) (slav %t space.pol)]
     ``trove-perm+!>(`perm`(to-perm:(to-abed:to spa) rest.pol))
   ::
       [%x %folder host=@ space=@ rest=*]
-    =+  tov=trove:(get [(slav %p host.pol) space.pol])
+    =+  tov=trove:(get [(slav %p host.pol) (slav %t space.pol)])
     ``trove-trecht+!>((~(get of `trove`tov) rest.pol))
   ::
       [%x %node host=@ space=@ id=@ rest=*]
-    =+  tov=trove:(get [(slav %p host.pol) space.pol])
+    =+  tov=trove:(get [(slav %p host.pol) (slav %t space.pol)])
     ?~  hav=(~(get of `trove`tov) rest.pol)  !!
     ``trove-node+!>(`node`(~(got by u.hav) (slav %uv id.pol)))
   ==
@@ -354,6 +356,7 @@
   ::
   ++  to-abed
     |=  sap=spat
+    ~&  >>  (~(has by troves) sap)
     =+  have=(~(got by troves) sap)                     ::  comment when testing
     :: =/  have                                         ::  use with tests
     ::   ?^  tuv=(~(get by troves) sap)  u.tuv
