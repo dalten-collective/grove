@@ -124,8 +124,6 @@
   ::
       [%x %team host=@ space=@ ~]
     =+  sap=[(slav %p host.pol) (slav %t space.pol)]
-    ~&  >>  sap
-    :: ``noun+!>(~)
     =+  to-team:(to-abed:to sap)
     ``trove-teams+!>(`team`[sap admins mods:(get sap) members]~)
   ::
@@ -138,7 +136,7 @@
     [sap [admins mods:(get sap) members]]
   ::
       [%x %regs host=@ space=@ ~]
-    ``trove-regs+!>(regs:(get [(slav %p host.pol) space.pol]))
+    ``trove-regs+!>(regs:(get [(slav %p host.pol) (slav %t space.pol)]))
   ::
       [%x %folder %perms host=@ space=@ rest=*]
     =+  spa=[(slav %p host.pol) (slav %t space.pol)]
@@ -356,7 +354,6 @@
   ::
   ++  to-abed
     |=  sap=spat
-    ~&  >>  (~(has by troves) sap)
     =+  have=(~(got by troves) sap)                     ::  comment when testing
     :: =/  have                                         ::  use with tests
     ::   ?^  tuv=(~(get by troves) sap)  u.tuv
