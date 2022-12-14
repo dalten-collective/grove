@@ -1,23 +1,26 @@
 import { useEffect, useState } from 'react';
-import { addFolderPoke } from './pokes';
+// import { addFolderPoke } from './pokes';
 import { getSubscription, subscription } from './subscription';
+import { getHosts } from './scries';
+import Urbit from '@urbit/http-api'
+
 
 export const useTrove = () => {
   const [ship, urbit] = useUrbit();
   const [troveSub, setTroveSub] = useState(null);
 
   useEffect(() => {
-    const testPoke = async () => {
-      const poke = await addFolderPoke(urbit);
-      console.log('poke', poke);
-      return poke;
-    };
+    // const testPoke = async () => {
+    //   const poke = await addFolderPoke(urbit);
+    //   console.log('poke', poke);
+    //   return poke;
+    // };
     if (urbit) {
       if (!troveSub) {
         const troveSub = getSubscription(urbit);
         setTroveSub(troveSub);
       } else {
-        getEverything(urbit);
+        // getEverything(urbit); TODO
         getHosts(urbit);
         // testPoke();
       }

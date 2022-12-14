@@ -58,30 +58,6 @@ export const addFolderPoke = async (urbit, space, data, ship) =>
     ...folders.add(urbit, space, data, ship),
   });
 
-export const folders = {
-  add: buildPoke('add-folder', space, data, ship),
-  remove: buildPoke('rem-folder', space, data, ship),
-  move: buildPoke('move-folder', space, data, ship),
-};
-
-export const files = {
-  add: buildPoke('add-node', space, data, ship),
-  remove: buildPoke('rem-node', space, data, ship),
-  edit: buildPoke('edit-node', space, data, ship),
-  move: buildPoke('move-node', space, data, ship),
-};
-
-export const moderators = {
-  add: buildPoke('add-moderators', space, data, ship),
-  remove: buildPoke('rem-moderators', space, data, ship),
-};
-
-export const errata = {
-  repeat: buildPoke('repeat', space, data, ship),
-  reperm: buildPoke('reperm', space, data, ship),
-  rehome: buildPoke('rehome', space, data, ship),
-};
-
 export const buildPoke =
   (type, space, data, ship = '') =>
   (space, data, ship) => ({
@@ -94,6 +70,30 @@ export const buildPoke =
       onError: console.log,
     },
   });
+
+// export const folders = {
+//   add: buildPoke('add-folder', space, data, ship),
+//   remove: buildPoke('rem-folder', space, data, ship),
+//   move: buildPoke('move-folder', space, data, ship),
+// };
+// 
+// export const files = {
+//   add: buildPoke('add-node', space, data, ship),
+//   remove: buildPoke('rem-node', space, data, ship),
+//   edit: buildPoke('edit-node', space, data, ship),
+//   move: buildPoke('move-node', space, data, ship),
+// };
+// 
+// export const moderators = {
+//   add: buildPoke('add-moderators', space, data, ship),
+//   remove: buildPoke('rem-moderators', space, data, ship),
+// };
+// 
+// export const errata = {
+//   repeat: buildPoke('repeat', space, data, ship),
+//   reperm: buildPoke('reperm', space, data, ship),
+//   rehome: buildPoke('rehome', space, data, ship),
+// };
 
 const structurePokeData = (type, data) => {
   switch (type) {
