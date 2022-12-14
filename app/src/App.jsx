@@ -1,9 +1,7 @@
-import React, { useEffect, useMemo } from 'react';
-import { observer } from 'mobx-react';
+import React from 'react';
 import { ThemeProvider } from 'styled-components';
 
 import TroveWindow from './components/TroveWindow/index';
-import { GlobalStyle } from './theme/App.styles';
 import { theme as baseTheme } from './theme/theme.jsx';
 import { useTrove } from './urbit';
 

@@ -1,9 +1,44 @@
 import { getSpace, mapTilde } from './utils';
 
-export const addFolderPoke = async (urbit, space, data, ship) =>
+export const poke = async (urbit, pokePath) =>
   await urbit.poke({
     ...folders.add(urbit, space, data, ship),
   });
+
+export const pokes = {
+  folders: {
+    add: async (urbit, space, data, ship) =>
+      await urbit.poke({ ...folders.add(urbit, space, data, ship) }),
+    remove: async (urbit, space, data, ship) =>
+      await urbit.poke({ ...folders.remove(urbit, space, data, ship) }),
+    move: async (urbit, space, data, ship) =>
+      await urbit.poke({ ...folders.move(urbit, space, data, ship) }),
+  },
+  files: {
+    add: async (urbit, space, data, ship) =>
+      await urbit.poke({ ...files.add(urbit, space, data, ship) }),
+    remove: async (urbit, space, data, ship) =>
+      await urbit.poke({ ...files.remove(urbit, space, data, ship) }),
+    edit: async (urbit, space, data, ship) =>
+      await urbit.poke({ ...files.edit(urbit, space, data, ship) }),
+    move: async (urbit, space, data, ship) =>
+      await urbit.poke({ ...files.move(urbit, space, data, ship) }),
+  },
+  moderators: {
+    add: async (urbit, space, data, ship) =>
+      await urbit.poke({ ...moderators.add(urbit, space, data, ship) }),
+    remove: async (urbit, space, data, ship) =>
+      await urbit.poke({ ...moderators.remove(urbit, space, data, ship) }),
+  },
+  errata: {
+    repeat: async (urbit, space, data, ship) =>
+      await urbit.poke({ ...errata.repeat(urbit, space, data, ship) }),
+    reperm: async (urbit, space, data, ship) =>
+      await urbit.poke({ ...errata.reperm(urbit, space, data, ship) }),
+    rehome: async (urbit, space, data, ship) =>
+      await urbit.poke({ ...errata.rehome(urbit, space, data, ship) }),
+  },
+};
 
 export const folders = {
   add: buildPoke('add-folder', space, data, ship),
@@ -31,7 +66,7 @@ export const errata = {
 
 export const buildPoke =
   (type, space, data, ship = '') =>
-  (space, data, ship) => ({
+  (urbit, space, data, ship) => ({
     app: 'trove',
     mark: 'trove-action',
     space: getSpace(space, ship),
