@@ -10,15 +10,33 @@ export const useStore = create(
   devtools(
     immer((set, get) => ({
       // ...initialState,
+      troveState: {
+        troves: {},
+        version: '0',
+      },
+      ships: {},
+      troves: {},
+      hosts: [],
       moderators: {},
       regulations: {},
-      trove: {},
-
+      version: '0',
       pokes,
 
+      getShips: () => get().ships,
+      getTroves: () => get().troves,
+      getTroveState: () => get().troveState,
       // TODO: Handle scry responses
       scries,
       // Actions to update the store here
+      setFullTroveState: (troveState) =>
+        set(
+          produce((draft) => {
+            draft.troveState = troveState;
+            draft.troves = troveState.troves;
+            draft.version = troveState.version;
+            draft.ships = troveState.ships;
+          })
+        ),
       addNode: (host, space, folder, node) =>
         set(
           produce((draft) => {
