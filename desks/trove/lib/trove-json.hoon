@@ -268,7 +268,7 @@
   ++  perm
     ^-  $-(json (unit perm:t))
     |=  j=json
-    ?~  json  ~
+    ?:  =(~ j)  ~
     :+  ~  %0
     %.  j
     %-  ot
