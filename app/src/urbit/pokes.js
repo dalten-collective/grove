@@ -2,33 +2,33 @@ import { getSpace, mapTilde } from './utils';
 
 export const poke = async (urbit, pokePath) =>
   await urbit.poke({
-    ...folders.add(urbit, space, data, ship),
+    ...folder.add(urbit, space, data, ship),
   });
 
 export const pokes = {
-  folders: {
+  folder: {
     add: async (urbit, space, data, ship) =>
-      await urbit.poke({ ...folders.add(urbit, space, data, ship) }),
-    remove: async (urbit, space, data, ship) =>
-      await urbit.poke({ ...folders.remove(urbit, space, data, ship) }),
+      await urbit.poke({ ...folder.add(urbit, space, data, ship) }),
+    rem: async (urbit, space, data, ship) =>
+      await urbit.poke({ ...folder.rem(urbit, space, data, ship) }),
     move: async (urbit, space, data, ship) =>
-      await urbit.poke({ ...folders.move(urbit, space, data, ship) }),
+      await urbit.poke({ ...folder.move(urbit, space, data, ship) }),
   },
-  files: {
+  node: {
     add: async (urbit, space, data, ship) =>
-      await urbit.poke({ ...files.add(urbit, space, data, ship) }),
-    remove: async (urbit, space, data, ship) =>
-      await urbit.poke({ ...files.remove(urbit, space, data, ship) }),
+      await urbit.poke({ ...node.add(urbit, space, data, ship) }),
+    rem: async (urbit, space, data, ship) =>
+      await urbit.poke({ ...node.rem(urbit, space, data, ship) }),
     edit: async (urbit, space, data, ship) =>
-      await urbit.poke({ ...files.edit(urbit, space, data, ship) }),
+      await urbit.poke({ ...node.edit(urbit, space, data, ship) }),
     move: async (urbit, space, data, ship) =>
-      await urbit.poke({ ...files.move(urbit, space, data, ship) }),
+      await urbit.poke({ ...node.move(urbit, space, data, ship) }),
   },
   moderators: {
     add: async (urbit, space, data, ship) =>
       await urbit.poke({ ...moderators.add(urbit, space, data, ship) }),
-    remove: async (urbit, space, data, ship) =>
-      await urbit.poke({ ...moderators.remove(urbit, space, data, ship) }),
+    rem: async (urbit, space, data, ship) =>
+      await urbit.poke({ ...moderators.rem(urbit, space, data, ship) }),
   },
   errata: {
     repeat: async (urbit, space, data, ship) =>
@@ -40,22 +40,22 @@ export const pokes = {
   },
 };
 
-export const folders = {
+export const folder = {
   add: buildPoke('add-folder', space, data, ship),
-  remove: buildPoke('rem-folder', space, data, ship),
+  rem: buildPoke('rem-folder', space, data, ship),
   move: buildPoke('move-folder', space, data, ship),
 };
 
-export const files = {
+export const node = {
   add: buildPoke('add-node', space, data, ship),
-  remove: buildPoke('rem-node', space, data, ship),
+  rem: buildPoke('rem-node', space, data, ship),
   edit: buildPoke('edit-node', space, data, ship),
   move: buildPoke('move-node', space, data, ship),
 };
 
 export const moderators = {
   add: buildPoke('add-moderators', space, data, ship),
-  remove: buildPoke('rem-moderators', space, data, ship),
+  rem: buildPoke('rem-moderators', space, data, ship),
 };
 
 export const errata = {
@@ -80,7 +80,7 @@ export const buildPoke =
 // TODO: Add type checking
 const structurePokeData = (type, data) => {
   switch (type) {
-    // Folders
+    // Folder
     case 'add-folder': {
       const { toPath, name, permissions } = data;
       return {
