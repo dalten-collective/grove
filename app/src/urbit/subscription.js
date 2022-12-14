@@ -1,7 +1,8 @@
-export const getSubscription = (urbit) =>
+export const getSubscription = (urbit, eventHandler = console.log) =>
   urbit.subscribe({
     ...subscription,
     ship: urbit.ship,
+    event: eventHandler,
   });
 
 export const subscription = {
