@@ -3,6 +3,9 @@ import { devtools } from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
 import produce from 'immer';
 
+import { pokes } from '../urbit/pokes';
+import { scries } from '../urbit/scries';
+
 export const useStore = create(
   devtools(
     immer((set, get) => ({
@@ -11,6 +14,10 @@ export const useStore = create(
       regulations: {},
       trove: {},
 
+      pokes,
+
+      // TODO: Handle scry responses
+      scries,
       // Actions to update the store here
       addNode: (host, space, folder, node) =>
         set(

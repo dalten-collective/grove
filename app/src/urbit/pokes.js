@@ -1,9 +1,9 @@
 import { getSpace, mapTilde } from './utils';
 
-export const poke = async (urbit, pokePath) =>
-  await urbit.poke({
-    ...folder.add(urbit, space, data, ship),
-  });
+// export const poke = async (urbit, pokePath) =>
+//   await urbit.poke({
+//     ...folder.add(urbit, space, data, ship),
+//   });
 
 export const pokes = {
   folder: {
