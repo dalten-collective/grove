@@ -65,20 +65,20 @@ const handleEvent = (evt, action) => {
   }
 };
 
-function handleScry(scry) {
-  // handle a urbit scry
-  switch (scry.mark) {
-    case '/x/state/json':
-      // return the state, as on initial subscription
-      break;
-    case '/x/hosts/json':
-      // return all spaces you know about that may or may not have active troves
-      break;
-    case '/x/team/<host-ship>/<space-name>/json':
-      // return information about a specific team
-      break;
-    case '/x/teams/json':
-      // return all teams you know about
-      break;
-  }
-}
+// function handleScry(scry) {
+//   // handle a urbit scry
+//   switch (scry.mark) {
+//     case '/x/state/json':
+//       // return the state, as on initial subscription
+//       break;
+//     case '/x/hosts/json':
+//       // return all spaces you know about that may or may not have active troves
+//       break;
+//     case '/x/team/<host-ship>/<space-name>/json':
+//       // return information about a specific team
+//       break;
+//     case '/x/teams/json':
+//       // return all teams you know about
+//       break;
+//   }
+// }
