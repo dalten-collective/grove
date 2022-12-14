@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import Urbit from '@urbit/http-api';
 import { getSubscription } from './subscription';
 import { scries } from './scries';
+import { pokes } from './pokes';
 
 export const useTrove = () => {
   const [ship, urbit] = useUrbit();
@@ -15,7 +16,7 @@ export const useTrove = () => {
     () => urbit.unsubscribe(troveSub);
   }, [ship, troveSub]);
 
-  return { ship, scries, urbit };
+  return { urbit, ship, scries, pokes };
 };
 
 export const useUrbit = () => {

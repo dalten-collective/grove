@@ -3,7 +3,7 @@ import { devtools } from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
 import produce from 'immer';
 
-import { pokes } from '../urbit/pokes';
+// import { pokes } from '../urbit/pokes';
 import { scries } from '../urbit/scries';
 
 export const useStore = create(
@@ -20,11 +20,12 @@ export const useStore = create(
       moderators: {},
       regulations: {},
       version: '0',
-      pokes,
+      // pokes,
 
       getShips: () => get().ships,
       getTroves: () => get().troves,
       getTroveState: () => get().troveState,
+      getHosts: () => get().hosts,
       // TODO: Handle scry responses
       scries,
       // Actions to update the store here
@@ -37,6 +38,13 @@ export const useStore = create(
             draft.ships = troveState.ships;
           })
         ),
+      setHosts: (hosts) =>
+        set(
+          produce((draft) => {
+            draft.hosts = hosts;
+          })
+        ),
+
       addNode: (host, space, folder, node) =>
         set(
           produce((draft) => {
