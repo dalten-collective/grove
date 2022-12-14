@@ -5,6 +5,19 @@ import { getSpace, mapTilde } from './utils';
 //     ...folder.add(urbit, space, data, ship),
 //   });
 
+export const buildPoke =
+  (type, space, data, ship = '') =>
+  (urbit, space, data, ship) => ({
+    app: 'trove',
+    mark: 'trove-action',
+    space: getSpace(space, ship),
+    poke: {
+      [type]: structurePokeData(type, data),
+      onSucccess: console.log,
+      onError: console.log,
+    },
+  });
+
 export const pokes = {
   folder: {
     add: async (urbit, space, data, ship) =>
@@ -41,41 +54,28 @@ export const pokes = {
 };
 
 export const folder = {
-  add: buildPoke('add-folder', space, data, ship),
-  rem: buildPoke('rem-folder', space, data, ship),
-  move: buildPoke('move-folder', space, data, ship),
+  add: (space, data, ship) => buildPoke('add-folder', space, data, ship),
+  rem: (space, data, ship) => buildPoke('rem-folder', space, data, ship),
+  move: (space, data, ship) => buildPoke('move-folder', space, data, ship),
 };
 
 export const node = {
-  add: buildPoke('add-node', space, data, ship),
-  rem: buildPoke('rem-node', space, data, ship),
-  edit: buildPoke('edit-node', space, data, ship),
-  move: buildPoke('move-node', space, data, ship),
+  add: (space, data, ship) => buildPoke('add-node', space, data, ship),
+  rem: (space, data, ship) => buildPoke('rem-node', space, data, ship),
+  edit: (space, data, ship) => buildPoke('edit-node', space, data, ship),
+  move: (space, data, ship) => buildPoke('move-node', space, data, ship),
 };
 
 export const moderators = {
-  add: buildPoke('add-moderators', space, data, ship),
-  rem: buildPoke('rem-moderators', space, data, ship),
+  add: (space, data, ship) => buildPoke('add-moderators', space, data, ship),
+  rem: (space, data, ship) => buildPoke('rem-moderators', space, data, ship),
 };
 
 export const errata = {
-  repeat: buildPoke('repeat', space, data, ship),
-  reperm: buildPoke('reperm', space, data, ship),
-  rehome: buildPoke('rehome', space, data, ship),
+  repeat: (space, data, ship) => buildPoke('repeat', space, data, ship),
+  reperm: (space, data, ship) => buildPoke('reperm', space, data, ship),
+  rehome: (space, data, ship) => buildPoke('rehome', space, data, ship),
 };
-
-export const buildPoke =
-  (type, space, data, ship = '') =>
-  (urbit, space, data, ship) => ({
-    app: 'trove',
-    mark: 'trove-action',
-    space: getSpace(space, ship),
-    poke: {
-      [type]: structurePokeData(type, data),
-      onSucccess: console.log,
-      onError: console.log,
-    },
-  });
 
 // TODO: Add type checking
 const structurePokeData = (type, data) => {
