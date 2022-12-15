@@ -151,9 +151,9 @@
     ?~  hav=(~(get of `trove`tov) rest.pol)  !!
     ``trove-node+!>(`node`(~(got by u.hav) (slav %uv id.pol)))
   ::
-      [%x %tree host=@ space=@ rest=@]
+      [%x %tree host=@ space=@ rest=*]
     =+  tov=trove:(get [(slav %p host.pol) (slav %t space.pol)])
-    ``trove-tree+!>((~(dip of tov) rest.pol))
+    ``trove-tree+!>(`trove`(~(dip of `trove`tov) rest.pol))
   ==
 ::  +peer: handle on-watch
 ::
