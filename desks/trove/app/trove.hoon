@@ -225,7 +225,7 @@
   +*  sa   .
       dok  [our.bol %spaces]
       adm  (silt `(list role)`[%admin]~)
-      maa  (silt `(list role)`[%admin %moderator]~)
+      maa  (silt `(list role)`~[%admin %moderator])
       mam  (silt `(list role)`~[%admin %moderator %member])
   ++  sa-emit  |=(c=card sa(caz [c caz]))
   ++  sa-emil  |=(lc=(list card) sa(caz (welp lc caz)))

@@ -67,11 +67,15 @@
   ++  team
     |=  [p=spat:t q=(set @p) r=(set @p) s=(set @p)]
     ^-  json
-    %+  frond  (spat p)
-    %-  pairs
-    :~  admins+a/(turn ~(tap in q) ships)
-        moderators+a/(turn ~(tap in r) ships)
-        members+a/(turn ~(tap in s) ships)
+    :~  type+s/'SCRY'
+        face+s/'TEAM'
+    ::
+      %-  pairs
+      :~  space+s/(spat p)
+          admins+a/(turn ~(tap in q) ships)
+          moderators+a/(turn ~(tap in r) ships)
+          members+a/(turn ~(tap in s) ships)
+      ==
     ==
   ::
   ++  state
