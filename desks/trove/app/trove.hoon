@@ -123,7 +123,7 @@
     ``trove-spaces+!>(`(list spat)`~(tap in ~(key by troves)))
   ::
       [%x %team host=@ space=@ ~]
-    =+  sap=[(slav %p host.pol) (slav %t space.pol)]
+    =+  sap=[(slav %p host.pol) space.pol]
     =+  to-team:(to-abed:to sap)
     ``trove-teams+!>(`team`[sap admins mods:(get sap) members]~)
   ::
@@ -136,23 +136,23 @@
     [sap [admins mods:(get sap) members]]
   ::
       [%x %regs host=@ space=@ ~]
-    ``trove-regs+!>(regs:(get [(slav %p host.pol) (slav %t space.pol)]))
+    ``trove-regs+!>(regs:(get [(slav %p host.pol) space.pol]))
   ::
       [%x %folder %perms host=@ space=@ rest=*]
-    =+  spa=[(slav %p host.pol) (slav %t space.pol)]
+    =+  spa=[(slav %p host.pol) space.pol]
     ``trove-perm+!>(`perm`(to-perm:(to-abed:to spa) rest.pol))
   ::
       [%x %folder host=@ space=@ rest=*]
-    =+  tov=trove:(get [(slav %p host.pol) (slav %t space.pol)])
+    =+  tov=trove:(get [(slav %p host.pol) space.pol])
     ``trove-trecht+!>((~(get of `trove`tov) rest.pol))
   ::
       [%x %node host=@ space=@ id=@ rest=*]
-    =+  tov=trove:(get [(slav %p host.pol) (slav %t space.pol)])
+    =+  tov=trove:(get [(slav %p host.pol) space.pol])
     ?~  hav=(~(get of `trove`tov) rest.pol)  !!
     ``trove-node+!>(`node`(~(got by u.hav) (slav %uv id.pol)))
   ::
       [%x %tree host=@ space=@ rest=*]
-    =+  tov=trove:(get [(slav %p host.pol) (slav %t space.pol)])
+    =+  tov=trove:(get [(slav %p host.pol) space.pol])
     ``trove-tree+!>(`trove`(~(dip of `trove`tov) rest.pol))
   ==
 ::  +peer: handle on-watch
