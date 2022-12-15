@@ -41,8 +41,14 @@
     ^-  json
     =;  subs=(list json)
       %-  pairs
-      :~  nodes+?~(fil.axe ~ (tract u.fil.axe))
-          subfolders+a/subs
+      :~  type+s/'SCRY'
+          face+s/'TREE'
+      ::
+        :-  %scry
+        %-  pairs
+        :~  nodes+?~(fil.axe ~ (tract u.fil.axe))
+            subfolders+a/subs
+        ==
       ==
     ?:  =(~ dir.axe)  ~
     %+  turn  ~(tap by `(map @t (axal tract:t))`dir.axe)
@@ -74,8 +80,14 @@
         ==
     ^-  json
     %-  pairs
-    :~  version+s/'0'
-        troves+(troves t)
+    :~  type+s/'FACT'
+        face+s/'INITIAL_STATE'
+    ::
+      :-  %fact
+      %-  pairs
+      :~  version+s/'0'
+          troves+(troves t)
+      ==
     ==
   ::
   ++  data
@@ -132,51 +144,81 @@
         %start
       =-  (frond add+(frond trove+-))
       %-  pairs
-      :~  space+s/(spat p.f)
-          regs+(regs p.q.f)
-          trove+(trove q.q.f)
+      :~  type+s/'FACT'
+          face+s/'TROVE_NEW'
+      ::
+        :-  %fact
+        %-  pairs
+        :~  space+s/(spat p.f)
+            regs+(regs p.q.f)
+            trove+(trove q.q.f)
+        ==
       ==
     ::
         %add-moderators
       %-  pairs
-      :~  space+s/(spat p.f)
-          :-  %add
-          %+  frond  %team
-          %+  frond  %moderators
-          a/(turn ~(tap in +.q.f) ships)
+      :~  type+s/'FACT'
+          face+s/'MODERATORS_ADD'
+      ::
+        :-  %fact
+        %-  pairs
+        :~  space+s/(spat p.f)
+            :-  %add
+            %+  frond  %team
+            %+  frond  %moderators
+            a/(turn ~(tap in +.q.f) ships)
+        ==
       ==
     ::
         %rem-moderators
       %-  pairs
-      :~  space+s/(spat p.f)
-          :-  %rem
-          %+  frond  %team
-          %+  frond  %moderators
-          a/(turn ~(tap in +.q.f) ships)
+      :~  type+s/'FACT'
+          face+s/'MODERATORS_REM'
+      ::
+        :-  %fact
+        %-  pairs
+        :~  space+s/(spat p.f)
+            :-  %rem
+            %+  frond  %team
+            %+  frond  %moderators
+            a/(turn ~(tap in +.q.f) ships)
+        ==
       ==
     ::
         %add-node
       %-  pairs
-      :~  space+s/(spat p.f)
+      :~  type+s/'FACT'
+          face+s/'NODE_ADD'
       ::
-        :-  %add
-        %+  frond  %node
+        :-  %fact
         %-  pairs
-        :~  id+s/(scot %uv id.q.f)
-            trail+s/(trail trail.q.f)
-            node+(node node.q.f)
+        :~  space+s/(spat p.f)
+        ::
+          :-  %add
+          %+  frond  %node
+          %-  pairs
+          :~  id+s/(scot %uv id.q.f)
+              trail+s/(trail trail.q.f)
+              node+(node node.q.f)
+          ==
         ==
       ==
     ::
         %rem-node
       %-  pairs
-      :~  space+s/(spat p.f)
+      :~  type+s/'FACT'
+          face+s/'NODE_REM'
       ::
-        :-  %rem
-        %+  frond  %node
+        :-  %fact
         %-  pairs
-        :~  id+s/(scot %uv id.q.f)
-            trail+s/(trail trail.q.f)
+        :~  space+s/(spat p.f)
+        ::
+          :-  %rem
+          %+  frond  %node
+          %-  pairs
+          :~  id+s/(scot %uv id.q.f)
+              trail+s/(trail trail.q.f)
+          ==
         ==
       ==
     ::
@@ -184,48 +226,72 @@
     ::
         %edit-node
       %-  pairs
-      :~  space+s/(spat p.f)
+      :~  type+s/'FACT'
+          face+s/'NODE_EDIT'
       ::
-        :-  %upd
-        %+  frond  %node
+        :-  %fact
         %-  pairs
-        :~  id+s/(scot %uv id.q.f)
-            trail+s/(trail trail.q.f)
-            title+?~(tut.q.f ~ s/u.tut.q.f)
-            description+?~(dus.q.f ~ s/u.dus.q.f)
+        :~  space+s/(spat p.f)
+        ::
+          :-  %upd
+          %+  frond  %node
+          %-  pairs
+          :~  id+s/(scot %uv id.q.f)
+              trail+s/(trail trail.q.f)
+              title+?~(tut.q.f ~ s/u.tut.q.f)
+              description+?~(dus.q.f ~ s/u.dus.q.f)
+          ==
         ==
       ==
     ::
         %add-folder
       %-  pairs
-      :~  space+s/(spat p.f)
+      :~  type+s/'FACT'
+          face+s/'FOLDER_ADD'
       ::
-        :-  %add
-        %+  frond  %folder
+        :-  %fact
         %-  pairs
-        :~  trail+s/(trail trail.q.f)
-            perms+?~(pur.q.f ~ (perm u.pur.q.f))
+        :~  space+s/(spat p.f)
+        ::
+          :-  %add
+          %+  frond  %folder
+          %-  pairs
+          :~  trail+s/(trail trail.q.f)
+              perms+?~(pur.q.f ~ (perm u.pur.q.f))
+          ==
         ==
       ==
     ::
         %rem-folder
       %-  pairs
-      :~  space+s/(spat p.f)
+      :~  type+s/'FACT'
+          face+s/'FOLDER_REM'
       ::
-        :-  %rem
-        %-  frond
-        folder+(frond trail+s/(trail trail.q.f))
+        :-  %fact
+        %-  pairs
+        :~  space+s/(spat p.f)
+        ::
+          :-  %rem
+          %-  frond
+          folder+(frond trail+s/(trail trail.q.f))
+        ==
       ==
     ::
         %move-folder
       %-  pairs
-      :~  space+s/(spat p.f)
+      :~  type+s/'FACT'
+          face+s/'FOLDER_MOVE'
       ::
-        :-  %move
-        %+  frond  %folder
+        :-  %fact
         %-  pairs
-        :~  from+(frond trail+s/(trail from.q.f))
-            to+(frond trail+s/(trail to.q.f))
+        :~  space+s/(spat p.f)
+        ::
+          :-  %move
+          %+  frond  %folder
+          %-  pairs
+          :~  from+(frond trail+s/(trail from.q.f))
+              to+(frond trail+s/(trail to.q.f))
+          ==
         ==
       ==
     ==
