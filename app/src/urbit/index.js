@@ -3,6 +3,7 @@ import Urbit from '@urbit/http-api';
 import { getSubscription } from './subscription';
 import { scries } from './scries';
 import { pokes } from './pokes';
+import { handleEvent } from '../state/events';
 
 export const useTrove = () => {
   const [ship, urbit] = useUrbit();
@@ -10,7 +11,7 @@ export const useTrove = () => {
 
   useEffect(() => {
     if (ship && !troveSub) {
-      const troveSub = getSubscription(urbit);
+      const troveSub = getSubscription(urbit, handleEvent);
       setTroveSub(troveSub);
     }
     () => urbit.unsubscribe(troveSub);

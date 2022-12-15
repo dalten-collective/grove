@@ -1,55 +1,66 @@
 import { getSpace, mapTilde } from './utils';
 
-// export const poke = async (urbit, pokePath) =>
-//   await urbit.poke({
-//     ...folder.add(urbit, space, data, ship),
-//   });
+export const poke = async (urbit, space, data, ship, pokeObj) => {
+  try {
+    const formedPoke = pokeObj(space, data, ship);
+    // console.log('====================================');
+    console.log('formedPoke: ', formedPoke);
+    // console.log('====================================');
+    const response = await urbit.poke(formedPoke);
+    // console.log('====================================');
+    console.log('Poke Response: ', response);
+    // console.log('====================================');
+    return response;
+  } catch (err) {
+    console.error(err);
+  }
+};
 
-export const buildPoke =
-  (type, space, data, ship = '') =>
-  (urbit, space, data, ship) => ({
-    app: 'trove',
-    mark: 'trove-action',
+export const buildPoke = (type, space, data, ship = '') => ({
+  app: 'trove',
+  mark: 'trove-action',
+  json: {
     space: getSpace(space, ship),
     poke: {
       [type]: structurePokeData(type, data),
-      onSucccess: console.log,
-      onError: console.log,
     },
-  });
+  },
+  onSucccess: console.log,
+  onError: console.log,
+});
 
 export const pokes = {
   folder: {
     add: async (urbit, space, data, ship) =>
-      await urbit.poke({ ...folder.add(urbit, space, data, ship) }),
+      await poke(urbit, space, data, ship, folder.add),
     rem: async (urbit, space, data, ship) =>
-      await urbit.poke({ ...folder.rem(urbit, space, data, ship) }),
+      await poke(urbit, space, data, ship, folder.rem),
     move: async (urbit, space, data, ship) =>
-      await urbit.poke({ ...folder.move(urbit, space, data, ship) }),
+      await poke(urbit, space, data, ship, folder.move),
   },
   node: {
     add: async (urbit, space, data, ship) =>
-      await urbit.poke({ ...node.add(urbit, space, data, ship) }),
+      await poke(urbit, space, data, ship, node.add),
     rem: async (urbit, space, data, ship) =>
-      await urbit.poke({ ...node.rem(urbit, space, data, ship) }),
+      await poke(urbit, space, data, ship, node.rem),
     edit: async (urbit, space, data, ship) =>
-      await urbit.poke({ ...node.edit(urbit, space, data, ship) }),
+      await poke(urbit, space, data, ship, node.edit),
     move: async (urbit, space, data, ship) =>
-      await urbit.poke({ ...node.move(urbit, space, data, ship) }),
+      await poke(urbit, space, data, ship, node.move),
   },
   moderators: {
     add: async (urbit, space, data, ship) =>
-      await urbit.poke({ ...moderators.add(urbit, space, data, ship) }),
+      await poke(urbit, space, data, ship, moderators.add),
     rem: async (urbit, space, data, ship) =>
-      await urbit.poke({ ...moderators.rem(urbit, space, data, ship) }),
+      await poke(urbit, space, data, ship, moderators.rem),
   },
   errata: {
     repeat: async (urbit, space, data, ship) =>
-      await urbit.poke({ ...errata.repeat(urbit, space, data, ship) }),
+      await poke(urbit, space, data, ship, errata.repeat),
     reperm: async (urbit, space, data, ship) =>
-      await urbit.poke({ ...errata.reperm(urbit, space, data, ship) }),
+      await poke(urbit, space, data, ship, errata.reperm),
     rehome: async (urbit, space, data, ship) =>
-      await urbit.poke({ ...errata.rehome(urbit, space, data, ship) }),
+      await poke(urbit, space, data, ship, errata.rehome),
   },
 };
 

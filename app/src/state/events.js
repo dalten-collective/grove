@@ -1,4 +1,4 @@
-import get from 'lodash.get';
+import get from 'lodash/get';
 
 function subscribeToUrbitEvents() {
   // subscribe to urbit events here
@@ -33,7 +33,11 @@ const handleEventAction = (evt, action) => {
       return; // on poke, send a poke to urbit
   }
 };
-const handleEvent = (evt, action) => {
+export const handleEvent = (evt, action) => {
+  console.log('====================================');
+  console.log('urbit event from sub: ', evt);
+  console.log('====================================');
+  // debugger;
   // handle an urbit evt
   switch (evt) {
     case matchEvent(evt, events.NODE.ADD):
@@ -50,6 +54,11 @@ const handleEvent = (evt, action) => {
       // move a file from here to there
       return handleEventAction(evt, action);
     case matchEvent(evt, events.FOLDER.ADD):
+      console.log('====================================');
+      console.log('Add folder evt: ', evt);
+      console.log('====================================');
+      debugger;
+      // TODO: handle fact and update store
       // add a folder to the system (with an empty map of files), maybe permissioned
       return handleEventAction(evt, action);
     case matchEvent(evt, events.FOLDER.REM):
