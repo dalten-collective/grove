@@ -36,6 +36,17 @@
     |=  [k=trail:t v=tract:t]
     [(trail k) (tract v)]
   ::
+  ++  tree
+    |=  axe=(axal tract:t)
+    ^-  json
+    %-  pairs
+    :~  :-  %nodes
+        ?~(fil.axe ~ (tract u.fil.axe))
+      ::
+        :-  %subfolders
+        a/(turn ~(tap in ~(key by dir.axe)) (lead %s))
+    ==
+  ::
   ++  regs
     |=  mp=(map ^path perm:t)
     ^-  json
@@ -268,7 +279,7 @@
   ++  perm
     ^-  $-(json (unit perm:t))
     |=  j=json
-    ?~  json  ~
+    ?:  =(~ j)  ~
     :+  ~  %0
     %.  j
     %-  ot
