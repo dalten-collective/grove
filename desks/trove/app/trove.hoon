@@ -225,6 +225,7 @@
   +*  sa   .
       dok  [our.bol %spaces]
       adm  (silt `(list role)`[%admin]~)
+      maa  (silt `(list role)`[%admin %moderator]~)
       mam  (silt `(list role)`~[%admin %moderator %member])
   ++  sa-emit  |=(c=card sa(caz [c caz]))
   ++  sa-emil  |=(lc=(list card) sa(caz (welp lc caz)))
@@ -295,7 +296,7 @@
     ^-  regs
     ?.  =(our.bol p.sap)  *regs
     %-  ~(put by *regs)
-    [/ [%0 [adm adm adm adm] [mam adm adm adm adm ~]]]
+    [/ [%0 [maa maa adm adm] [mam maa maa adm adm ~]]]
   ::  +sa-dude: handle spaces-reaction marks
   ::
   ++  sa-dude
