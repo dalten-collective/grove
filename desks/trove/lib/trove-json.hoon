@@ -39,7 +39,7 @@
   ++  tree
     |=  axe=(axal tract:t)
     ^-  json
-    =;  subs=(list json)
+    =;  kids=(list json)
       %-  pairs
       :~  type+s/'SCRY'
           face+s/'TREE'
@@ -47,7 +47,7 @@
         :-  %scry
         %-  pairs
         :~  nodes+?~(fil.axe ~ (tract u.fil.axe))
-            subfolders+a/subs
+            children+a/kids
         ==
       ==
     ?:  =(~ dir.axe)  ~
