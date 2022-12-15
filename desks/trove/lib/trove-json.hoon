@@ -39,13 +39,15 @@
   ++  tree
     |=  axe=(axal tract:t)
     ^-  json
-    %-  pairs
-    :~  :-  %nodes
-        ?~(fil.axe ~ (tract u.fil.axe))
-      ::
-        :-  %subfolders
-        a/(turn ~(tap in ~(key by dir.axe)) (lead %s))
-    ==
+    =;  subs=(list json)
+      %-  pairs
+      :~  nodes+?~(fil.axe ~ (tract u.fil.axe))
+          subfolders+a/subs
+      ==
+    ?:  =(~ dir.axe)  ~
+    %+  turn  ~(tap by `(map @t (axal tract:t))`dir.axe)
+    |=  [fol=@ta con=(axal tract:t)]
+    (frond fol (tree con))
   ::
   ++  regs
     |=  mp=(map ^path perm:t)
