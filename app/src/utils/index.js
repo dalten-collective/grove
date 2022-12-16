@@ -3,7 +3,13 @@ export const getSpace = (space, ship = '') =>
 
 export const mapTilde = (ships = []) => ships.map(addTilde);
 
-export const addTilde = (ship) => `~${ship}`;
+// Maybe add tilde
+export const addTilde = (ship) => {
+  if (ship[0] === '~') {
+    return ship
+  }
+  return `~${ship}`;
+}
 
 export const getTreePath = (host, space, folder) => {
   if (!host && !space) {
