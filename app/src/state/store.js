@@ -33,6 +33,11 @@ export const getScryActions = (state) => ({
 
 // export const defaultContext = { src: 'NO_SRC', urbit: window?.urbit };
 
+export const getStateFromEvt = (evt) => {
+  if (evt?.fact) return evt.fact;
+  if (evt?.scry) return evt.scry;
+  return evt;
+};
 export const useStore = create(
   devtools(
     immer((set, get) => ({
@@ -58,7 +63,7 @@ export const useStore = create(
       setTree: (tree) =>
         set(
           produce((draft) => {
-            draft.tree = tree;
+            draft.tree = getStateFromEvt(tree);
           })
         ),
       fetchTree: async (urbit, args) => {
@@ -76,7 +81,7 @@ export const useStore = create(
       setTroveState: (_troveState) =>
         set(
           produce((draft) => {
-            const troveState = _troveState?.fact || _troveState;
+            const troveState = getStateFromEvt(_troveState);
             draft.troveState = troveState;
             draft.troves = troveState.troves;
             draft.version = troveState.version;
@@ -92,7 +97,7 @@ export const useStore = create(
       setHosts: (hosts) =>
         set(
           produce((draft) => {
-            draft.hosts = hosts;
+            draft.hosts = getStateFromEvt(hosts);
           })
         ),
       fetchHosts: async (urbit) => {

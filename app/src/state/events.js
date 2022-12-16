@@ -23,7 +23,7 @@ export const handleEvent = (urbit, storeActions) => (evt, action) => {
       return handleEventActions(
         evt,
         storeActions,
-        {},
+        evt,
         // { host: 'FILL ME IN BRUH', space: 'FILL ME IN BRUH' },
         { urbit, src: evt.face }
       );
