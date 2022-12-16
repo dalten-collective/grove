@@ -34,7 +34,10 @@ export const formScry = (path, args) => ({
   ...args,
 });
 
-export const getTroveState = async (urbit, { src = 'NO_SRC', ...args }) => {
+export const getTroveState = async (
+  urbit,
+  { src = 'NO_SRC', ...args } = {}
+) => {
   try {
     const data = await urbit.scry(formScry(PATHS.STATE, args));
     return data;
@@ -43,7 +46,7 @@ export const getTroveState = async (urbit, { src = 'NO_SRC', ...args }) => {
   }
 };
 
-export const getHosts = async (urbit, { src = 'NO_SRC', ...args }) => {
+export const getHosts = async (urbit, { src = 'NO_SRC', ...args } = {}) => {
   try {
     const data = await urbit.scry(formScry(PATHS.HOSTS, args));
     return data;
@@ -52,7 +55,7 @@ export const getHosts = async (urbit, { src = 'NO_SRC', ...args }) => {
   }
 };
 
-export const getFolder = async (urbit, { src = 'NO_SRC', ...args }) => {
+export const getFolder = async (urbit, { src = 'NO_SRC', ...args } = {}) => {
   try {
     const data = await urbit.scry(formScry(PATHS.FOLDER, args));
     return data;
@@ -61,7 +64,7 @@ export const getFolder = async (urbit, { src = 'NO_SRC', ...args }) => {
   }
 };
 
-export const getTeams = async (urbit, { src = 'NO_SRC', ...args }) => {
+export const getTeams = async (urbit, { src = 'NO_SRC', ...args } = {}) => {
   try {
     const data = await urbit.scry(formScry(PATHS.TEAMS, args));
     return data;
@@ -70,7 +73,7 @@ export const getTeams = async (urbit, { src = 'NO_SRC', ...args }) => {
   }
 };
 
-export const getTeam = async (urbit, { src = 'NO_SRC', ...args }) => {
+export const getTeam = async (urbit, { src = 'NO_SRC', ...args } = {}) => {
   try {
     const data = await urbit.scry(formScry(PATHS.TEAM, args));
     return data;
@@ -79,7 +82,7 @@ export const getTeam = async (urbit, { src = 'NO_SRC', ...args }) => {
   }
 };
 
-export const getRegs = async (urbit, { src = 'NO_SRC', ...args }) => {
+export const getRegs = async (urbit, { src = 'NO_SRC', ...args } = {}) => {
   try {
     const data = await urbit.scry(formScry(PATHS.REGS, args));
     return data;
@@ -88,7 +91,7 @@ export const getRegs = async (urbit, { src = 'NO_SRC', ...args }) => {
   }
 };
 
-export const getPerms = async (urbit, { src = 'NO_SRC', ...args }) => {
+export const getPerms = async (urbit, { src = 'NO_SRC', ...args } = {}) => {
   try {
     const data = await urbit.scry(formScry(PATHS.PERMS, args));
     return data;

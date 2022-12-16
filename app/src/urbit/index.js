@@ -19,7 +19,7 @@ export const useTrove = () => {
     () => urbit.unsubscribe(troveSub);
   }, [ship, troveSub]);
 
-  return { urbit, ship, scries, pokes, scriesWithCb };
+  return { urbit, ship, scries, pokes };
 };
 
 export const useUrbit = () => {
