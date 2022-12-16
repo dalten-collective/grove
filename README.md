@@ -93,3 +93,6 @@ To deploy, run `npm run build` in the `ui` directory which will bundle all the c
 [react]: https://reactjs.org/
 [tailwind css]: https://tailwindcss.com/
 [vite]: https://vitejs.dev/
+
+# Copy desk
+watch cp -rL ./* ~/urbit/my-ship/trove

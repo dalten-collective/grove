@@ -15,6 +15,7 @@ export const events = {
     REM: { FACE: 'MODERATORS_REM' },
   },
   TROVE: {
+    INITIAL_STATE: { FACE: 'INITIAL_STATE' },
     NEW: { FACE: 'TROVE_NEW' },
   },
   // REPERM: { FACE: 'REPERM' },

@@ -7,8 +7,12 @@ import { events } from './faces';
 // import { pokes } from '../urbit/pokes';
 import { scries, scriesWithCb } from '../urbit/scries';
 
+const cl = (...args) => console.log('yo', ...args);
 export const getActions = (state) => ({
   onFact: {
+    [events.TROVE.INITIAL_STATE.FACE]: [state.setTroveState],
+    [events.TROVE.NEW.FACE]: [state.newTrove],
+
     [events.NODE.ADD.FACE]: [state.fetchTree],
     [events.NODE.REM.FACE]: [state.remNode],
     [events.NODE.EDIT.FACE]: [state.editNode],
@@ -18,7 +22,6 @@ export const getActions = (state) => ({
     [events.FOLDER.MOVE.FACE]: [state.fetchTree],
     [events.MODERATORS.ADD.FACE]: [state.addModerators],
     [events.MODERATORS.REM.FACE]: [state.removeModerators],
-    [events.TROVE.NEW.FACE]: [state.newTrove],
   },
 });
 
@@ -70,13 +73,14 @@ export const useStore = create(
       },
       // =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
       getTroveState: () => get().troveState,
-      setTroveState: (troveState) =>
+      setTroveState: (_troveState) =>
         set(
           produce((draft) => {
+            const troveState = _troveState?.fact || _troveState;
             draft.troveState = troveState;
             draft.troves = troveState.troves;
             draft.version = troveState.version;
-            draft.ships = troveState.ships;
+            // draft.ships = troveState.ships;
           })
         ),
       fetchTroveState: async (urbit) => {
