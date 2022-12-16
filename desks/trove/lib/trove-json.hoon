@@ -67,6 +67,7 @@
   ++  team
     |=  [p=spat:t q=(set @p) r=(set @p) s=(set @p)]
     ^-  json
+    %-  pairs
     :~  type+s/'SCRY'
         face+s/'TEAM'
     ::
