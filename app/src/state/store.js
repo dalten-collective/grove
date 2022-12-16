@@ -2,22 +2,23 @@ import create from 'zustand';
 import { devtools } from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
 import produce from 'immer';
+import { events } from './faces';
 
 // import { pokes } from '../urbit/pokes';
 import { scries, scriesWithCb } from '../urbit/scries';
 
 export const getActions = (state) => ({
   onFact: {
-    [events.NODE.ADD.FACE]: state.addNode,
-    [events.NODE.REM.FACE]: state.remNode,
-    [events.NODE.EDIT.FACE]: state.editNode,
-    // [events.NODE.MOVE.FACE]: state.moveNode,
-    [events.FOLDER.ADD.FACE]: state.fetchTree,
-    [events.FOLDER.REM.FACE]: state.fetchTree,
-    [events.FOLDER.MOVE.FACE]: state.fetchTree,
-    [events.MODERATORS.ADD.FACE]: state.addModerators,
-    [events.MODERATORS.REM.FACE]: state.removeModerators,
-    [events.TROVE.NEW.FACE]: state.newTrove,
+    [events.NODE.ADD.FACE]: [state.fetchTree],
+    [events.NODE.REM.FACE]: [state.remNode],
+    [events.NODE.EDIT.FACE]: [state.editNode],
+    // [events.NODE.MOVE.FACE]: [state.moveNode],
+    [events.FOLDER.ADD.FACE]: [state.fetchTree],
+    [events.FOLDER.REM.FACE]: [state.fetchTree],
+    [events.FOLDER.MOVE.FACE]: [state.fetchTree],
+    [events.MODERATORS.ADD.FACE]: [state.addModerators],
+    [events.MODERATORS.REM.FACE]: [state.removeModerators],
+    [events.TROVE.NEW.FACE]: [state.newTrove],
   },
 });
 

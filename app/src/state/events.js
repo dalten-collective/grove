@@ -7,7 +7,11 @@ export const handleEvent = (urbit, storeActions) => (evt, action) => {
   switch (evt.face) {
     case events.NODE.ADD:
       // add a file to a folder
-      return handleEventAction(evt, storeActions, action);
+      return Promise.all(
+        storeActions.onFact[evt.face].forEach((fn) =>
+          Promise.resolve(fn({ space: evt.space }, { urbit, src: evt.face }))
+        )
+      );
     case events.NODE.REM:
       // remove a file from a folder
       return handleEventAction(evt, storeActions, action);

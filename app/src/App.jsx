@@ -5,6 +5,7 @@ import TroveWindow from './components/TroveWindow/index';
 import { useStore } from './state/store';
 import { theme as baseTheme } from './theme/theme.jsx';
 import { useTrove } from './urbit';
+import { addTilde } from './utils';
 
 export const App = () => {
   const [isHydrated, setIsHydrated] = useState(false);
@@ -24,7 +25,7 @@ export const App = () => {
     if (ship && !isHydrated) {
       setIsHydrated(true);
       scries.troveState(urbit);
-      scries.tree(urbit, { host: ship, space: 'our' });
+      scries.tree(urbit, { host: addTilde(ship), space: 'our' });
       scries.hosts(urbit);
     }
   }, [ship]);
@@ -38,7 +39,7 @@ export const App = () => {
     console.log('troveState: ', _troveState);
     console.log('tree: ', _tree);
     console.log('hosts: ', _hosts);
-  }, [troves, troveState, hosts]);
+  }, [troves, troveState, hosts, tree]);
 
   // Poke working here
   // useAddFolderPokeTest();

@@ -4,16 +4,17 @@ import { getSubscription } from './subscription';
 // import { scries, scriesWithCb } from './scries';
 import { pokes } from './pokes';
 import { handleEvent } from '../state/events';
-import { getScryActions, useStore } from '../state/store';
+import { getActions, getScryActions, useStore } from '../state/store';
 
 export const useTrove = () => {
   const [ship, urbit] = useUrbit();
   const [troveSub, setTroveSub] = useState(null);
   const scries = useStore(getScryActions);
+  const factActions = useStore(getActions);
 
   useEffect(() => {
     if (ship && !troveSub) {
-      const troveSub = getSubscription(urbit, handleEvent);
+      const troveSub = getSubscription(urbit, handleEvent(urbit, factActions));
       setTroveSub(troveSub);
     }
     () => urbit.unsubscribe(troveSub);
