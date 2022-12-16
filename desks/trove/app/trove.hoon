@@ -649,6 +649,8 @@
       =/  read=[? ? ?]
         =+  red=~(has in read.folder.perms)
         [(red %member) (red %admin) (red %moderator)]
+      =.  by.dat.node.q.f    src.bol
+      =.  from.dat.node.q.f  now.bol
       =?    node.q.f
           ?=(%0v0 id.q.f)
         ?:  =(our.bol src.bol)
