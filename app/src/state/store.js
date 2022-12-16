@@ -4,7 +4,7 @@ import { immer } from 'zustand/middleware/immer';
 import produce from 'immer';
 
 // import { pokes } from '../urbit/pokes';
-import { scries } from '../urbit/scries';
+import { scries, scriesWithCb } from '../urbit/scries';
 
 export const getActions = (state) => ({
   onFact: {
@@ -21,7 +21,13 @@ export const getActions = (state) => ({
   },
 });
 
-export const defaultContext = { src: 'NO_SRC', urbit: window?.urbit };
+export const getScryActions = (state) => ({
+  tree: state.fetchTree,
+  troveState: state.fetchTroveState,
+  hosts: state.fetchHosts,
+});
+
+// export const defaultContext = { src: 'NO_SRC', urbit: window?.urbit };
 
 export const useStore = create(
   devtools(
@@ -42,13 +48,28 @@ export const useStore = create(
 
       getShips: () => get().ships,
       getTroves: () => get().troves,
-      getTroveState: () => get().troveState,
-      getHosts: () => get().hosts,
-      // TODO: Handle scry responses
-      scries,
-      // Actions to update the store here
 
-      setFullTroveState: (troveState) =>
+      // =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+      getTree: () => get().tree,
+      setTree: (tree) =>
+        set(
+          produce((draft) => {
+            draft.tree = tree;
+          })
+        ),
+      fetchTree: async (urbit, args) => {
+        const tree = await scries.tree(urbit, args);
+        get().setTree(tree);
+      },
+      // Example of using a callback to set state
+      cbStyleFetchTree: async (urbit, { cb = get().setTree, ...args }) => {
+        const tree = await scriesWithCb.tree(urbit, { cb, ...args });
+        return tree;
+        // cb(tree);
+      },
+      // =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+      getTroveState: () => get().troveState,
+      setTroveState: (troveState) =>
         set(
           produce((draft) => {
             draft.troveState = troveState;
@@ -57,33 +78,23 @@ export const useStore = create(
             draft.ships = troveState.ships;
           })
         ),
+      fetchTroveState: async (urbit) => {
+        const troveState = await scries.troveState(urbit);
+        get().setTroveState(troveState);
+      },
+      // =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+      getHosts: () => get().hosts,
       setHosts: (hosts) =>
         set(
           produce((draft) => {
             draft.hosts = hosts;
           })
         ),
-      setTree: (tree) =>
-        set(
-          produce((draft) => {
-            draft.tree = tree;
-          })
-        ),
-      // TODO: We may want to pass setTree as a callback/handler to the scry.
-      // This works for now.
-      fetchTree: async (
-        { host, space } = {},
-        { urbit, src } = defaultContext
-      ) => {
-        const tree = await scries.tree(urbit, { args: { host, space } });
-        // console.log(src, 'fetchTree', tree)
-        set(
-          produce((draft) => {
-            // TODO: Trees can be useful for any trove. We should store them by host/space.
-            draft.tree = tree;
-          })
-        );
+      fetchHosts: async (urbit) => {
+        const hosts = await scries.hosts(urbit);
+        get().setHosts(hosts);
       },
+      // =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
       addNode: (host, space, folder, node) =>
         set(
           produce((draft) => {
@@ -115,6 +126,8 @@ export const useStore = create(
             }
           })
         ),
+      // =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+      getModerators: () => get().moderators,
       addModerators: (host, space, moderators) =>
         set(
           produce((draft) => {
@@ -132,7 +145,7 @@ export const useStore = create(
             );
           })
         ),
-
+      // =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
       // update regulations for a given space and folder
       updateRegs: (host, space, folder, regulations) =>
         set(

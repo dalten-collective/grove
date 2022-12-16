@@ -6,12 +6,12 @@ export const mapTilde = (ships = []) => ships.map(addTilde);
 // Maybe add tilde
 export const addTilde = (ship) => {
   if (ship[0] === '~') {
-    return ship
+    return ship;
   }
   return `~${ship}`;
-}
+};
 
-export const getTreePath = (host, space, folder) => {
+export const getTreePath = (host, space) => {
   if (!host && !space) {
     throw new Error('getTree requires a host or space');
   }

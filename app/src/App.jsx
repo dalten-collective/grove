@@ -15,39 +15,28 @@ export const App = () => {
     tree,
     hosts,
     getTroveState,
-    setFullTroveState,
     getTroves,
-    setHosts,
     getHosts,
-    setTree,
-    fetchTree,
+    getTree,
   } = useStore();
 
   useEffect(() => {
     if (ship && !isHydrated) {
       setIsHydrated(true);
-      scries.state(urbit, setFullTroveState);
-      scries.hosts(urbit, setHosts);
-      scries.team(urbit);
-
-      // NOTE: There are two ways to scry and update store state.
-      // 1. Use an async scry function from the store, such as `fetchTree`, which can update store state itself.
-      // 2. Pass a store-updating callback to the scry helper function we get from the `scries` object on `useTrove`.
-
-      scries.tree(urbit, {
-        handler: setTree,
-        args: { host: ship, space: 'our' },
-      });
-      fetchTree(urbit, { host: ship, space: 'our' });
+      scries.troveState(urbit);
+      scries.tree(urbit, { host: ship, space: 'our' });
+      scries.hosts(urbit);
     }
   }, [ship]);
 
   useEffect(() => {
     const _troves = getTroves();
     const _troveState = getTroveState();
+    const _tree = getTree();
     const _hosts = getHosts();
     console.log('troves: ', _troves);
     console.log('troveState: ', _troveState);
+    console.log('tree: ', _tree);
     console.log('hosts: ', _hosts);
   }, [troves, troveState, hosts]);
 

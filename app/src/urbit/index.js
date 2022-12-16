@@ -1,13 +1,15 @@
 import { useEffect, useState } from 'react';
 import Urbit from '@urbit/http-api';
 import { getSubscription } from './subscription';
-import { scries } from './scries';
+// import { scries, scriesWithCb } from './scries';
 import { pokes } from './pokes';
 import { handleEvent } from '../state/events';
+import { getScryActions, useStore } from '../state/store';
 
 export const useTrove = () => {
   const [ship, urbit] = useUrbit();
   const [troveSub, setTroveSub] = useState(null);
+  const scries = useStore(getScryActions);
 
   useEffect(() => {
     if (ship && !troveSub) {
@@ -17,7 +19,7 @@ export const useTrove = () => {
     () => urbit.unsubscribe(troveSub);
   }, [ship, troveSub]);
 
-  return { urbit, ship, scries, pokes };
+  return { urbit, ship, scries, pokes, scriesWithCb };
 };
 
 export const useUrbit = () => {
