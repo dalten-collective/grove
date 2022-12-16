@@ -71,6 +71,7 @@
     :~  type+s/'SCRY'
         face+s/'TEAM'
     ::
+      :-  %scry
       %-  pairs
       :~  space+s/(spat p)
           admins+a/(turn ~(tap in q) ships)
