@@ -38,22 +38,27 @@
   ::
   ++  tree
     |=  axe=(axal tract:t)
-    ^-  json
-    =;  kids=(list json)
+    |^  ^-  json
       %-  pairs
       :~  type+s/'SCRY'
           face+s/'TREE'
       ::
         :-  %scry
+        (chop-wood axe)
+      ==
+    ::
+    ++  chop-wood
+      |=  stump=(axal tract:t)
+      =;  kids=(list json)
         %-  pairs
-        :~  nodes+?~(fil.axe ~ (tract u.fil.axe))
+        :~  nodes+?~(fil.stump ~ (tract u.fil.stump))
             children+a/kids
         ==
-      ==
-    ?:  =(~ dir.axe)  ~
-    %+  turn  ~(tap by `(map @t (axal tract:t))`dir.axe)
-    |=  [fol=@ta con=(axal tract:t)]
-    (frond fol (tree con))
+      ?:  =(~ dir.stump)  ~
+      %+  turn  ~(tap by `(map @t (axal tract:t))`dir.stump)
+      |=  [fol=@ta twig=(axal tract:t)]
+      (frond fol (chop-wood twig))
+    --
   ::
   ++  regs
     |=  mp=(map ^path perm:t)
