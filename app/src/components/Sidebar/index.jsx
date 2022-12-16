@@ -2,6 +2,15 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { RiArrowDownSLine } from 'react-icons/ri';
 
+import FolderTree, { testData } from 'react-folder-tree';
+import 'react-folder-tree/dist/style.css';
+
+const BasicTree = () => {
+  const onTreeStateChange = (state, event) => console.log(state, event);
+
+  return <FolderTree data={testData} onChange={onTreeStateChange} />;
+};
+
 const initalSidebarItemsState = [
   { title: 'Memes', selected: false },
   { title: 'Books', selected: true },

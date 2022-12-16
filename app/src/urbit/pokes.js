@@ -1,4 +1,4 @@
-import { getSpace, mapTilde } from './utils';
+import { getSpace, mapTilde } from '../utils';
 
 export const poke = async (urbit, space, data, ship, pokeObj) => {
   try {

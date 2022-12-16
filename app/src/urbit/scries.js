@@ -1,3 +1,5 @@
+import { getTreePath } from '../utils';
+
 const BASE_CMD = `.^(json %gx /=trove=`;
 
 export const PATHS = {
@@ -8,35 +10,40 @@ export const PATHS = {
   REGS: `/regs/(scot %p our)/(scot %t 'our')`,
   PERMS: `/folder/perms/(scot %p our)/(scot %t 'our')`,
   FOLDER: `/folder/(scot %p our)/(scot %t 'our')`,
+  TREE: `/tree/~host/space`,
+  TREE_AT_PATH: `/tree/~host/space/path`,
   // NODE: `/node/(scot %p our)/(scot %t 'our')/(scot %uv 0v5.a7f3d.8a2rd.ro62i.a8niq.sb782)/test/json)`,
 };
 
 // Take urbit instance & an optional callback, and execute scry.
 // This will be where we update the store with the new state.
 export const scries = {
-  state: (urbit, handler = cl) => handleScry(urbit, getState, handler),
-  hosts: (urbit, handler = cl) => handleScry(urbit, getHosts, handler),
-  folder: (urbit, handler = cl) => handleScry(urbit, getFolder, handler),
-  teams: (urbit, handler = cl) => handleScry(urbit, getTeams, handler),
-  team: (urbit, handler = cl) => handleScry(urbit, getTeam, handler),
-  regs: (urbit, handler = cl) => handleScry(urbit, getRegs, handler),
-  perms: (urbit, handler = cl) => handleScry(urbit, getPerms, handler),
+  state: (urbit, options) => handleScry(urbit, getState, options),
+  hosts: (urbit, options) => handleScry(urbit, getHosts, options),
+  folder: (urbit, options) => handleScry(urbit, getFolder, options),
+  teams: (urbit, options) => handleScry(urbit, getTeams, options),
+  team: (urbit, options) => handleScry(urbit, getTeam, options),
+  regs: (urbit, options) => handleScry(urbit, getRegs, options),
+  perms: (urbit, options) => handleScry(urbit, getPerms, options),
+  tree: (urbit, options) => handleScry(urbit, getTree, options),
+  treeAtPath: (urbit, options) => handleScry(urbit, getTreeAtPath, options),
   // node: handler => handler(getNode),
 };
 
-export const handleScry = async (urbit, _scry, handler) => {
+export const handleScry = async (urbit, _scry, { handler = cl, args = {} }) => {
   try {
-    const res = await _scry(urbit);
+    const res = await _scry(urbit, args);
     return handler(res);
   } catch (err) {
     console.error(err);
   }
 };
 
-export const scry = async (urbit, path) => {
+export const scry = async (args, { urbit, src = 'NO_SRC' }) => {
   try {
-    const data = await urbit.scry({ app: 'trove', path });
-    console.log(`${path} scry: `, data);
+    const data = await urbit.scry({ app: 'trove', ...args });
+    // console.log(`${path} scry args: `, args);
+    console.log(`${src} scry data: `, data);
 
     // debugger;
     return data;
@@ -45,9 +52,9 @@ export const scry = async (urbit, path) => {
   }
 };
 
-export const getState = async (urbit) => {
+export const getState = async (urbit, { handler = setFull } = {}) => {
   try {
-    const data = await scry(urbit, PATHS.STATE);
+    const data = await scry({ path: PATHS.STATE }, { urbit });
     return data;
   } catch (err) {
     console.error(err);
@@ -56,7 +63,7 @@ export const getState = async (urbit) => {
 
 export const getHosts = async (urbit) => {
   try {
-    const data = await scry(urbit, PATHS.HOSTS);
+    const data = await scry({ path: PATHS.HOSTS }, { urbit });
     return data;
   } catch (err) {
     console.error(err);
@@ -65,7 +72,7 @@ export const getHosts = async (urbit) => {
 
 export const getFolder = async (urbit) => {
   try {
-    const data = await scry(urbit, PATHS.FOLDER);
+    const data = await scry({ path: PATHS.FOLDER }, { urbit });
     return data;
   } catch (err) {
     console.error(err);
@@ -74,7 +81,7 @@ export const getFolder = async (urbit) => {
 
 export const getTeams = async (urbit) => {
   try {
-    const data = await scry(urbit, PATHS.TEAMS);
+    const data = await scry({ path: PATHS.TEAMS }, { urbit });
     return data;
   } catch (err) {
     console.error(err);
@@ -83,7 +90,7 @@ export const getTeams = async (urbit) => {
 
 export const getTeam = async (urbit) => {
   try {
-    const data = await scry(urbit, PATHS.TEAM);
+    const data = await scry({ path: PATHS.TEAM }, { urbit });
     return data;
   } catch (err) {
     console.error(err);
@@ -92,7 +99,7 @@ export const getTeam = async (urbit) => {
 
 export const getRegs = async (urbit) => {
   try {
-    const data = await scry(urbit, PATHS.REGS);
+    const data = await scry({ path: PATHS.REGS }, { urbit });
     return data;
   } catch (err) {
     console.error(err);
@@ -101,7 +108,26 @@ export const getRegs = async (urbit) => {
 
 export const getPerms = async (urbit) => {
   try {
-    const data = await scry(urbit, PATHS.PERMS);
+    const data = await scry({ path: PATHS.PERMS }, { urbit });
+    return data;
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+export const getTree = async (urbit, { host, space, folder } = {}) => {
+  const treePath = getTreePath(host, space, folder);
+  try {
+    const data = await scry(urbit, treePath);
+    return data;
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+export const getTreeAtPath = async (urbit) => {
+  try {
+    const data = await scry(urbit, PATHS.TREE_AT_PATH);
     return data;
   } catch (err) {
     console.error(err);

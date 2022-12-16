@@ -6,6 +6,23 @@ import produce from 'immer';
 // import { pokes } from '../urbit/pokes';
 import { scries } from '../urbit/scries';
 
+export const getActions = (state) => ({
+  onFact: {
+    [events.NODE.ADD.FACE]: state.addNode,
+    [events.NODE.REM.FACE]: state.remNode,
+    [events.NODE.EDIT.FACE]: state.editNode,
+    // [events.NODE.MOVE.FACE]: state.moveNode,
+    [events.FOLDER.ADD.FACE]: state.fetchTree,
+    [events.FOLDER.REM.FACE]: state.fetchTree,
+    [events.FOLDER.MOVE.FACE]: state.fetchTree,
+    [events.MODERATORS.ADD.FACE]: state.addModerators,
+    [events.MODERATORS.REM.FACE]: state.removeModerators,
+    [events.TROVE.NEW.FACE]: state.newTrove,
+  },
+});
+
+export const defaultContext = { src: 'NO_SRC', urbit: window?.urbit };
+
 export const useStore = create(
   devtools(
     immer((set, get) => ({
@@ -16,6 +33,7 @@ export const useStore = create(
       },
       ships: {},
       troves: {},
+      tree: {},
       hosts: [],
       moderators: {},
       regulations: {},
@@ -29,6 +47,7 @@ export const useStore = create(
       // TODO: Handle scry responses
       scries,
       // Actions to update the store here
+
       setFullTroveState: (troveState) =>
         set(
           produce((draft) => {
@@ -44,7 +63,27 @@ export const useStore = create(
             draft.hosts = hosts;
           })
         ),
-
+      setTree: (tree) =>
+        set(
+          produce((draft) => {
+            draft.tree = tree;
+          })
+        ),
+      // TODO: We may want to pass setTree as a callback/handler to the scry.
+      // This works for now.
+      fetchTree: async (
+        { host, space } = {},
+        { urbit, src } = defaultContext
+      ) => {
+        const tree = await scries.tree(urbit, { args: { host, space } });
+        // console.log(src, 'fetchTree', tree)
+        set(
+          produce((draft) => {
+            // TODO: Trees can be useful for any trove. We should store them by host/space.
+            draft.tree = tree;
+          })
+        );
+      },
       addNode: (host, space, folder, node) =>
         set(
           produce((draft) => {

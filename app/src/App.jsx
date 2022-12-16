@@ -12,12 +12,15 @@ export const App = () => {
   const {
     troves,
     troveState,
+    tree,
     hosts,
     getTroveState,
     setFullTroveState,
     getTroves,
     setHosts,
     getHosts,
+    setTree,
+    fetchTree,
   } = useStore();
 
   useEffect(() => {
@@ -25,6 +28,17 @@ export const App = () => {
       setIsHydrated(true);
       scries.state(urbit, setFullTroveState);
       scries.hosts(urbit, setHosts);
+      scries.team(urbit);
+
+      // NOTE: There are two ways to scry and update store state.
+      // 1. Use an async scry function from the store, such as `fetchTree`, which can update store state itself.
+      // 2. Pass a store-updating callback to the scry helper function we get from the `scries` object on `useTrove`.
+
+      scries.tree(urbit, {
+        handler: setTree,
+        args: { host: ship, space: 'our' },
+      });
+      fetchTree(urbit, { host: ship, space: 'our' });
     }
   }, [ship]);
 
@@ -33,10 +47,12 @@ export const App = () => {
     const _troveState = getTroveState();
     const _hosts = getHosts();
     console.log('troves: ', _troves);
+    console.log('troveState: ', _troveState);
+    console.log('hosts: ', _hosts);
   }, [troves, troveState, hosts]);
 
   // Poke working here
-  useAddFolderPokeTest();
+  // useAddFolderPokeTest();
 
   return (
     // <CoreProvider value={coreStore}>

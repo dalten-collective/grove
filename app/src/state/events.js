@@ -1,93 +1,59 @@
-import get from 'lodash/get';
+import { logLarge } from '../utils';
+import { events } from './faces';
 
-function subscribeToUrbitEvents() {
-  // subscribe to urbit events here
-}
-
-const events = {
-  NODE: {
-    ADD: 'add.node',
-    REM: 'rem.node',
-    EDIT: 'upd.node',
-    MOVE: 'move.node',
-  },
-  FOLDER: {
-    ADD: 'add.folder',
-    REM: 'rem.folder',
-    MOVE: 'move.folder',
-  },
-  REPEAT: 'repeat',
-  REPERM: 'reperm',
+export const handleEvent = (urbit, storeActions) => (evt, action) => {
+  logLarge('urbit event from sub: ', evt);
+  // return handleEventAction(evt, storeActions, { urbit, action });
+  switch (evt.face) {
+    case events.NODE.ADD:
+      // add a file to a folder
+      return handleEventAction(evt, storeActions, action);
+    case events.NODE.REM:
+      // remove a file from a folder
+      return handleEventAction(evt, storeActions, action);
+    case events.NODE.UPD:
+      // edit either the title, description or both of a file
+      return handleEventAction(evt, storeActions, action);
+    // TODO: handle both adds and remove facts
+    case events.NODE.MOVE:
+      // move a file from here to there
+      return handleEventAction(evt, storeActions, action);
+    case events.FOLDER.ADD:
+      logLarge('Add folder evt: ', evt);
+      debugger;
+      return storeActions.onFact[evt.face](
+        { space: evt.space },
+        { urbit, src: evt.face }
+      );
+    // return handleEventAction(evt, storeActions, action);
+    case events.FOLDER.REM:
+      // delete a folder and its subfolders
+      return handleEventAction(evt, storeActions, action);
+    // TODO: handle both adds and remove facts
+    case events.FOLDER.MOVE:
+      // move a folder from this container to that, adjusts its permissions
+      return handleEventAction(evt, storeActions, action);
+    // TODO: handle facts for repeat, reperm
+    // case events.REPEAT: return;
+    // case events.REPERM: return;
+    default: {
+      logLarge('Unhandled event: ', evt);
+      debugger;
+      break;
+    }
+  }
 };
-const matchEvent = (evt, path) => get(evt, path, false);
 
-// action is handlerType of 'fact' | 'scry' | 'poke'
-const handleEventAction = (evt, action) => {
+export const handleEventAction = (evt, storeActions, action) => {
   // handle an urbit evt
-  switch (action) {
-    case 'fact':
-      return; // on fact, update store with new state
-    case 'scry':
+  switch (evt.type) {
+    case 'FACT':
+      // TODO: We could really use async middleware here.
+      return storeActions.onFact[evt.face](urbit);
+    // return; // on fact, update store with new state
+    case 'SCRY':
       return; // on scry, request state from urbit
-    case 'poke':
+    case 'POKE':
       return; // on poke, send a poke to urbit
   }
 };
-export const handleEvent = (evt, action) => {
-  console.log('====================================');
-  console.log('urbit event from sub: ', evt);
-  console.log('====================================');
-  // debugger;
-  // handle an urbit evt
-  switch (evt) {
-    case matchEvent(evt, events.NODE.ADD):
-      // add a file to a folder
-      return handleEventAction(evt, action);
-    case matchEvent(evt, events.NODE.REM):
-      // remove a file from a folder
-      return handleEventAction(evt, action);
-    case matchEvent(evt, events.NODE.UPD):
-      // edit either the title, description or both of a file
-      return handleEventAction(evt, action);
-    // TODO: handle both adds and remove facts
-    case matchEvent(evt, events.NODE.MOVE):
-      // move a file from here to there
-      return handleEventAction(evt, action);
-    case matchEvent(evt, events.FOLDER.ADD):
-      console.log('====================================');
-      console.log('Add folder evt: ', evt);
-      console.log('====================================');
-      debugger;
-      // TODO: handle fact and update store
-      // add a folder to the system (with an empty map of files), maybe permissioned
-      return handleEventAction(evt, action);
-    case matchEvent(evt, events.FOLDER.REM):
-      // delete a folder and its subfolders
-      return handleEventAction(evt, action);
-    // TODO: handle both adds and remove facts
-    case matchEvent(evt, events.FOLDER.MOVE):
-      // move a folder from this container to that, adjusts its permissions
-      return handleEventAction(evt, action);
-    // TODO: handle facts for repeat, reperm
-    case matchEvent(evt, events.REPEAT):
-    case matchEvent(evt, events.REPERM):
-  }
-};
-
-// function handleScry(scry) {
-//   // handle a urbit scry
-//   switch (scry.mark) {
-//     case '/x/state/json':
-//       // return the state, as on initial subscription
-//       break;
-//     case '/x/hosts/json':
-//       // return all spaces you know about that may or may not have active troves
-//       break;
-//     case '/x/team/<host-ship>/<space-name>/json':
-//       // return information about a specific team
-//       break;
-//     case '/x/teams/json':
-//       // return all teams you know about
-//       break;
-//   }
-// }

@@ -22,6 +22,7 @@
     "polished": "^4.2.2",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
+    "react-folder-tree": "^5.1.1",
     "react-icons": "^4.7.1",
     "react-router-dom": "^6.3.0",
     "react-window": "^1.8.7",
