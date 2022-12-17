@@ -2,24 +2,26 @@ import create from 'zustand';
 import { devtools } from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
 import produce from 'immer';
-import { events } from './faces';
 
-// import { pokes } from '../urbit/pokes';
+import { events } from './faces';
+import { getStateFromEvt, addNames } from '../utils';
+import { getHostSpaceShape } from '../utils/config';
 import { scries, scriesWithCb } from '../urbit/scries';
 
-const cl = (...args) => console.log('yo', ...args);
 export const getActions = (state) => ({
   onFact: {
-    [events.TROVE.INITIAL_STATE.FACE]: [state.setTroveState],
+    [events.TROVE.INITIAL_STATE.FACE]: [state.setTroves],
     [events.TROVE.NEW.FACE]: [state.newTrove],
 
     [events.NODE.ADD.FACE]: [state.fetchTree],
     [events.NODE.REM.FACE]: [state.remNode],
     [events.NODE.EDIT.FACE]: [state.editNode],
     // [events.NODE.MOVE.FACE]: [state.moveNode],
+
     [events.FOLDER.ADD.FACE]: [state.fetchTree],
     [events.FOLDER.REM.FACE]: [state.fetchTree],
     [events.FOLDER.MOVE.FACE]: [state.fetchTree],
+
     [events.MODERATORS.ADD.FACE]: [state.addModerators],
     [events.MODERATORS.REM.FACE]: [state.removeModerators],
   },
@@ -27,48 +29,48 @@ export const getActions = (state) => ({
 
 export const getScryActions = (state) => ({
   tree: state.fetchTree,
-  troveState: state.fetchTroveState,
+  troves: state.fetchTroves,
   hosts: state.fetchHosts,
+  allTrees: state.fetchTreesForAllTroves,
 });
 
-// export const defaultContext = { src: 'NO_SRC', urbit: window?.urbit };
-
-export const getStateFromEvt = (evt) => {
-  if (evt?.fact) return evt.fact;
-  if (evt?.scry) return evt.scry;
-  return evt;
-};
 export const useStore = create(
   devtools(
     immer((set, get) => ({
       // ...initialState,
-      troveState: {
-        troves: {},
-        version: '0',
-      },
-      ships: {},
       troves: {},
-      tree: {},
       hosts: [],
       moderators: {},
       regulations: {},
-      version: '0',
-      // pokes,
-
-      getShips: () => get().ships,
-      getTroves: () => get().troves,
 
       // =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
       getTree: () => get().tree,
-      setTree: (tree) =>
+      setTree: (_tree, args) =>
         set(
           produce((draft) => {
-            draft.tree = getStateFromEvt(tree);
+            const hostSpaceShape = getHostSpaceShape(args);
+            const tree = addNames(getStateFromEvt(_tree));
+            if (draft.troves[hostSpaceShape]) {
+              draft.troves[hostSpaceShape].tree = tree;
+            } else {
+              draft.troves = { [hostSpaceShape]: { tree } };
+            }
           })
         ),
       fetchTree: async (urbit, args) => {
         const tree = await scries.tree(urbit, args);
-        get().setTree(tree);
+        get().setTree(tree, args);
+      },
+      fetchTreesForAllTroves: async (urbit) => {
+        const hosts = get().hosts;
+        if (hosts && hosts.length) {
+          await Promise.all([
+            hosts.forEach(
+              async (hostSpace) =>
+                await get().fetchTree(urbit, { host: hostSpace })
+            ),
+          ]);
+        }
       },
       // Example of using a callback to set state
       cbStyleFetchTree: async (urbit, { cb = get().setTree, ...args }) => {
@@ -77,20 +79,29 @@ export const useStore = create(
         // cb(tree);
       },
       // =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-      getTroveState: () => get().troveState,
-      setTroveState: (_troveState) =>
+      getTroves: () => get().troves,
+      setTroves: (_troveState) =>
         set(
           produce((draft) => {
             const troveState = getStateFromEvt(_troveState);
-            draft.troveState = troveState;
-            draft.troves = troveState.troves;
-            draft.version = troveState.version;
-            // draft.ships = troveState.ships;
+            Object.keys(troveState.troves).forEach((hostSpace) => {
+              if (draft.troves[hostSpace]) {
+                // TODO: This is ugly but actually immutable
+                draft.troves[hostSpace].regs =
+                  troveState.troves[hostSpace].regs;
+                draft.troves[hostSpace].team =
+                  troveState.troves[hostSpace].team;
+                draft.troves[hostSpace].trove =
+                  troveState.troves[hostSpace].trove;
+              } else {
+                draft.troves[hostSpace] = troveState.troves[hostSpace];
+              }
+            });
           })
         ),
-      fetchTroveState: async (urbit) => {
+      fetchTroves: async (urbit) => {
         const troveState = await scries.troveState(urbit);
-        get().setTroveState(troveState);
+        get().setTroves(troveState);
       },
       // =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
       getHosts: () => get().hosts,

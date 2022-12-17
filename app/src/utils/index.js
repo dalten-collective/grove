@@ -15,16 +15,34 @@ export const getTreePath = (host, space) => {
   if (!host && !space) {
     throw new Error('getTree requires a host or space');
   }
-  if (space.slice().split('/').length > 1) {
+  if (space?.slice().split('/').length > 1) {
     return `/tree/${space}`;
   }
-  if (host.slice().split('/').length > 1) {
+  if (host?.slice().split('/').length > 1) {
     return `/tree/${host}`;
   }
   if (!space) {
     return `/tree/${host}/our`;
   }
   return `/tree/${host}/${space}`;
+};
+
+export const getStateFromEvt = (evt) => {
+  if (evt?.fact) return evt.fact;
+  if (evt?.scry) return evt.scry;
+  return evt;
+};
+
+export const addNames = (obj) => {
+  if (!obj.children) return obj;
+
+  obj.children.forEach((child) => {
+    const key = Object.keys(child)[0];
+    child[key].name = key;
+
+    addNames(child[key]);
+  });
+  return obj;
 };
 
 export const logLarge = (key, msg) => {

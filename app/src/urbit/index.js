@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import Urbit from '@urbit/http-api';
+
 import { getSubscription } from './subscription';
-// import { scries, scriesWithCb } from './scries';
 import { pokes } from './pokes';
 import { handleEvent } from '../state/events';
 import { getActions, getScryActions, useStore } from '../state/store';
@@ -26,8 +26,6 @@ export const useTrove = () => {
 export const useUrbit = () => {
   const [urbit, setUrbit] = useState(null);
   const [ship, setShip] = useState(null);
-  const [code, setCode] = useState(null);
-  const [url, setUrl] = useState(null);
 
   useEffect(() => {
     if (!ship) {
