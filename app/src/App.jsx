@@ -1,42 +1,29 @@
 import React, { useState, useEffect } from 'react';
 import { ThemeProvider } from 'styled-components';
+import isEmpty from 'lodash/isEmpty';
 
 import TroveWindow from './components/TroveWindow/index';
 import { useStore } from './state/store';
 import { theme as baseTheme } from './theme/theme.jsx';
 import { useTrove } from './urbit';
+// import { addTilde } from './utils';
 
 export const App = () => {
   const [isHydrated, setIsHydrated] = useState(false);
   const { urbit, ship, scries } = useTrove();
-  const {
-    troves,
-    troveState,
-    hosts,
-    getTroveState,
-    setFullTroveState,
-    getTroves,
-    setHosts,
-    getHosts,
-  } = useStore();
+  const hosts = useStore((state) => state.hosts);
 
   useEffect(() => {
     if (ship && !isHydrated) {
       setIsHydrated(true);
-      scries.state(urbit, setFullTroveState);
-      scries.hosts(urbit, setHosts);
+      scries.hosts(urbit);
     }
-  }, [ship]);
-
-  useEffect(() => {
-    const _troves = getTroves();
-    const _troveState = getTroveState();
-    const _hosts = getHosts();
-    console.log('troves: ', _troves);
-  }, [troves, troveState, hosts]);
+    if (ship && !isEmpty(hosts)) scries.allTrees(urbit);
+    // scries.tree(urbit, { host: addTilde(ship), space: 'our' });
+  }, [ship, hosts]);
 
   // Poke working here
-  useAddFolderPokeTest();
+  // useAddFolderPokeTest();
 
   return (
     // <CoreProvider value={coreStore}>

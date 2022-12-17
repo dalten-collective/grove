@@ -2,6 +2,17 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { RiArrowDownSLine } from 'react-icons/ri';
 
+import FolderTree, { testData } from 'react-folder-tree';
+import 'react-folder-tree/dist/style.css';
+
+import { useStore } from '../../state/store';
+
+const BasicTree = ({ data }) => {
+  const onTreeStateChange = (state, event) => console.log(state, event);
+
+  return <FolderTree data={data} onChange={onTreeStateChange} />;
+};
+
 const initalSidebarItemsState = [
   { title: 'Memes', selected: false },
   { title: 'Books', selected: true },
@@ -12,12 +23,17 @@ const initalSidebarItemsState = [
 
 export const Sidebar = ({}) => {
   const [selectedRow, setSelectedRow] = useState(initalSidebarItemsState);
+  const tree = useStore(
+    (state) =>
+      Object.values(state.troves) && Object.values(state.troves)[0]?.tree
+  );
 
   return (
     <SidebarContainer>
       {initalSidebarItemsState.map(({ title, selected }) => (
         <SidebarRow key={title} title={title} selected={selected}></SidebarRow>
       ))}
+      {/* {tree ? <BasicTree data={tree} /> : <></>} */}
     </SidebarContainer>
   );
 };

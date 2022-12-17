@@ -44,7 +44,7 @@ export const MainContentWindow = () => {
       <ActualMainContent>
         <InfoSortingBar></InfoSortingBar>
         {files.map((file) => (
-          <FileRow>
+          <FileRow key={file.title}>
             <Title>{file.title}</Title>
             <Metadata>
               <Size>{file.size}</Size>
