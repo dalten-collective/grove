@@ -803,6 +803,7 @@
       ==
     ::
         %add-folder
+      ?>  ((sane %tas) nam.q.f)
       =.  trail.q.f  (snoc trail.q.f nam.q.f)
       =+  perms=(to-perm trail.q.f)
       ?>  ?|  =(~ (~(get of `trove`tov) trail.q.f))
@@ -852,7 +853,7 @@
         %-  malt
         %+  murn  ~(tap by rag)
         |=  (pair trail perm)
-        ?.((pre-fix trail.q.f p) ~ `[p q])
+        ?:((pre-fix trail.q.f p) ~ `[p q])
       ?.  =(our.bol p.sap)
         ?:  =(our.bol src.bol)
           ::  an instruction to a remote trove
