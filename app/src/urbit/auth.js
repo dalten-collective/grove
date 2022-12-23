@@ -13,3 +13,24 @@ export const openAirlock = async () => {
   const airlock = await authAirlock();
   airlock.subscribe('trove', '/all');
 };
+
+export const useAirlock = () => {
+  const [airlock, setAirlock] = useState(null);
+  const [isAuthed, setIsAuthed] = useState(false);
+
+  useEffect(() => {
+    const authAirlock = async () => {
+      const airlock = await Urbit.authenticate({
+        ship: 'YOUR_SHIP_HERE',
+        url: 'localhost:80',
+        code: 'YOUR_CODE_HERE',
+        verbose: true,
+      });
+      setAirlock(airlock);
+      setIsAuthed(true);
+    };
+    authAirlock();
+  }, []);
+
+  return { airlock, isAuthed };
+};
