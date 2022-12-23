@@ -22,7 +22,7 @@ export const useAirlock = () => {
     const authAirlock = async () => {
       const airlock = await Urbit.authenticate({
         ship: 'YOUR_SHIP_HERE',
-        url: 'localhost:80',
+        url: 'YOUR_VITE_PORT_HERE',
         code: 'YOUR_CODE_HERE',
         verbose: true,
       });
