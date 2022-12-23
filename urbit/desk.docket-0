@@ -1,8 +1,0 @@
-:~  title+'trove'
-    info+'group file drive'
-    color+0xd0.aad0
-    site+/apps/trove
-    version+[0 0 1]
-    website+'https://stp.world/'
-    license+'REKT'
-==
