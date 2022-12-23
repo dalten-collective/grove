@@ -1,5 +1,6 @@
 import { getSpace, mapTilde } from '../utils';
 
+// TODO: Remoe deleted folders and nodes from local storage
 export const poke = async (urbit, space, data, ship, pokeObj) => {
   try {
     const formedPoke = pokeObj(space, data, ship);
@@ -102,7 +103,8 @@ const structurePokeData = (type, data) => {
     }
     case 'rem-folder': {
       const { fromPath } = data;
-      return { trail: fromPath };
+      debugger;
+      return fromPath;
     }
     case 'move-folder': {
       const { fromPath, toPath } = data;

@@ -1,0 +1,6 @@
+vite.config.ts
+test/setup.ts
+package.json
+modules/app.tsx
+./app.tsx
+app.tsx
