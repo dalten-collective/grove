@@ -6,11 +6,11 @@ import TroveWindow from './components/TroveWindow/index';
 import { useStore } from './state/store';
 import { theme as baseTheme } from './theme/theme.jsx';
 import { useTrove, useTroveSubscription } from './urbit';
-// import { useAirlock } from './urbit/auth';
+import { useAirlock } from './urbit/auth';
 // import { addTilde } from './utils';
 
 export const App = () => {
-  // useAirlock();
+  useAirlock();
   useTroveSubscription();
   const [isHydrated, setIsHydrated] = useState(false);
   const { urbit, ship, scries } = useTrove();
