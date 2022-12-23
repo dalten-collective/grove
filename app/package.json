@@ -11,8 +11,7 @@
     "lint": "eslint ./src --fix",
     "storybook": "start-storybook -p 6007",
     "build-storybook": "build-storybook",
-    "build-modules": "tsc",
-    "postinstall": "yarn run build-modules"
+    "build-modules": "tsc"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.236.0",
