@@ -12,7 +12,7 @@
     "storybook": "start-storybook -p 6007",
     "build-storybook": "build-storybook",
     "build-modules": "tsc",
-    "postinstall": "build-modules"
+    "postinstall": "yarn run build-modules"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.236.0",
