@@ -23,6 +23,7 @@ import {
 import { getDateTime } from '../../utils';
 import { useStore } from '../../state/store';
 import { CustomNoRowsOverlay } from './EmptyFolder';
+import FileViewer from './FileViewer';
 
 function CustomToolbar() {
   return (
@@ -111,6 +112,7 @@ export default function DataGridDemo({
 }) {
   // console.log('parent', parent);
   const setSelectedPath = useStore((state) => state.setSelectedPath);
+  const [renderDoc, setRenderDoc] = useState(false);
   // const [selectionModel, setSelectionModel] = useState([]);
   const [_rows, setRows] = useState(() => []);
   useEffect(() => {
@@ -119,6 +121,7 @@ export default function DataGridDemo({
     }
   }, [rows, selectedPath]);
 
+  const [selectedDoc, setSelectedDoc] = useState(null);
   // const handleAddRow = () => {
   //   // setRows((prevRows) => [...prevRows, createRandomRow()]);
   //   setRows((prevRows) => [{ name: Yo }, ...prevRows]);
@@ -144,7 +147,16 @@ export default function DataGridDemo({
   //   });
   // };
   const openAtPath = (params) => {
-    params.id && setSelectedPath(params.id);
+    const isPDF =
+      params.row?.dat?.extension === '.pdf' ||
+      params.row?.dat?.extension === 'pdf';
+    if (isPDF) {
+      setSelectedDoc(params.row);
+      setRenderDoc(true);
+    } else {
+      params.id && setSelectedPath(params.id);
+    }
+    // debugger;
   };
   return (
     <Box
@@ -155,6 +167,9 @@ export default function DataGridDemo({
         padding: '0px 0px 20px',
       }}
     >
+      {renderDoc ? (
+        <FileViewer file={selectedDoc} url={selectedDoc?.url} />
+      ) : null}
       <DataGrid
         headerHeight={30}
         // headerClassName={tableHeaderClass}

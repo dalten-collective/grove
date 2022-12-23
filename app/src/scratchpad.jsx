@@ -8,15 +8,16 @@ export const usePoke = (key, action, args) => {
   const { urbit, ship, pokes } = useTrove();
   const _hosts = getHosts();
   const [sentPoke, setSentPoke] = useState(false);
-  useEffect(() => {
-    const testPoke = async () => {
-      pokes[key][action](urbit, 'our', { ...args }, ship);
-    };
-    if (ship && _hosts?.length && !sentPoke) {
-      setSentPoke(true);
-      testPoke();
-    }
-  }, [ship, hosts]);
+  // useEffect(() => {
+  const poke = async () => {
+    pokes[key][action](urbit, 'our', { ...args }, ship);
+  };
+  // if (ship && _hosts?.length && !sentPoke) {
+  //   setSentPoke(true);
+  //   testPoke();
+  // }
+  // }, [ship, hosts]);
+  return [poke];
 };
 
 export const addFolderArgs = [

@@ -11,6 +11,7 @@ import { RiArrowDownSLine } from 'react-icons/ri';
 
 import { getTree, useStore } from '../../state/store';
 import { SpaceInfo } from './Sidebar';
+import FullWidthTextField from '../Form';
 // import sigil from '../../assets/sigil.png';
 
 const CustomContent = React.forwardRef(function CustomContent(props, ref) {
@@ -200,12 +201,17 @@ const initalSidebarItemsState = [
 
 export const Sidebar = ({}) => {
   const [selectedRow, setSelectedRow] = useState(initalSidebarItemsState);
+  const [addFolderToggled, setAddFolderToggled] = useState(false);
   const tree = useStore(getTree);
+  const toggleAddFolder = () => {
+    setAddFolderToggled(!addFolderToggled);
+  };
 
   return (
     <SidebarContainer>
-      <SpaceInfo />
+      <SpaceInfo toggleAddFolder={toggleAddFolder} />
       <RichObjectTreeView tree={tree} />
+      {addFolderToggled ? <FullWidthTextField /> : <></>}
       {/* {initalSidebarItemsState.map(({ title, selected }) => (
         <SidebarRow key={title} title={title} selected={selected}></SidebarRow>
       ))} */}

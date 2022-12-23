@@ -102,9 +102,9 @@ export const getPerms = async (urbit, { src = 'NO_SRC', ...args } = {}) => {
 
 export const getTree = async (
   urbit,
-  { host, space, src = 'NO_SRC', ...args } = {}
+  { host, space, src = 'NO_SRC', fact, ...args } = {}
 ) => {
-  const treePath = getTreePath(host, space);
+  const treePath = getTreePath(host, space, fact);
   try {
     const data = await urbit.scry(formScry(treePath, args));
     return data;

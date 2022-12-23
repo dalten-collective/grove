@@ -19,9 +19,12 @@ export const removeTilde = (ship) => (ship[0] === '~' ? ship.slice(1) : ship);
 export const getDateTime = (timeStamp) =>
   new Date(timeStamp * 1000).toLocaleString();
 
-export const getTreePath = (host, space) => {
-  if (!host && !space) {
+export const getTreePath = (host, space, fact) => {
+  if (!host && !space && !fact?.space) {
     throw new Error('getTree requires a host or space');
+  }
+  if (fact?.space) {
+    return `/tree/${fact.space}`;
   }
   if (space?.slice().split('/').length > 1) {
     return `/tree/${space}`;

@@ -10,7 +10,7 @@ import { useAirlock } from './urbit/auth';
 // import { addTilde } from './utils';
 
 export const App = () => {
-  useAirlock();
+  // useAirlock();
   useTroveSubscription();
   const [isHydrated, setIsHydrated] = useState(false);
   const { urbit, ship, scries } = useTrove();

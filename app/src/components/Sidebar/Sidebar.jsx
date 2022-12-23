@@ -15,8 +15,18 @@ import {
 } from 'react-icons/ri';
 import Avatar from '@mui/material/Avatar';
 import Stack from '@mui/material/Stack';
+import useMenu, { SimpleMenu } from '../AddMenu/SimpleMenu';
 // import { deepOrange, green } from '@mui/material/colors';
 // import AssignmentIcon from '@mui/icons-material/Assignment';
+import {
+  AddPassportCard,
+  FileUploadCard,
+  FileUploadIcon,
+  FileUploadText,
+  NewFolderCard,
+  NewFolderIcon,
+  NewFolderText,
+} from '../AddMenu/styles';
 
 export default function VariantAvatars() {
   return (
@@ -34,7 +44,17 @@ export default function VariantAvatars() {
     // </Stack>
   );
 }
-export const SpaceInfo = () => {
+export const SpaceInfo = ({ toggleAddFolder }) => {
+  // const { anchorEl, open, handleClick, handleClose } = useMenu();
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
   return (
     <SpaceInfoContainer>
       <SpaceInfoCard>
@@ -59,9 +79,34 @@ export const SpaceInfo = () => {
       </SpaceInfoCard>
       <SpaceInfoToolbar>
         <SpaceInfoInnerToolbar>
-          <FolderPlusContainer>
+          <FolderPlusContainer onClick={toggleAddFolder}>
             <RiAddLine />
+            {/* <RiAddLine onClick={handleClick} /> */}
           </FolderPlusContainer>
+          {/* <SimpleMenu
+            anchorEl={anchorEl}
+            open={open}
+            handleClick={handleClick}
+            handleClose={handleClose}
+          /> */}
+          {/* <AddPassportCard
+            // id="basic-menu"
+            anchorEl={anchorEl}
+            open={open}
+            onClose={handleClose}
+            // MenuListProps={{
+            //   'aria-labelledby': 'basic-button',
+            // }}
+          > */}
+          {/* <NewFolderCard onClick={handleClose}> */}
+          {/* <NewFolderIcon />
+              <NewFolderText>New Folder</NewFolderText> */}
+          {/* </NewFolderCard> */}
+          {/* <FileUploadCard onClick={handleClose}> */}
+          {/* <FileUploadIcon />
+              <FileUploadText>Upload File</FileUploadText> */}
+          {/* </FileUploadCard> */}
+          {/* </AddPassportCard> */}
           <ToolbarIconContainer>
             <ToolbarPeopleContainer>
               <RiUser3Line />
