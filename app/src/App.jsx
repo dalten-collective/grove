@@ -5,10 +5,11 @@ import isEmpty from 'lodash/isEmpty';
 import TroveWindow from './components/TroveWindow/index';
 import { useStore } from './state/store';
 import { theme as baseTheme } from './theme/theme.jsx';
-import { useTrove } from './urbit';
+import { useTrove, useTroveSubscription } from './urbit';
 // import { addTilde } from './utils';
 
 export const App = () => {
+  useTroveSubscription();
   const [isHydrated, setIsHydrated] = useState(false);
   const { urbit, ship, scries } = useTrove();
   const hosts = useStore((state) => state.hosts);
@@ -23,7 +24,8 @@ export const App = () => {
   }, [ship, hosts]);
 
   // Poke working here
-  // useAddFolderPokeTest();
+  // usePoke(...addFolderArgs);
+  // usePoke(...remFolderArgs);
 
   return (
     // <CoreProvider value={coreStore}>
@@ -34,23 +36,4 @@ export const App = () => {
       </ThemeProvider>
     </>
   );
-};
-
-export const useAddFolderPokeTest = () => {
-  const { getHosts, hosts } = useStore();
-  const { urbit, ship, pokes } = useTrove();
-  const _hosts = getHosts();
-  useEffect(() => {
-    const testPoke = async () => {
-      pokes.folder.add(
-        urbit,
-        'our',
-        { toPath: '/', name: 'test-folder-yoo/chicken', permissions: null },
-        ship
-      );
-    };
-    if (ship && _hosts?.length) {
-      testPoke();
-    }
-  }, [ship, hosts]);
 };

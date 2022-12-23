@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 
 export const LocationBar = styled.div`
   /* Frame 2124 */
@@ -188,6 +188,7 @@ export const Bucket = styled.div`
   padding: 2px 4px;
   gap: 10px;
 
+  word-wrap: none;
   width: 43px;
   height: 20px;
 
@@ -206,6 +207,8 @@ export const BucketText = styled.div`
 
   width: 35px;
   height: 14px;
+
+  word-wrap: none;
 
   font-family: 'Rubik';
   font-style: normal;

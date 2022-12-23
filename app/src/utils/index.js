@@ -1,3 +1,6 @@
+import keyBy from 'lodash/keyBy';
+// import { unix } from 'moment/moment';
+
 export const getSpace = (space, ship = '') =>
   ship.length ? `~${ship}/${space}` : `~${space}`;
 
@@ -10,6 +13,11 @@ export const addTilde = (ship) => {
   }
   return `~${ship}`;
 };
+
+export const removeTilde = (ship) => (ship[0] === '~' ? ship.slice(1) : ship);
+
+export const getDateTime = (timeStamp) =>
+  new Date(timeStamp * 1000).toLocaleString();
 
 export const getTreePath = (host, space) => {
   if (!host && !space) {
@@ -33,16 +41,55 @@ export const getStateFromEvt = (evt) => {
   return evt;
 };
 
-export const addNames = (obj) => {
-  if (!obj.children) return obj;
+export const getNodeName = (nodePath, key) => nodePath?.dat?.title || key;
 
-  obj.children.forEach((child) => {
-    const key = Object.keys(child)[0];
-    child[key].name = key;
+export const getHostSpace = (hostSpace) => {
+  const hostSpaces = hostSpace?.slice()?.split('/') || [];
+  const isFullHostSpace = hostSpaces?.length > 1;
+  return isFullHostSpace
+    ? [...hostSpaces, true]
+    : [hostSpaces[0], 'our', false];
+};
 
-    addNames(child[key]);
-  });
-  return obj;
+export const getShipName = (_ship) => {
+  if (_ship && _ship.length > 2) {
+    const names = _ship?.slice().split('-');
+    return names.length > 2
+      ? addTilde(`${names[0]}-${names[names.length - 1]}`)
+      : addTilde(`${_ship}`);
+  }
+};
+
+export const getSpacePath = (host, space, selectedHostSpace) =>
+  host && space ? `${addTilde(host)}/${space}` : selectedHostSpace;
+
+export const getPathPills = (frags, selectedHostSpace) =>
+  frags?.length
+    ? [
+        {
+          name: getShipName(frags[0]),
+          path: getSpacePath(frags[0], frags[1]),
+        },
+      ].concat(
+        frags.slice(1).map((frag, idx) => ({
+          name: frag,
+          path: getSpacePath(frags[0], frags.slice(1, idx + 2).join('/')),
+        }))
+      )
+    : [];
+
+export const getChildPath = (fromPath, name) => {
+  return `${fromPath}/${name}`;
+};
+
+export const passToMap = (obj) => {
+  const map = makeMap(obj.children);
+  return map;
+};
+
+export const makeMap = (children) => {
+  const map = keyBy(children, (child) => Object.keys(child)[0]);
+  return map;
 };
 
 export const logLarge = (key, msg) => {
