@@ -3,7 +3,7 @@ import { devtools, subscribeWithSelector, persist } from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
 import pipe from 'ramda/es/pipe';
 
-import bootstrap from '../modules/state/bootstrap';
+// import bootstrap from '../modules/state/bootstrap';
 
 const logger = (config) => (set, get, api) =>
   config(
@@ -29,4 +29,4 @@ export const createStore = pipe(
   create
 );
 
-export const storageSlice = bootstrap;
+// export const storageSlice = bootstrap;

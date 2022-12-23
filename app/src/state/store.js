@@ -8,7 +8,7 @@ import { getStateFromEvt, getShipName, getHostSpace } from '../utils';
 import { indexTree, createLookupTable } from '../utils/indexTree';
 import { getHostSpaceShape } from '../utils/config';
 import { scries, scriesWithCb } from '../urbit/scries';
-import { createStore, storageSlice } from './storeMiddleware';
+import { createStore } from './storeMiddleware';
 
 // const [] = useStore((state) => (state.tree), shallow)
 export const getShorthandHost = (state) =>
