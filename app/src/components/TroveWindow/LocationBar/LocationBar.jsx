@@ -173,7 +173,6 @@ export const Slash = styled.div`
   /* Inside auto layout */
 
   flex: none;
-  order: 1;
   flex-grow: 0;
 `;
 
@@ -189,7 +188,6 @@ export const Bucket = styled.div`
   gap: 10px;
 
   word-wrap: none;
-  width: 43px;
   height: 20px;
 
   background: #f4f4f4;
@@ -198,14 +196,12 @@ export const Bucket = styled.div`
   /* Inside auto layout */
 
   flex: none;
-  order: 2;
   flex-grow: 0;
 `;
 
 export const BucketText = styled.div`
   /* Books */
 
-  width: 35px;
   height: 14px;
 
   word-wrap: none;

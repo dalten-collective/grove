@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ThemeProvider } from 'styled-components';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
 import isEmpty from 'lodash/isEmpty';
 
 import TroveWindow from './components/TroveWindow/index';
@@ -8,6 +8,8 @@ import { theme as baseTheme } from './theme/theme.jsx';
 import { useTrove, useTroveSubscription } from './urbit';
 import { useAirlock } from './urbit/auth';
 // import { addTilde } from './utils';
+
+const theme = createTheme(baseTheme);
 
 export const App = () => {
   // useAirlock();
@@ -32,7 +34,7 @@ export const App = () => {
   return (
     // <CoreProvider value={coreStore}>
     <>
-      <ThemeProvider theme={baseTheme['dark']}>
+      <ThemeProvider theme={theme}>
         <TroveWindow />
         <div id="portal-root" />
       </ThemeProvider>

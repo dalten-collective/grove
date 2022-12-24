@@ -48,6 +48,7 @@ export const LocationBar = () => {
             <PatP>{pathPills[0]?.name}</PatP>
           </ShipInfo>
         )}
+        <Slash>/</Slash>
         {pathPills?.length > 1 &&
           pathPills
             .slice(1)
@@ -59,7 +60,6 @@ export const LocationBar = () => {
                 navigateToPillPath={navigateToPillPath}
               />
             ))}
-        <Slash>/</Slash>
       </LocationInfo>
     </_LocationBar>
   );
