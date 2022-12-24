@@ -12,7 +12,7 @@ export const LocationBar = styled.div`
   padding: 0px;
   gap: 10px;
 
-  width: 696px;
+  /* width: 696px; */
   height: 28px;
 
   /* Inside auto layout */
@@ -83,7 +83,7 @@ export const LocationInfo = styled.div`
   padding: 8px 9px 8px 4px;
   gap: 4px;
 
-  width: 646px;
+  /* width: 646px; */
   height: 28px;
 
   background: #ffffff;
@@ -95,7 +95,7 @@ export const LocationInfo = styled.div`
 
   /* Inside auto layout */
 
-  flex: none;
+  /* flex: none; */
   order: 1;
   flex-grow: 1;
 `;

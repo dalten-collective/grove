@@ -27,6 +27,8 @@ import {
   NewFolderIcon,
   NewFolderText,
 } from '../AddMenu/styles';
+import { useStore } from '../../state/store';
+import { getShipName } from '../../utils';
 
 export default function VariantAvatars() {
   return (
@@ -47,6 +49,9 @@ export default function VariantAvatars() {
 export const SpaceInfo = ({ toggleAddFolder }) => {
   // const { anchorEl, open, handleClick, handleClose } = useMenu();
   const [anchorEl, setAnchorEl] = useState(null);
+  const selectedPath = useStore((state) => state.selectedPath);
+  const [_host, space] = selectedPath?.slice().split('/');
+  const host = getShipName(_host);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -72,7 +77,9 @@ export const SpaceInfo = ({ toggleAddFolder }) => {
               <SpaceNameSmall>
                 <SpaceNameSmallText>Group</SpaceNameSmallText>
               </SpaceNameSmall>
-              <SpaceNameBigText>Holy Urbit Empire</SpaceNameBigText>
+              <SpaceNameBigText>
+                {host}/{space}
+              </SpaceNameBigText>
             </SpaceName>
           </SpaceInfoCardElements>
         </InnerSpaceInfoCard>
@@ -365,7 +372,7 @@ export const SpaceName = styled.div`
   align-items: flex-start;
   padding: 0px;
 
-  width: 93px;
+  /* width: 93px; */
   height: 25px;
 
   /* Inside auto layout */
@@ -426,11 +433,12 @@ export const SpaceNameSmallText = styled.div`
 export const SpaceNameBigText = styled.div`
   /* Holy Urbit Empire */
 
-  width: 93px;
+  /* width: 93px; */
   height: 13px;
 
   font-family: 'Rubik';
   font-style: normal;
+  word-wrap: none;
   font-weight: 500;
   font-size: 11px;
   line-height: 13px;

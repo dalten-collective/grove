@@ -69,7 +69,7 @@ export const ContentWindowContainer = styled.div`
   align-items: flex-start;
   padding: 0px 12px;
 
-  width: 512px;
+  /* width: 512px; */
   height: 430px;
 
   background: #ffffff;
@@ -78,7 +78,7 @@ export const ContentWindowContainer = styled.div`
 
   /* Inside auto layout */
 
-  flex: none;
+  /* flex: none; */
   order: 1;
   align-self: stretch;
   flex-grow: 1;
@@ -96,12 +96,12 @@ export const SortingBar = styled.div`
   padding: 8px 0px;
   gap: 10px;
 
-  width: 488px;
+  /* width: 488px; */
   height: 32px;
 
   /* Inside auto layout */
 
-  flex: none;
+  /* flex: none; */
   order: 0;
   align-self: stretch;
   flex-grow: 0;
@@ -225,12 +225,12 @@ export const ActualMainContent = styled.div`
   align-items: flex-start;
   padding: 0px;
 
-  width: 488px;
+  /* width: 488px; */
   height: 398px;
 
   /* Inside auto layout */
 
-  flex: none;
+  /* flex: none; */
   order: 1;
   align-self: stretch;
   flex-grow: 1;
@@ -249,14 +249,14 @@ export const InfoSortingBar = styled.div`
   padding: 4px 0px;
   gap: 10px;
 
-  width: 488px;
-  height: 20px;
+  /* width: 488px; */
+  /* height: 20px; */
 
-  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  border-bottom: 1px solid #e8e8e8;
 
   /* Inside auto layout */
 
-  flex: none;
+  /* flex: none; */
   order: 0;
   align-self: stretch;
   flex-grow: 0;
@@ -273,13 +273,13 @@ export const FileRow = styled.div`
   padding: 4px 0px;
   gap: 10px;
 
-  width: 488px;
+  /* width: 488px; */
   height: 22px;
 
   /* cont */
   /* Inside auto layout */
 
-  flex: none;
+  /* flex: none; */
   order: 1;
   align-self: stretch;
   flex-grow: 0;
@@ -302,9 +302,11 @@ export const fileRowStyle = {
 export const Title = styled.div`
   /* Mastering Mars.pdf */
 
-  width: 234px;
+  /* width: 234px; */
   height: 14px;
 
+  padding: 0px;
+  gap: 10px;
   font-family: 'Rubik';
   font-style: normal;
   font-weight: 400;
@@ -317,7 +319,7 @@ export const Title = styled.div`
 
   /* Inside auto layout */
 
-  flex: none;
+  /* flex: none; */
   order: 0;
   flex-grow: 1;
 `;
@@ -325,7 +327,7 @@ export const Title = styled.div`
 export const TitleType = styled(Typography)`
   /* Mastering Mars.pdf */
 
-  width: 234px;
+  /* width: 234px; */
   height: 14px;
 
   font-family: 'Rubik';
@@ -358,12 +360,12 @@ export const Metadata = styled.div`
   padding: 0px;
   gap: 10px;
 
-  width: 244px;
+  /* width: 244px; */
   height: 14px;
 
   /* Inside auto layout */
 
-  flex: none;
+  /* flex: none; */
   order: 1;
   flex-grow: 0;
 `;
@@ -379,7 +381,7 @@ export const MetadataType = styled(Typography)`
   padding: 0px;
   gap: 10px;
 
-  width: 244px;
+  /* width: 244px; */
   height: 14px;
 
   /* Inside auto layout */
@@ -392,7 +394,7 @@ export const MetadataType = styled(Typography)`
 export const SizeType = styled(Typography)`
   /* 1.6 MB */
 
-  width: 53px;
+  /* width: 53px; */
   height: 14px;
 
   font-family: 'Rubik';
@@ -416,7 +418,7 @@ export const SizeType = styled(Typography)`
 export const DateUploadedType = styled(Typography)`
   /* 07/15/22 at 9:23 AM */
 
-  width: 121px;
+  /* width: 121px; */
   height: 14px;
 
   font-family: 'Rubik';
@@ -440,7 +442,7 @@ export const DateUploadedType = styled(Typography)`
 export const FileTypeType = styled(Typography)`
   /* PDF */
 
-  width: 50px;
+  /* width: 50px; */
   height: 14px;
 
   font-family: 'Rubik';
@@ -464,9 +466,11 @@ export const FileTypeType = styled(Typography)`
 export const Size = styled.div`
   /* 1.6 MB */
 
-  width: 53px;
+  /* width: 53px; */
   height: 14px;
 
+  padding: 0px;
+  gap: 10px;
   font-family: 'Rubik';
   font-style: normal;
   font-weight: 400;
@@ -480,7 +484,7 @@ export const Size = styled.div`
 
   /* Inside auto layout */
 
-  flex: none;
+  /* flex: none; */
   order: 0;
   flex-grow: 0;
 `;
@@ -488,9 +492,11 @@ export const Size = styled.div`
 export const DateUploaded = styled.div`
   /* 07/15/22 at 9:23 AM */
 
-  width: 121px;
+  /* width: 121px; */
   height: 14px;
 
+  padding: 0px;
+  gap: 10px;
   font-family: 'Rubik';
   font-style: normal;
   font-weight: 400;
@@ -504,7 +510,7 @@ export const DateUploaded = styled.div`
 
   /* Inside auto layout */
 
-  flex: none;
+  /* flex: none; */
   order: 1;
   flex-grow: 0;
 `;
@@ -512,8 +518,10 @@ export const DateUploaded = styled.div`
 export const FileType = styled.div`
   /* PDF */
 
-  width: 50px;
+  /* width: 50px; */
   height: 14px;
+  padding: 0px;
+  gap: 10px;
 
   font-family: 'Rubik';
   font-style: normal;
@@ -528,7 +536,7 @@ export const FileType = styled.div`
 
   /* Inside auto layout */
 
-  flex: none;
+  /* flex: none; */
   order: 2;
   flex-grow: 0;
 `;

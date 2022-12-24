@@ -13,11 +13,11 @@ export const WindowContainer = styled.div`
   align-items: flex-start;
   padding: 0px;
 
-  position: absolute;
-  width: 712px;
-  height: 506px;
-  left: 76px;
-  top: 62px;
+  /* position: absolute; */
+  /* width: 712px; */
+  /* height: 506px; */
+  /* left: 76px;
+  top: 62px; */
 
   background: #fbfbfb;
   border: 1px solid rgba(219, 219, 219, 0.8);

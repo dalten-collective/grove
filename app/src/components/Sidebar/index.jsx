@@ -7,7 +7,7 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import Typography from '@mui/material/Typography';
 import styled from '@emotion/styled';
 import clsx from 'clsx';
-import { RiArrowDownSLine } from 'react-icons/ri';
+import { RiArrowDownSLine, RiArrowRightSLine } from 'react-icons/ri';
 
 import { getTree, useStore } from '../../state/store';
 import { SpaceInfo } from './Sidebar';
@@ -25,6 +25,7 @@ const CustomContent = React.forwardRef(function CustomContent(props, ref) {
     displayIcon,
   } = props;
 
+  const selectedPath = useStore((state) => state.selectedPath);
   const setSelectedPath = useStore((state) => state.setSelectedPath);
 
   const {
@@ -53,7 +54,11 @@ const CustomContent = React.forwardRef(function CustomContent(props, ref) {
   };
   const handleSelectionClick = (evt, x) => {
     handleSelection(evt);
-    setSelectedPath(x.nodeId);
+    if (x.nodeId === 'root') {
+      setSelectedPath(selectedPath?.slice().split('/').slice(0, 2).join('/'));
+    } else {
+      setSelectedPath(x.nodeId);
+    }
   };
 
   return (
@@ -61,7 +66,7 @@ const CustomContent = React.forwardRef(function CustomContent(props, ref) {
     <div
       className={clsx(className, classes.root, {
         [classes.expanded]: expanded,
-        [classes.selected]: selected,
+        // [classes.selected]: selected,
         [classes.focused]: focused,
         [classes.disabled]: disabled,
       })}
@@ -75,22 +80,15 @@ const CustomContent = React.forwardRef(function CustomContent(props, ref) {
       ref={ref}
     >
       {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions */}
-      <div onClick={handleExpansionClick} className={classes.iconContainer}>
-        {icon}
-      </div>
-      <Typography
-        onClick={(evt) => handleRowClick(evt, { nodeId })}
-        component="div"
-        // className={classes.label}
-        sx={{
-          fontFamily: 'Rubik',
-          fontSize: '14px',
-          fontWeight: '400',
-          lineHeight: '14.22px',
-        }}
+      <RowDropDownArrow
+        onClick={handleExpansionClick}
+        className={classes.iconContainer}
       >
+        {icon}
+      </RowDropDownArrow>
+      <RowTitle onClick={(evt) => handleRowClick(evt, { nodeId })}>
         {label}
-      </Typography>
+      </RowTitle>
     </div>
   );
 });
@@ -132,27 +130,6 @@ function CustomTreeItem(props) {
   return <TreeItem ContentComponent={CustomContent} {...props} />;
 }
 
-const fakeData = {
-  id: 'root',
-  name: 'Parent',
-  children: [
-    {
-      id: '1',
-      name: 'Child - 1',
-    },
-    {
-      id: '3',
-      name: 'Child - 3',
-      children: [
-        {
-          id: '4',
-          name: 'Child - 4',
-        },
-      ],
-    },
-  ],
-};
-
 export const RichObjectTreeView = ({ tree }) => {
   const renderTree = (nodes) => (
     <CustomTreeItem
@@ -169,9 +146,10 @@ export const RichObjectTreeView = ({ tree }) => {
   return tree ? (
     <TreeView
       aria-label="rich object"
-      defaultCollapseIcon={<ExpandMoreIcon />}
+      // defaultCollapseIcon={<RiArrowDownSLine />}
+      defaultCollapseIcon={<RiArrowDownSLine />}
       defaultExpanded={['root']}
-      defaultExpandIcon={<ChevronRightIcon />}
+      defaultExpandIcon={<RiArrowRightSLine />}
       sx={{
         height: 110,
         flexGrow: 1,
@@ -239,6 +217,11 @@ export const SidebarContainer = styled.div`
   border: 1px solid rgba(0, 0, 0, 0.09);
   border-radius: 6px;
 
+  font-family: 'Rubik';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  /* line-height: 14px; */
   /* Inside auto layout */
 
   flex: none;
@@ -274,14 +257,16 @@ export const _SidebarRow = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  padding: 0px;
+  padding: 0px 6px 0px 2px;
+  /* padding: 2px 6px 2px 2px; */
   gap: 6px;
 
   width: 168px;
   height: 24px;
 
   background: ${(props) => (props.selected ? '#F4F4F4' : '#ffffff')};
-  border-radius: 6px;
+  border-radius: 4px;
+  /* border-radius: 6px; */
 
   /* Inside auto layout */
 
@@ -297,7 +282,7 @@ export const RowDropDownArrow = styled.div`
   width: 14px;
   height: 14px;
 
-  transform: rotate(-90deg);
+  /* transform: rotate(-90deg); */
 
   /* Inside auto layout */
 
@@ -309,14 +294,14 @@ export const RowDropDownArrow = styled.div`
 export const RowTitle = styled.div`
   /* Memes */
 
-  width: 40px;
+  /* width: 40px; */
   height: 14px;
 
   font-family: 'Rubik';
   font-style: normal;
   font-weight: 400;
   font-size: 12px;
-  line-height: 14px;
+  line-height: 14.22px;
   display: flex;
   align-items: center;
 

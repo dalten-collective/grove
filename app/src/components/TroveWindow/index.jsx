@@ -1,4 +1,5 @@
 import React from 'react';
+import { Box } from '@mui/material';
 import { WindowContainer } from './WindowContainer';
 import { TopBar } from './TopBar';
 import { MainContainer } from './MainContainer';
@@ -13,18 +14,20 @@ export default function TroveWindow() {
   useLookupTable();
   // TODO: Make this based off current trove; move to utils
   return (
-    <WindowContainer>
-      <TopBar appTitle="Trove" />
-      <MainContainer>
-        <LocationBar
-          patP={shorthandHost || '~sampel-planet'}
-          bucketText="Books"
-        />
-        <MainContentContainer>
-          <Sidebar />
-          <MainContentWindow />
-        </MainContentContainer>
-      </MainContainer>
-    </WindowContainer>
+    <Box>
+      <WindowContainer>
+        <TopBar appTitle="Trove" />
+        <MainContainer>
+          <LocationBar
+            patP={shorthandHost || '~sampel-planet'}
+            bucketText="Books"
+          />
+          <MainContentContainer>
+            <Sidebar />
+            <MainContentWindow />
+          </MainContentContainer>
+        </MainContainer>
+      </WindowContainer>
+    </Box>
   );
 }

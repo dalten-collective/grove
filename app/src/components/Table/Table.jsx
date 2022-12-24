@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Fragment } from 'react';
 import Box from '@mui/material/Box';
 import {
   DataGrid,
@@ -37,7 +37,7 @@ const columns = [
   {
     field: 'name',
     headerName: 'Name',
-    width: 170,
+    width: 234,
     renderHeader: (params) => <Title>Name</Title>,
     headerClassName: 'column-header-trove-explorer',
     border: 'none',
@@ -51,7 +51,7 @@ const columns = [
     renderHeader: (params) => <Size>Size</Size>,
     headerClassName: 'column-header-trove-explorer',
     border: 'none',
-    width: 80,
+    width: 53,
     ...SizeType,
   },
   // {
@@ -67,7 +67,7 @@ const columns = [
     headerClassName: 'column-header-trove-explorer',
     border: 'none',
     description: 'Folder or Record',
-    width: 80,
+    width: 50,
   },
   {
     field: 'timestamp',
@@ -78,7 +78,7 @@ const columns = [
     border: 'none',
     // description: 'This column has a value getter and is not sortable.',
     sortable: false,
-    width: 140,
+    width: 121,
     valueGetter: (params) =>
       `${
         params?.row?.dateUploaded ? getDateTime(params.row.dateUploaded) : ''
@@ -105,11 +105,23 @@ const fakeRows = [
   { id: 9, name: 9, type: 'Roxie', size: 'Harvey', dateUploaded: 65 },
 ];
 
-export default function DataGridDemo({
-  rows = fakeRows,
-  selectedPath,
-  parent,
-}) {
+const DataGridDemo = styled(_DataGridDemo)(({ theme }) => ({
+  '.MuiDataGrid-iconSeparator': {
+    color: 'transparent',
+  },
+  // '& .MuiDataGrid-virtualScroller': {
+  //   marginTop: '0 !important',
+  // },
+  '.MuiDataGrid-columnSeparator': {
+    color: 'transparent',
+  },
+
+  '& .MuiDataGrid-root .MuiDataGrid-columnSeparator': {
+    color: 'transparent',
+  },
+}));
+
+export function _DataGridDemo({ rows = fakeRows, selectedPath, parent }) {
   // console.log('parent', parent);
   const setSelectedPath = useStore((state) => state.setSelectedPath);
   const [renderDoc, setRenderDoc] = useState(false);
@@ -159,6 +171,7 @@ export default function DataGridDemo({
     // debugger;
   };
   return (
+    // <Fragment>
     <Box
       sx={{
         height: '100%',
@@ -172,10 +185,13 @@ export default function DataGridDemo({
       ) : null}
       <DataGrid
         headerHeight={30}
+        // he
         // headerClassName={tableHeaderClass}
         sx={{
+          // m: 2,
           height: '100%',
           width: '100%',
+          padding: '0px 0px 20px',
           borderCollapse: 'collapse',
           borderStyle: 'none',
           fontFamily: 'Rubik',
@@ -219,3 +235,5 @@ export default function DataGridDemo({
     </Box>
   );
 }
+
+export default DataGridDemo;

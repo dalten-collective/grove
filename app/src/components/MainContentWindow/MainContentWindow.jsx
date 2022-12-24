@@ -49,14 +49,14 @@ export const ContentWindowContainer = ({ children }) => {
           </GridView>
         </DisplayOptions>
         <DateSortContainer>
-          <DateText></DateText>
+          <DateText>Date</DateText>
           <DateDropDown>
             <RiArrowUpSLine />
           </DateDropDown>
         </DateSortContainer>
       </_SortingBar>
       <ActualMainContent>
-        <InfoSortingBar></InfoSortingBar>
+        {/* <InfoSortingBar></InfoSortingBar> */}
         {/* <RichObjectTreeView tree={contentAtPath} /> */}
         {/* <CustomizedTreeView /> */}
         {children}
