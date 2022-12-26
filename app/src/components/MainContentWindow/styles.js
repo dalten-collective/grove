@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from '@emotion/styled';
+import styled from 'styled-components';
 import { Typography } from '@mui/material';
 
 export const contentWindowStylesObj = {
@@ -133,7 +133,7 @@ export const ListView = styled.div`
 
   width: 16px;
   height: 16px;
-
+  cursor: pointer;
   /* Inside auto layout */
 
   flex: none;
@@ -146,7 +146,7 @@ export const GridView = styled.div`
 
   width: 16px;
   height: 16px;
-
+  cursor: pointer;
   /* Inside auto layout */
 
   flex: none;

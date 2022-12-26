@@ -62,6 +62,7 @@ export const useStore = createStore(
     selectedTrove: { initialized: false, host: '', space: '', path: '' },
     selectedPath: '',
     selectedHostSpace: '',
+    selectedViewOption: 'list',
 
     _hasHydrated: false,
 
@@ -70,6 +71,12 @@ export const useStore = createStore(
       set(
         produce((draft) => {
           draft._hasHydrated = state;
+        })
+      ),
+    setSelectedViewOption: (option) =>
+      set(
+        produce((draft) => {
+          draft.selectedViewOption = option;
         })
       ),
     setSelectedHostSpace: (hostSpace) =>

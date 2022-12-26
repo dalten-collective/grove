@@ -4,6 +4,7 @@ import { loadEnv, defineConfig } from 'vite';
 import reactRefresh from '@vitejs/plugin-react-refresh';
 import { urbitPlugin } from '@urbit/vite-plugin-urbit';
 import { VitePWA } from 'vite-plugin-pwa';
+import babel from 'vite-plugin-babel';
 
 // https://vitejs.dev/config/
 export default ({ mode }) => {
@@ -42,6 +43,7 @@ export default ({ mode }) => {
       urbitPlugin({ base: 'trove', target: SHIP_URL, secure: false }),
       reactRefresh(),
       reactVirtualized(),
+      // babel(),
       // VitePWA({
       //   registerType: 'autoUpdate',
       //   devOptions: {

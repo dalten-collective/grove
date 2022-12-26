@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from '@emotion/styled';
+import styled from 'styled-components';
 import { RiMenu2Line, RiCloseLine } from 'react-icons/ri';
 import WindowButtonTopLeft from './WindowButtonTopLeft.svg';
 

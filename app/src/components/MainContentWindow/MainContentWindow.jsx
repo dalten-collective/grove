@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { RiListCheck, RiFunctionLine, RiArrowUpSLine } from 'react-icons/ri';
-import styled from '@emotion/styled';
+import styled from 'styled-components';
+import { useStore } from '../../state/store';
 
 import {
   ContentWindowContainer as _ContentWindowContainer,
@@ -37,14 +38,17 @@ const files = [
   },
 ];
 export const ContentWindowContainer = ({ children }) => {
+  const setSelectedViewOption = useStore(
+    (state) => state.setSelectedViewOption
+  );
   return (
     <_ContentWindowContainer>
       <_SortingBar>
         <DisplayOptions>
-          <ListView>
+          <ListView onClick={(evt) => setSelectedViewOption('list')}>
             <RiListCheck />
           </ListView>
-          <GridView>
+          <GridView onClick={(evt) => setSelectedViewOption('grud')}>
             <RiFunctionLine />
           </GridView>
         </DisplayOptions>

@@ -5,7 +5,7 @@ import TreeItem, { useTreeItem } from '@mui/lab/TreeItem';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import Typography from '@mui/material/Typography';
-import styled from '@emotion/styled';
+import styled from 'styled-components';
 import clsx from 'clsx';
 import {
   RiArrowDownSLine,
@@ -223,8 +223,11 @@ export const FolderPlusContainer = styled.div`
   /* Auto layout */
 
   display: flex;
-  flex-direction: row;
-  align-items: flex-start;
+  /* flex-direction: row; */
+  justify-content: center;
+  align-items: center;
+  /* flex-direction: row;
+  align-items: flex-start; */
   padding: 0px;
   gap: 4px;
 

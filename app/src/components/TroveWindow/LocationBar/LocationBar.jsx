@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from '@emotion/styled';
+import styled from 'styled-components';
 
 export const LocationBar = styled.div`
   /* Frame 2124 */
@@ -111,7 +111,7 @@ export const ShipInfo = styled.div`
   padding: 2px 4px;
   gap: 10px;
 
-  width: 93px;
+  /* width: 93px; */
   height: 20px;
 
   background: #f4f4f4;
@@ -127,7 +127,7 @@ export const ShipInfo = styled.div`
 export const PatP = styled.div`
   /* ~lomder-librun */
 
-  width: 85px;
+  /* width: 85px; */
   height: 14px;
 
   font-family: 'Rubik';
@@ -187,6 +187,7 @@ export const Bucket = styled.div`
   padding: 2px 4px;
   gap: 10px;
 
+  cursor: pointer;
   word-wrap: none;
   height: 20px;
 

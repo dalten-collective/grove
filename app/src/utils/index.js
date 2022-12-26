@@ -16,6 +16,13 @@ export const addTilde = (ship) => {
 
 export const removeTilde = (ship) => (ship[0] === '~' ? ship.slice(1) : ship);
 
+export const getDateUploaded = (file) =>
+  file.dat?.from
+    ? getDateTime(file.dat.from)
+    : file.dateUploaded
+    ? getDateTime(file.dateUploaded)
+    : '';
+
 export const getDateTime = (timeStamp) =>
   new Date(timeStamp * 1000).toLocaleString();
 

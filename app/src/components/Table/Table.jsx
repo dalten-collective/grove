@@ -8,23 +8,19 @@ import {
 import { styled } from '@mui/material/styles';
 
 import {
-  FileRow,
-  FileTypeType,
   TitleType,
-  MetadataType,
   SizeType,
-  DateUploadedType,
   Title,
-  Metadata,
   Size,
   DateUploaded,
   FileType,
 } from '../MainContentWindow/styles';
-import { getDateTime } from '../../utils';
 import { useStore } from '../../state/store';
 import { CustomNoRowsOverlay } from './EmptyFolder';
 import FileViewer from './FileViewer';
-
+import { ImageTable } from '../FilePreview/ImageTable';
+import { getDateUploaded } from '../../utils';
+import { getFileType } from '../../utils/files';
 function CustomToolbar() {
   return (
     <GridToolbarContainer>
@@ -37,7 +33,7 @@ const columns = [
   {
     field: 'name',
     headerName: 'Name',
-    width: 234,
+    flex: 3,
     renderHeader: (params) => <Title>Name</Title>,
     headerClassName: 'column-header-trove-explorer',
     border: 'none',
@@ -51,24 +47,29 @@ const columns = [
     renderHeader: (params) => <Size>Size</Size>,
     headerClassName: 'column-header-trove-explorer',
     border: 'none',
-    width: 53,
+    flex: 1,
     ...SizeType,
   },
-  // {
-  //   field: 'dateUploaded',
-  //   headerName: 'Date Uploaded',
-  //   type: 'date',
-  //   width: 100,
-  // },
   {
     field: 'type',
     headerName: 'Type',
     renderHeader: (params) => <FileType>Type</FileType>,
     headerClassName: 'column-header-trove-explorer',
     border: 'none',
+    flex: 1,
     description: 'Folder or Record',
-    width: 50,
+    valueGetter: ({ row }) => getFileType(row),
   },
+  // {
+  //   field: 'description',
+  //   headerName: 'Description',
+  //   // renderHeader: (params) => <FileType>Type</FileType>,
+  //   headerClassName: 'column-header-trove-explorer',
+  //   border: 'none',
+  //   flex: 1,
+  //   // description: 'Folder or Record',
+  //   // minWidth: '50px',
+  // },
   {
     field: 'timestamp',
     headerName: 'Date Uploaded',
@@ -76,22 +77,11 @@ const columns = [
     renderHeader: (params) => <DateUploaded>Date Uploaded</DateUploaded>,
     headerClassName: 'column-header-trove-explorer',
     border: 'none',
-    // description: 'This column has a value getter and is not sortable.',
+    flex: 2,
     sortable: false,
-    width: 121,
-    valueGetter: (params) =>
-      `${
-        params?.row?.dateUploaded ? getDateTime(params.row.dateUploaded) : ''
-      }`,
+    valueGetter: ({ row }) => getDateUploaded(row),
   },
 ];
-
-const tableHeaderClass = {
-  lineHeight: 30,
-  maxHeight: 30,
-  minHeight: 10,
-  borderTop: 'none',
-};
 
 const fakeRows = [
   { id: 1, name: 1, type: 'Snow', size: 'Jon', dateUploaded: 35 },
@@ -105,27 +95,32 @@ const fakeRows = [
   { id: 9, name: 9, type: 'Roxie', size: 'Harvey', dateUploaded: 65 },
 ];
 
-const DataGridDemo = styled(_DataGridDemo)(({ theme }) => ({
+const FileTable = styled(_FileTable)(({ theme }) => ({
+  '& > .MuiDataGrid-columnSeparator': {
+    visibility: 'hidden',
+  },
   '.MuiDataGrid-iconSeparator': {
     color: 'transparent',
+    visibility: 'hidden',
   },
   // '& .MuiDataGrid-virtualScroller': {
   //   marginTop: '0 !important',
   // },
   '.MuiDataGrid-columnSeparator': {
     color: 'transparent',
+    visibility: 'hidden',
   },
 
   '& .MuiDataGrid-root .MuiDataGrid-columnSeparator': {
     color: 'transparent',
+    visibility: 'hidden',
   },
 }));
 
-export function _DataGridDemo({ rows = fakeRows, selectedPath, parent }) {
+export function _FileTable({ rows = fakeRows, selectedPath, parent }) {
   // console.log('parent', parent);
   const setSelectedPath = useStore((state) => state.setSelectedPath);
   const [renderDoc, setRenderDoc] = useState(false);
-  // const [selectionModel, setSelectionModel] = useState([]);
   const [_rows, setRows] = useState(() => []);
   useEffect(() => {
     if (!_rows?.length || _rows !== rows) {
@@ -168,10 +163,8 @@ export function _DataGridDemo({ rows = fakeRows, selectedPath, parent }) {
     } else {
       params.id && setSelectedPath(params.id);
     }
-    // debugger;
   };
   return (
-    // <Fragment>
     <Box
       sx={{
         height: '100%',
@@ -180,12 +173,11 @@ export function _DataGridDemo({ rows = fakeRows, selectedPath, parent }) {
         padding: '0px 0px 20px',
       }}
     >
-      {renderDoc ? (
-        <FileViewer file={selectedDoc} url={selectedDoc?.url} />
-      ) : null}
+      {/* {renderDoc ? (
+        <ImageTable file={selectedDoc} url={selectedDoc?.url} />
+      ) : null} */}
       <DataGrid
         headerHeight={30}
-        // he
         // headerClassName={tableHeaderClass}
         sx={{
           // m: 2,
@@ -199,19 +191,22 @@ export function _DataGridDemo({ rows = fakeRows, selectedPath, parent }) {
           fontWeight: '400',
           fontSize: '12px',
           lineHeight: '14px',
+          '& > .MuiDataGrid-iconButtonContainer': {
+            height: '10px',
+          },
+          '& > .MuiDataGrid-sortIcon': {
+            height: '8px',
+            opacity: '1',
+            color: 'blue',
+          },
           '& .column-header-trove-explorer': {
             borderStyle: 'none',
+            '& > .MuiDataGrid-columnSeparator': {
+              visibility: 'hidden',
+            },
           },
         }}
         // onRowClick={(params) => {}}
-        // onSelectionModelChange={(newSelectionModel) => {
-        //   // debugger;
-        //   // selectionModel={selectionModel}
-        //   if (newSelectionModel === selectionModel) {
-        //     setSelectedPath(newSelectionModel[0]);
-        //     setSelectionModel(newSelectionModel);
-        //   } else setSelectionModel(newSelectionModel);
-        // }}
         hideFooter
         // hideFooterPagination
         // hideFooterSelectedRowCount
@@ -221,10 +216,6 @@ export function _DataGridDemo({ rows = fakeRows, selectedPath, parent }) {
         rowHeight={30}
         pdateUploadedSize={5}
         rowsPerPdateUploadedOptions={[5]}
-        // selectionModel={selectionModel}
-        // checkboxSelection
-        // disableSelectionOnClick
-        // enableMultipleSelection
         experimentalFeatures={{ newEditingApi: true }}
         components={{
           // Toolbar: CustomToolbar,
@@ -236,4 +227,4 @@ export function _DataGridDemo({ rows = fakeRows, selectedPath, parent }) {
   );
 }
 
-export default DataGridDemo;
+export default FileTable;

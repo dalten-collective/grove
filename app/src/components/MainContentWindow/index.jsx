@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from '@emotion/styled';
+import styled from 'styled-components';
 import { RichObjectTreeView } from './Tree';
 import {
   getLookupTableAtSelectedSpace,
@@ -20,9 +20,10 @@ import {
 } from './styles';
 import { ContentWindowTree } from '../Tree/Tree';
 import { Typography } from '@mui/material';
-import DataGridDemo from '../Table/Table';
+import FileTable from '../Table/Table';
 import { flatten } from 'ramda';
 import ReactVirtualizedTable from '../Table/VirtualizedTable';
+import { ImageTable } from '../FilePreview/ImageTable';
 
 const files = [
   {
@@ -48,6 +49,7 @@ export const MainContentWindow = () => {
   const selectedPath = useStore((state) => state.selectedPath);
   const lookupTable = useStore(getLookupTableAtSelectedSpace);
   const tree = useStore(getTree);
+  const selectedViewOption = useStore((state) => state.selectedViewOption);
 
   const contentAtPath =
     selectedPath && !isEmpty(lookupTable) && !isEmpty(lookupTable[selectedPath])
@@ -70,8 +72,11 @@ export const MainContentWindow = () => {
       : [];
   return (
     <ContentWindowContainer>
-      {/* <ReactVirtualizedTable /> */}
-      <DataGridDemo rows={rows} parent={parent} selectedPath={selectedPath} />
+      {selectedViewOption === 'list' ? (
+        <FileTable rows={rows} parent={parent} selectedPath={selectedPath} />
+      ) : (
+        <ImageTable files={rows} parent={parent} selectedPath={selectedPath} />
+      )}
     </ContentWindowContainer>
   );
 };

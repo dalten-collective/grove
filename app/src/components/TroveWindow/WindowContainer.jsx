@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from '@emotion/styled';
+import styled from 'styled-components';
 
 export const WindowContainer = styled.div`
   /* Frame 2049 */

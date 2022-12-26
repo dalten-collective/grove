@@ -6,7 +6,7 @@ import TreeItem, { useTreeItem } from '@mui/lab/TreeItem';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import Typography from '@mui/material/Typography';
-import styled from '@emotion/styled';
+import styled from 'styled-components';
 import clsx from 'clsx';
 import { RiArrowDownSLine } from 'react-icons/ri';
 
