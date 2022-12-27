@@ -7,6 +7,7 @@ import {
   useStore,
 } from '../../state/store';
 import { flatMap, isEmpty, map } from 'lodash';
+import ClickAwayListener from '@mui/base/ClickAwayListener';
 
 import CustomizedTreeView from '../Tree/OtherTree';
 import { ContentWindowContainer } from './MainContentWindow';
@@ -47,6 +48,14 @@ const files = [
 ];
 export const MainContentWindow = () => {
   const selectedPath = useStore((state) => state.selectedPath);
+  const showSingleItemPreview = useStore(
+    (state) => state.showSingleItemPreview
+  );
+  const resetPreviewState = useStore((state) => state.resetPreviewState);
+  const singlePreviewItem = useStore((state) => state.getSinglePreviewItem());
+  const itemPreviewPath = useStore((state) => state.itemPreviewPath);
+  console.log('itemPreviewPath', itemPreviewPath);
+  console.log('aingle', singlePreviewItem);
   const lookupTable = useStore(getLookupTableAtSelectedSpace);
   const tree = useStore(getTree);
   const selectedViewOption = useStore((state) => state.selectedViewOption);
@@ -59,7 +68,7 @@ export const MainContentWindow = () => {
   const getRows = ({ id, name, path, children, nodes }) => {
     const files = nodes?.files;
     const parentObj = { id, name, path, children, nodes, files };
-    const _rows = [...children, ...(files ? files : [])];
+    const _rows = [...(files ? files : []), ...children];
     // const rows = _rows.length ? _rows : [getEmptyNode()];
     const rows = _rows.length ? _rows : [];
     return [rows, parentObj];
@@ -70,13 +79,27 @@ export const MainContentWindow = () => {
       : tree
       ? getRows(tree)
       : [];
+
+  const showPreview =
+    showSingleItemPreview && singlePreviewItem && selectedViewOption === 'list';
+
+  // TODO: Keep selectedView rendered or memoizied in background of preview.
+  const closePreview = (evt) => {
+    console.log('closePreview');
+    resetPreviewState();
+  };
+
   return (
     <ContentWindowContainer>
-      {selectedViewOption === 'list' ? (
+      {selectedViewOption === 'list' && !showPreview ? (
         <FileTable rows={rows} parent={parent} selectedPath={selectedPath} />
-      ) : (
+      ) : selectedViewOption === 'grid' && !showPreview ? (
         <ImageTable files={rows} parent={parent} selectedPath={selectedPath} />
-      )}
+      ) : showPreview ? (
+        <ClickAwayListener onClickAway={(evt) => closePreview(evt)}>
+          <ImageTable style={{ zIndex: '4' }} files={[singlePreviewItem]} />
+        </ClickAwayListener>
+      ) : null}
     </ContentWindowContainer>
   );
 };

@@ -120,6 +120,7 @@ const FileTable = styled(_FileTable)(({ theme }) => ({
 export function _FileTable({ rows = fakeRows, selectedPath, parent }) {
   // console.log('parent', parent);
   const setSelectedPath = useStore((state) => state.setSelectedPath);
+  const previewSingleItem = useStore((state) => state.previewSingleItem);
   const [renderDoc, setRenderDoc] = useState(false);
   const [_rows, setRows] = useState(() => []);
   useEffect(() => {
@@ -154,16 +155,12 @@ export function _FileTable({ rows = fakeRows, selectedPath, parent }) {
   //   });
   // };
   const openAtPath = (params) => {
-    const isPDF =
-      params.row?.dat?.extension === '.pdf' ||
-      params.row?.dat?.extension === 'pdf';
-    if (isPDF) {
-      setSelectedDoc(params.row);
-      setRenderDoc(true);
-    } else {
-      params.id && setSelectedPath(params.id);
-    }
+    const isFile = params.row?.dat || params.row?.type === 'record';
+    // TODO: Reset preview on next click if not same file
+    if (isFile) previewSingleItem(params.row.path);
+    else setSelectedPath(params.id);
   };
+
   return (
     <Box
       sx={{

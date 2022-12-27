@@ -63,6 +63,8 @@ export const useStore = createStore(
     selectedPath: '',
     selectedHostSpace: '',
     selectedViewOption: 'list',
+    showSingleItemPreview: false,
+    itemPreviewPath: '',
 
     _hasHydrated: false,
 
@@ -79,6 +81,34 @@ export const useStore = createStore(
           draft.selectedViewOption = option;
         })
       ),
+    getSinglePreviewItem: () => {
+      if (!get().showSingleItemPreview) return null;
+      const pathFrags = get().itemPreviewPath.slice().split('/');
+      const nodeId = pathFrags.pop();
+      const basePath = pathFrags.join('/');
+      return get().lookupTable[get().selectedHostSpace][basePath][nodeId];
+    },
+    previewSingleItem: (path) => {
+      get().setItemPreviewPath(path);
+      get().setShowSingleItemPreview(true);
+    },
+    resetPreviewState: () => {
+      get().setShowSingleItemPreview(false);
+      get().setItemPreviewPath('');
+    },
+    setShowSingleItemPreview: (bool) =>
+      set(
+        produce((draft) => {
+          draft.showSingleItemPreview = bool;
+        })
+      ),
+    setItemPreviewPath: (path) =>
+      set(
+        produce((draft) => {
+          draft.itemPreviewPath = path;
+        })
+      ),
+
     setSelectedHostSpace: (hostSpace) =>
       set(
         produce((draft) => {

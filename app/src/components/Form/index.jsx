@@ -13,6 +13,7 @@ import { useStore } from '../../state/store';
 import { RiSave3Line, RiFileTextLine, RiFolder2Line } from 'react-icons/ri';
 import { useTrove } from '../../urbit';
 import { Stack } from '@mui/material';
+import { formatImplicitExtension } from '../../utils/files';
 
 export default function FullWidthTextField() {
   const selectedPath = useStore((state) => state.selectedPath);
@@ -49,11 +50,11 @@ export default function FullWidthTextField() {
           {
             toPath,
             url: name,
-            extension: '.pdf',
+            extension: formatImplicitExtension(name),
             from: Date.now(),
             by: ship,
             name,
-            description: '',
+            description: name,
             permissions: null,
           },
           ship

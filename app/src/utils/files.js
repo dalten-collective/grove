@@ -28,6 +28,10 @@ export const getTypeByExtension = (extension) => {
     : 'unknown';
 };
 
+export const formatImplicitExtension = (url) => {
+  return `.${getDerivedExtension({ title: url })}`;
+};
+
 export const getDerivedExtension = (file) => {
   return file.title?.slice().split('.').pop();
 };

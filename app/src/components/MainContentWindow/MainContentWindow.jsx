@@ -48,7 +48,7 @@ export const ContentWindowContainer = ({ children }) => {
           <ListView onClick={(evt) => setSelectedViewOption('list')}>
             <RiListCheck />
           </ListView>
-          <GridView onClick={(evt) => setSelectedViewOption('grud')}>
+          <GridView onClick={(evt) => setSelectedViewOption('grid')}>
             <RiFunctionLine />
           </GridView>
         </DisplayOptions>

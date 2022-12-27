@@ -14,13 +14,20 @@ import { DISPLAY_NON_IMAGE_FILES_IN_GALLERY } from '../../utils/config';
 
 export const FilePreview = ({ file }) => {
   const setSelectedPath = useStore((state) => state.setSelectedPath);
+  const showSingleItemPreview = useStore(
+    (state) => state.showSingleItemPreview
+  );
+  const previewSingleItem = useStore((state) => state.previewSingleItem);
   const fileType = getFileTypeExhaustive(file);
   const isImage = getIsImage(fileType);
   const preview = previewImages[fileType.toLowerCase()];
 
-  const handleClick = (evt, path) => {
+  const handleClick = (evt, path, fileType) => {
     if (evt.detail === 1) return;
-    if (evt.detail === 2) setSelectedPath(path);
+    if (evt.detail === 2) {
+      if (fileType === 'folder') setSelectedPath(path);
+      else previewSingleItem(path);
+    }
   };
 
   return isImage ? (
@@ -28,13 +35,13 @@ export const FilePreview = ({ file }) => {
       <img
         src={file.url}
         style={previewStyles}
-        onClick={(evt) => handleClick(evt, file.path)}
+        onClick={(evt) => handleClick(evt, file.path, file.type)}
         alt={file.name}
       />
     </PhotoView>
   ) : (
     <NonImageDisplayGate
-      handleClick={handleClick}
+      handleClick={(evt) => handleClick(evt, file.path, file.type)}
       file={file}
       preview={preview}
     />
@@ -50,12 +57,12 @@ export const NonImageDisplayGate = ({
     supported ? (
       _render({
         style: docStyles,
-        onClick: (evt) => handleClick(evt, file.path),
+        onClick: (evt) => handleClick(evt, file.path, file.type),
       })
     ) : (
       <RiFileUnknowLine
         style={docStyles}
-        onClick={(evt) => handleClick(evt, file.path)}
+        onClick={(evt) => handleClick(evt, file.path, file.type)}
       />
     )
   ) : null;

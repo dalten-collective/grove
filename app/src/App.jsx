@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useLayoutEffect } from 'react';
 import { ThemeProvider } from 'styled-components';
 // import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { MotionConfig } from 'framer-motion';
@@ -18,6 +18,14 @@ export const App = () => {
   const [isHydrated, setIsHydrated] = useState(false);
   const { urbit, ship, scries } = useTrove();
   const hosts = useStore((state) => state.hosts);
+  const resetPreviewState = useStore((state) => state.resetPreviewState);
+
+  // Reset (perseistent) preview state on unmount
+  useLayoutEffect(() => {
+    return () => {
+      resetPreviewState();
+    };
+  }, []);
 
   useEffect(() => {
     if (ship && !isHydrated) {
