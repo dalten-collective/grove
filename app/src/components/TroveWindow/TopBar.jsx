@@ -29,16 +29,17 @@ export const TopBarContainer = styled.div`
   justify-content: space-between;
   align-items: center;
   padding: 6px 8px;
-  gap: 228px;
+  /* gap: 228px; */
 
-  width: 712px;
+  /* max-width: 100%; */
+  /* width: 712px; */
   height: 30px;
 
   border-radius: 9px 9px 0px 0px;
 
   /* Inside auto layout */
 
-  flex: none;
+  /* flex: none; */
   order: 0;
   align-self: stretch;
   flex-grow: 0;
@@ -60,7 +61,7 @@ export const TopBarIcon = styled.div`
 
   /* Inside auto layout */
 
-  flex: none;
+  /* flex: none; */
   order: 0;
   flex-grow: 0;
 `;
@@ -75,7 +76,7 @@ export const IconVector = styled.div`
 
   /* Inside auto layout */
 
-  flex: none;
+  /* flex: none; */
   order: 0;
   flex-grow: 0;
 `;
@@ -83,7 +84,7 @@ export const IconVector = styled.div`
 export const AppTitle = styled.div`
   /* Trove */
 
-  width: 32px;
+  /* width: 32px; */
   height: 14px;
 
   font-family: 'Rubik';
@@ -97,7 +98,7 @@ export const AppTitle = styled.div`
 
   /* Inside auto layout */
 
-  flex: none;
+  /* flex: none; */
   order: 1;
   flex-grow: 0;
 `;
@@ -110,7 +111,8 @@ export const WindowCloseContainer = styled.div`
 
   /* Inside auto layout */
 
-  flex: none;
+  /* margin-right: 2px; */
+  /* flex: none; */
   order: 2;
   flex-grow: 0;
 `;

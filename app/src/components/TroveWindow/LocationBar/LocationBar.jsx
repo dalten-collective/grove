@@ -12,7 +12,7 @@ export const LocationBar = styled.div`
   padding: 0px;
   gap: 10px;
 
-  width: 696px;
+  /* width: 696px; */
   height: 28px;
 
   /* Inside auto layout */
@@ -83,7 +83,7 @@ export const LocationInfo = styled.div`
   padding: 8px 9px 8px 4px;
   gap: 4px;
 
-  width: 646px;
+  /* width: 646px; */
   height: 28px;
 
   background: #ffffff;
@@ -95,7 +95,7 @@ export const LocationInfo = styled.div`
 
   /* Inside auto layout */
 
-  flex: none;
+  /* flex: none; */
   order: 1;
   flex-grow: 1;
 `;
@@ -111,7 +111,7 @@ export const ShipInfo = styled.div`
   padding: 2px 4px;
   gap: 10px;
 
-  width: 93px;
+  /* width: 93px; */
   height: 20px;
 
   background: #f4f4f4;
@@ -127,7 +127,7 @@ export const ShipInfo = styled.div`
 export const PatP = styled.div`
   /* ~lomder-librun */
 
-  width: 85px;
+  /* width: 85px; */
   height: 14px;
 
   font-family: 'Rubik';
@@ -173,7 +173,6 @@ export const Slash = styled.div`
   /* Inside auto layout */
 
   flex: none;
-  order: 1;
   flex-grow: 0;
 `;
 
@@ -188,7 +187,8 @@ export const Bucket = styled.div`
   padding: 2px 4px;
   gap: 10px;
 
-  width: 43px;
+  cursor: pointer;
+  word-wrap: none;
   height: 20px;
 
   background: #f4f4f4;
@@ -197,15 +197,15 @@ export const Bucket = styled.div`
   /* Inside auto layout */
 
   flex: none;
-  order: 2;
   flex-grow: 0;
 `;
 
 export const BucketText = styled.div`
   /* Books */
 
-  width: 35px;
   height: 14px;
+
+  word-wrap: none;
 
   font-family: 'Rubik';
   font-style: normal;

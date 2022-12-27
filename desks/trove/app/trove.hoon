@@ -123,7 +123,7 @@
     ``trove-spaces+!>(`(list spat)`~(tap in ~(key by troves)))
   ::
       [%x %team host=@ space=@ ~]
-    =+  sap=[(slav %p host.pol) (slav %t space.pol)]
+    =+  sap=[(slav %p host.pol) space.pol]
     =+  to-team:(to-abed:to sap)
     ``trove-teams+!>(`team`[sap admins mods:(get sap) members]~)
   ::
@@ -136,20 +136,24 @@
     [sap [admins mods:(get sap) members]]
   ::
       [%x %regs host=@ space=@ ~]
-    ``trove-regs+!>(regs:(get [(slav %p host.pol) (slav %t space.pol)]))
+    ``trove-regs+!>(regs:(get [(slav %p host.pol) space.pol]))
   ::
       [%x %folder %perms host=@ space=@ rest=*]
-    =+  spa=[(slav %p host.pol) (slav %t space.pol)]
+    =+  spa=[(slav %p host.pol) space.pol]
     ``trove-perm+!>(`perm`(to-perm:(to-abed:to spa) rest.pol))
   ::
       [%x %folder host=@ space=@ rest=*]
-    =+  tov=trove:(get [(slav %p host.pol) (slav %t space.pol)])
+    =+  tov=trove:(get [(slav %p host.pol) space.pol])
     ``trove-trecht+!>((~(get of `trove`tov) rest.pol))
   ::
       [%x %node host=@ space=@ id=@ rest=*]
-    =+  tov=trove:(get [(slav %p host.pol) (slav %t space.pol)])
+    =+  tov=trove:(get [(slav %p host.pol) space.pol])
     ?~  hav=(~(get of `trove`tov) rest.pol)  !!
     ``trove-node+!>(`node`(~(got by u.hav) (slav %uv id.pol)))
+  ::
+      [%x %tree host=@ space=@ rest=*]
+    =+  tov=trove:(get [(slav %p host.pol) space.pol])
+    ``trove-tree+!>(`trove`(~(dip of `trove`tov) rest.pol))
   ==
 ::  +peer: handle on-watch
 ::
@@ -221,6 +225,7 @@
   +*  sa   .
       dok  [our.bol %spaces]
       adm  (silt `(list role)`[%admin]~)
+      maa  (silt `(list role)`~[%admin %moderator])
       mam  (silt `(list role)`~[%admin %moderator %member])
   ++  sa-emit  |=(c=card sa(caz [c caz]))
   ++  sa-emil  |=(lc=(list card) sa(caz (welp lc caz)))
@@ -291,7 +296,7 @@
     ^-  regs
     ?.  =(our.bol p.sap)  *regs
     %-  ~(put by *regs)
-    [/ [%0 [adm adm adm adm] [mam adm adm adm adm ~]]]
+    [/ [%0 [maa maa adm adm] [mam maa maa adm adm ~]]]
   ::  +sa-dude: handle spaces-reaction marks
   ::
   ++  sa-dude
@@ -644,6 +649,8 @@
       =/  read=[? ? ?]
         =+  red=~(has in read.folder.perms)
         [(red %member) (red %admin) (red %moderator)]
+      =.  by.dat.node.q.f    src.bol
+      =.  from.dat.node.q.f  now.bol
       =?    node.q.f
           ?=(%0v0 id.q.f)
         ?:  =(our.bol src.bol)
@@ -796,6 +803,7 @@
       ==
     ::
         %add-folder
+      ?>  ((sane %tas) nam.q.f)
       =.  trail.q.f  (snoc trail.q.f nam.q.f)
       =+  perms=(to-perm trail.q.f)
       ?>  ?|  =(~ (~(get of `trove`tov) trail.q.f))
@@ -845,7 +853,7 @@
         %-  malt
         %+  murn  ~(tap by rag)
         |=  (pair trail perm)
-        ?.((pre-fix trail.q.f p) ~ `[p q])
+        ?:((pre-fix trail.q.f p) ~ `[p q])
       ?.  =(our.bol p.sap)
         ?:  =(our.bol src.bol)
           ::  an instruction to a remote trove

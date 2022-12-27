@@ -12,12 +12,12 @@ export const MainContainer = styled.div`
   padding: 0px 8px 10px;
   gap: 8px;
 
-  width: 712px;
+  /* width: 712px; */
   height: 476px;
 
   /* Inside auto layout */
 
-  flex: none;
+  /* flex: none; */
   order: 1;
   align-self: stretch;
   flex-grow: 1;
