@@ -175,6 +175,8 @@ mark: `trove-action`
       "node": {
         "url": "https://aws.com/myfile",
         "dat": {
+          "from": 161234567,
+          "by": "~zod"
           "title": "the-filename",
           "description": "Optional long description",
           "extension": ".png"
