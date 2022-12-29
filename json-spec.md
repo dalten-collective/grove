@@ -317,7 +317,7 @@ mark: `trove-action`
         "url" : "https://aws.com/myfile",
         "dat" : {
           "from" : 161234567,
-          "by" : "~zod"
+          "by" : "~zod",
           "title" : "the-filename",
           "description" : "Optional long description",
           "extension" : ".png"
