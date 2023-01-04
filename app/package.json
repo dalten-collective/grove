@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "vite",
-    "build": "NODE_ENV=PRODUCTION vite build",
+    "build": "vite build",
     "serve": "vite preview",
     "build-prod": "tsc && vite build --mode production --base=/dist/",
     "clean": "rimraf dist",
