@@ -9,28 +9,8 @@ import styled from 'styled-components';
 import clsx from 'clsx';
 import { RiArrowDownSLine } from 'react-icons/ri';
 
-import { getTree, useStore } from '../../state/store';
-import {
-  FileRow,
-  Title,
-  Metadata,
-  Size,
-  DateUploaded,
-  FileType,
-} from './styles';
+import { getTree, useStore } from '../state/store';
 
-export const Row = (props) => {
-  return (
-    <FileRow key={props.file?.title}>
-      <Title>{props.file?.title}</Title>
-      <Metadata>
-        <Size>{props.file?.size}</Size>
-        <DateUploaded>{props.file?.dateUploaded}</DateUploaded>
-        <FileType>{props.file?.kind}</FileType>
-      </Metadata>
-    </FileRow>
-  );
-};
 const CustomContent = React.forwardRef(function CustomContent(props, ref) {
   const {
     classes,
@@ -64,15 +44,13 @@ const CustomContent = React.forwardRef(function CustomContent(props, ref) {
     handleExpansion(event);
   };
 
-  const handleRowClick = (event, x) => {
-    if (evt.detail === 1) handleExpansionClick(event);
-    if (evt.detail === 2) handleSelectionClick(event, x);
-  };
   const handleSelectionClick = (event, x) => {
     handleSelection(event);
+    console.log('event', event);
+    console.log('x', x);
     setSelectedPath(x.nodeId);
   };
-
+  console.log('classes', classes);
   return (
     // eslint-disable-next-line jsx-a11y/no-static-element-interactions
     <div
@@ -90,13 +68,15 @@ const CustomContent = React.forwardRef(function CustomContent(props, ref) {
         {icon}
       </div>
       <Typography
-        onClick={(evt) => handleRowClick(evt, { nodeId })}
+        onClick={(evt) => handleSelectionClick(evt, { nodeId }, setSelectedPath)}
         component="div"
-        fontFamily="Rubik"
-        fontStyle="normal"
-        fontWeight="400"
-        fontSize="12px"
-        // className={classes.label}
+        className={classes.label}
+        sx={{
+          fontFamily: 'Rubik',
+          fontSize: '14px',
+          fontWeight: '400',
+          lineHeight: '14.22px',
+        }}
       >
         {label}
       </Typography>
@@ -141,7 +121,7 @@ function CustomTreeItem(props) {
   return <TreeItem ContentComponent={CustomContent} {...props} />;
 }
 
-const fakeData = {
+const data = {
   id: 'root',
   name: 'Parent',
   children: [
@@ -164,16 +144,15 @@ const fakeData = {
 
 export const RichObjectTreeView = ({ tree }) => {
   const renderTree = (nodes) => (
-    <CustomTreeItem
+    <TreeItem
       key={nodes.id}
       nodeId={nodes.id ? nodes.id : 'defaultNodeId'}
       label={nodes.name}
-      file={nodes}
     >
       {Array.isArray(nodes.children)
         ? [...nodes?.children]?.map((node) => renderTree(node))
         : null}
-    </CustomTreeItem>
+    </TreeItem>
   );
 
   return tree ? (
