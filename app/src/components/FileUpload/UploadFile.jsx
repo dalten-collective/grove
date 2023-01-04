@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { findLast } from 'lodash';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -8,9 +8,8 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 // import ClickAwayListener from '@mui/base/ClickAwayListener';
 import { useStore } from '../../state/store';
-import { PokeForm } from '../PokeForm/pokeform';
-import { useFileStore } from 'landscape-apps/dist/src/state/storage';
-import useFileUpload from 'landscape-apps/dist/src/logic/useFileUpload';
+import useFileStore from '../../lib/state/useFileStore';
+import useFileUpload from '../../lib/useFileUpload';
 
 export default function UploadFile({ open, setOpen }) {
   const selectedPath = useStore((state) => state.selectedPath);

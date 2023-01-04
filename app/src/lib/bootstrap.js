@@ -3,8 +3,8 @@ import api from './api';
 // import { useGroupState } from 'landscape-apps/dist/src/state/groups';
 // import useHarkState from 'landscape-apps/dist/src/state/hark';
 // import { useHeapState } from 'landscape-apps/dist/src/state/heap/heap';
-import { useSettingsState } from 'landscape-apps/dist/src/state/settings';
-import { useStorage } from 'landscape-apps/dist/src/state/storage';
+import { useSettingsState } from './state/useSettingsState';
+import { useStorage } from './state/useStorage';
 
 export default function bootstrap() {
   // useGroupState.getState().start();

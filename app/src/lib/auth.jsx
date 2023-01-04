@@ -8,19 +8,19 @@ import {
 } from 'react-router-dom';
 import { ErrorBoundary } from 'react-error-boundary';
 import { TooltipProvider } from '@radix-ui/react-tooltip';
-// import useMedia, { useIsDark, useIsMobile } from 'logic/useMedia';
-// import { useIsDark } from 'landscape-apps/dist/src/logic/useMedia';
-import useErrorHandler from 'landscape-apps/dist/src/logic/useErrorHandler';
-import { useTheme } from 'landscape-apps/dist/src/state/settings';
+
+// import useMedia, { useIsDark, useIsMobile } from './logic/useMedia';
+// import { useTheme } from './state/settings';
+import useErrorHandler from './useErrorHandler';
 import {
   useAirLockErrorCount,
   useErrorCount,
   useLocalState,
   useSubscriptionStatus,
-} from 'landscape-apps/dist/src/state/local';
-import ErrorAlert from 'landscape-apps/dist/src/components/ErrorAlert';
-import DisconnectNotice from 'landscape-apps/dist/src/components/DisconnectNotice';
+} from './state/useLocalState';
 
+import ErrorAlert from './components/ErrorAlert';
+import DisconnectNotice from './components/DisconnectNotice';
 import replaceFavicon from '../assets/android-chrome-512x512.png';
 // import favicon from './apps/trove/src/assets/android-chrome-512x512.png';
 import bootstrap from './bootstrap';
@@ -113,7 +113,7 @@ export default function AuthRouter({ children }) {
   const basename = '/apps/trove';
 
   const [userThemeColor, setUserThemeColor] = useState('#ffffff');
-  const theme = useTheme();
+  // const theme = useTheme();
   // const isDarkMode = useIsDark();
 
   // useEffect(() => {

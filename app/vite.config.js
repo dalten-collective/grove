@@ -1,4 +1,5 @@
 import fs from 'fs';
+import packageJson from './package.json';
 import path from 'path';
 import { loadEnv, defineConfig } from 'vite';
 import reactRefresh from '@vitejs/plugin-react-refresh';
@@ -7,9 +8,15 @@ import { visualizer } from 'rollup-plugin-visualizer';
 import { urbitPlugin } from '@urbit/vite-plugin-urbit';
 import { VitePWA } from 'vite-plugin-pwa';
 import babel from 'vite-plugin-babel';
+// import replace from '@rollup/plugin-replace'
 
 // https://vitejs.dev/config/
 export default ({ mode }) => {
+  const app = 'trove';
+  process.env.VITE_APP = app;
+  process.env.VITE_STORAGE_VERSION =
+    mode === 'dev' ? Date.now().toString() : packageJson.version;
+
   Object.assign(process.env, loadEnv(mode, process.cwd()));
   const SHIP_URL =
     process.env.SHIP_URL || process.env.VITE_SHIP_URL || 'http://localhost:80';
@@ -38,9 +45,10 @@ export default ({ mode }) => {
     build: {
       target: 'esnext',
       minify: true,
-      sourcemap: true,
+      sourcemap: false,
       manifest: true,
       rollupOptions: {
+        external: ['@aws-sdk/client-s3', '@aws-sdk/s3-request-presigner'],
         plugins: [
           analyze({
             limit: 20,
@@ -82,12 +90,6 @@ export default ({ mode }) => {
     ],
   });
 };
-
-// export default defineConfig({
-//   plugins: [ reactVirtualized() ], // add
-// }
-
-// import replace from '@rollup/plugin-replace'
 
 // const pwaOptions = {
 //   mode: 'development',

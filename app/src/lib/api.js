@@ -1,7 +1,7 @@
-// import type UrbitMock from '@tloncorp/mock-http-api';
 import Urbit from '@urbit/http-api';
-import { useLocalState } from 'landscape-apps/dist/src/state/local';
-import useSubscriptionState from 'landscape-apps/dist/src/state/subscription';
+
+import { useLocalState } from './state/useLocalState';
+import useSubscriptionState from './state/useSubscriptionState';
 
 let client = undefined;
 
