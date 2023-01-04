@@ -1,11 +1,9 @@
-import * as React from 'react';
+import React from 'react';
 import Box from '@mui/material/Box';
-// import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-// import Select from '@mui/material/Select';
 // import ClickAwayListener from '@mui/base/ClickAwayListener';
 import { useStore } from '../../state/store';
 import { PokeForm } from '../PokeForm/pokeform';

@@ -1,13 +1,13 @@
-import fs from 'fs';
+// import fs from 'fs';
 import packageJson from './package.json';
 import path from 'path';
 import { loadEnv, defineConfig } from 'vite';
-import reactRefresh from '@vitejs/plugin-react-refresh';
+// import reactRefresh from '@vitejs/plugin-react-refresh';
 import analyze from 'rollup-plugin-analyzer';
-import { visualizer } from 'rollup-plugin-visualizer';
+// import { visualizer } from 'rollup-plugin-visualizer';
 import { urbitPlugin } from '@urbit/vite-plugin-urbit';
 import { VitePWA } from 'vite-plugin-pwa';
-import babel from 'vite-plugin-babel';
+// import babel from 'vite-plugin-babel';
 // import replace from '@rollup/plugin-replace'
 
 // https://vitejs.dev/config/
@@ -53,7 +53,7 @@ export default ({ mode }) => {
           analyze({
             limit: 20,
           }),
-          visualizer(),
+          // visualizer(),
         ],
         output: {
           manualChunks: {
@@ -84,7 +84,7 @@ export default ({ mode }) => {
       VitePWA({
         registerType: 'autoUpdate',
         devOptions: {
-          enabled: true,
+          enabled: false,
         },
       }),
     ],

@@ -7,7 +7,7 @@ import {
 } from 'react-icons/ri';
 import { useStore } from '../../state/store';
 
-const DialogSelect = React.lazy(() => import('../Dialog/Dialog'));
+import DialogSelect from '../Dialog/Dialog';
 
 import {
   ContentWindowContainer as _ContentWindowContainer,
@@ -16,7 +16,6 @@ import {
   ListView,
   GridView,
   DateSortContainer,
-  InfoSortingBar,
   DateText,
   DateDropDown,
   ActualMainContent,
@@ -25,7 +24,7 @@ import {
 
 export default function ContentWindowContainer({ children }) {
   const setSelectedViewOption = useStore((state) => state.setSelectedViewOption);
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
   return (
     <_ContentWindowContainer>
       <_SortingBar>

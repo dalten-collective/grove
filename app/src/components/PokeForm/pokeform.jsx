@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react';
-
+import React, { useEffect } from 'react';
 import InputLabel from '@mui/material/InputLabel';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import TextField from '@mui/material/TextField';
@@ -10,13 +9,12 @@ import toPairs from 'lodash/toPairs';
 import { useTheme } from 'styled-components';
 import { useStore } from '../../state/store';
 import { useForm } from '../../state/form';
-import { getLookupTableAtSelectedPath } from '../../state/selectors';
+// import { getLookupTableAtSelectedPath } from '../../state/selectors';
 import { useTrove } from '../../urbit/index';
 import { formatImplicitExtension } from '../../utils/files';
 import { fieldsByAction } from './fieldsByAction';
 
 export const PokeForm = ({ selectedPath, handleClose }) => {
-  const theme = useTheme();
   const { urbit, ship, pokes } = useTrove();
   const selectedHostSpace = useStore((state) => state.selectedHostSpace);
   const selectedRelativePath = useStore((state) => state.selectedRelativePath);
