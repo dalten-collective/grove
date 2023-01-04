@@ -10,6 +10,6 @@ export const getFragsAndAssertPath = (path) => {
 export const getHostSpaceFromSearchParams = (url) => {
   const searchParams = new URLSearchParams(url);
   const hostSpace = searchParams.get('spaceId');
-  debugger;
+  // debugger;
   return hostSpace;
 };
