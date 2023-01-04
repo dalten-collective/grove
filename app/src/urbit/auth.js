@@ -4,10 +4,10 @@ import Urbit from '@urbit/http-api';
 export const openAirlock = async () => {
   const authAirlock = async () =>
     await Urbit.authenticate({
-      ship: 'ranrud-navdep-danlyd-bitwep--soptyr-misdul-hatmut-marzod',
-      url: 'localhost:80',
-      code: 'lapfus-fanryn-saltyd-siprel',
-      verbose: true,
+      ship: process.env.REACT_APP_SHIP_NAME,
+      url: process.env.REACT_APP_SHIP_URL || 'localhost:80',
+      code: process.env.REACT_APP_SHIP_CODE || '',
+      // verbose: true,
     });
 
   const airlock = await authAirlock();
@@ -24,7 +24,7 @@ export const useAirlock = () => {
         ship: 'YOUR_SHIP_HERE',
         url: 'YOUR_VITE_PORT_HERE',
         code: 'YOUR_CODE_HERE',
-        verbose: true,
+        // verbose: true,
       });
       setAirlock(airlock);
       setIsAuthed(true);

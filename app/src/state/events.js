@@ -1,4 +1,4 @@
-import { logLarge } from '../utils';
+// import { logLarge } from '../utils';
 import { events } from './faces';
 
 export const handleEventActions = (
@@ -42,8 +42,10 @@ export const handleEvent = (urbit, storeActions) => (evt, action) => {
     // case events.REPEAT: return;
     // case events.REPERM: return;
     default: {
+      // TODO: Handle other events and errors
       console.log('=====================');
-      logLarge('Unhandled event: ', evt);
+      console.log('Unhandled event: ', evt);
+      // throw new Error('Unhandled event');
       console.log('=====================');
       break;
     }
