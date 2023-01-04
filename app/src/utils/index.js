@@ -1,8 +1,10 @@
 import keyBy from 'lodash/keyBy';
 // import { unix } from 'moment/moment';
 
-export const getSpace = (space, ship = '') =>
-  ship.length ? `~${ship}/${space}` : `~${space}`;
+export const getSpace = (space, ship = '') => {
+  if (space[0] === '~') return space;
+  return ship.length ? `~${ship}/${space}` : `~${space}`;
+};
 
 export const mapTilde = (ships = []) => ships.map(addTilde);
 
@@ -53,14 +55,6 @@ export const getStateFromEvt = (evt) => {
 
 export const getNodeName = (nodePath, key) => nodePath?.dat?.title || key;
 
-export const getHostSpace = (hostSpace) => {
-  const hostSpaces = hostSpace?.slice()?.split('/') || [];
-  const isFullHostSpace = hostSpaces?.length > 1;
-  return isFullHostSpace
-    ? [...hostSpaces, true]
-    : [hostSpaces[0], 'our', false];
-};
-
 export const getShipName = (_ship) => {
   if (_ship && _ship.length > 2) {
     const names = _ship?.slice().split('-');
@@ -107,67 +101,3 @@ export const logLarge = (key, msg) => {
   console.log(`${key}: `, msg);
   console.log(`====================================`);
 };
-
-export const nestTrovePaths = (paths) => {
-  const troves = Object.values(paths).length && Object.values(paths)[0].trove;
-  const nestedPaths = Object.keys(troves).reduce((result, key) => {
-    const pathSegments = key.split('/').filter((s) => s);
-
-    if (pathSegments[0] !== 'trove') {
-      return {
-        ...result,
-        [key]: paths[key],
-      };
-    }
-
-    const nested = pathSegments
-      .slice(1)
-      .reduce(
-        (nestedPaths, segment) => ({ ...nestedPaths, [segment]: {} }),
-        result
-      );
-
-    nested[pathSegments[pathSegments.length - 1]].value = paths[key];
-
-    return nested;
-  }, {});
-  return nestedPaths;
-};
-
-// recurively nest child paths under children keys in parent paths
-export const nestChildren = (paths) => {
-  const nestedPaths = Object.keys(paths).reduce((result, key) => {
-    return paths[key].value
-      ? {
-          ...result,
-          [key]: paths[key],
-        }
-      : {
-          ...result,
-          [key]: {
-            children: nestChildren(paths[key]),
-          },
-        };
-  }, {});
-
-  return nestedPaths;
-};
-
-// export const nestTrovePaths = (paths) => {
-//   const nestedPaths = Object.keys(paths).reduce((result, key) => {
-//     const pathSegments = key.split('/').filter((s) => s);
-//     const nested = pathSegments.reduce(
-//       (nestedPaths, segment) => ({
-//         ...nestedPaths,
-//         [segment]: {},
-//       }),
-//       {}
-//     );
-//     nested[pathSegments[pathSegments.length - 1]].value = paths[key];
-//     return {
-//       ...result,
-//       ...nested,
-//     };
-//   }, {});
-//   return nestedPaths;
-// };

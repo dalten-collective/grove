@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
-import { useStore } from './state/store';
-import { useTrove } from './urbit';
+import { useStore } from '../state/store';
+import { useTrove } from '../urbit';
 
 export const usePoke = (key, action, args) => {
   const { getHosts, hosts } = useStore();

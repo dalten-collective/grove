@@ -13,8 +13,10 @@ export default ({ mode }) => {
     process.env.SHIP_URL || process.env.VITE_SHIP_URL || 'http://localhost:80';
   console.log(SHIP_URL);
 
+  const base = () => '/apps/trove/';
   return defineConfig({
     // vite: {
+    base: base(),
     resolve: {
       alias: {
         react: path.resolve('./node_modules/react'),
@@ -24,6 +26,10 @@ export default ({ mode }) => {
         '@urbit/vite-plugin-urbit': path.resolve(
           './node_modules/@urbit/vite-plugin-urbit'
         ),
+        'landscape-apps': path.resolve('./node_modules/landscape-apps'),
+        '@/': `${path.resolve(__dirname, 'node_modules')}/landscape-apps/src/`,
+        '@mui/styled-engine': path.resolve('./node_modules/@mui/styled-engine'),
+        // '@/': `${path.resolve(__dirname, 'src')}/`,
       },
     },
     // mode: process.env.NODE_ENV,
@@ -40,9 +46,13 @@ export default ({ mode }) => {
       cors: true,
     },
     plugins: [
-      urbitPlugin({ base: 'trove', target: SHIP_URL, secure: false }),
+      urbitPlugin({
+        base: 'trove',
+        target: SHIP_URL,
+        changeOrigin: true,
+        secure: false,
+      }),
       reactRefresh(),
-      reactVirtualized(),
       // babel(),
       // VitePWA({
       //   registerType: 'autoUpdate',
@@ -53,29 +63,6 @@ export default ({ mode }) => {
     ],
   });
 };
-
-const BAD_IMPORT = `import { bpfrpt_proptype_WindowScroller } from "../WindowScroller.js";`;
-export function reactVirtualized() {
-  return {
-    name: 'flat:react-virtualized',
-    // Note: we cannot use the `transform` hook here
-    //       because libraries are pre-bundled in vite directly,
-    //       plugins aren't able to hack that step currently.
-    //       so instead we manually edit the file in node_modules.
-    //       all we need is to find the timing before pre-bundling.
-    configResolved() {
-      const file = require
-        .resolve('react-virtualized')
-        .replace(
-          path.join('dist', 'commonjs', 'index.js'),
-          path.join('dist', 'es', 'WindowScroller', 'utils', 'onScroll.js')
-        );
-      const code = fs.readFileSync(file, 'utf-8');
-      const modified = code.replace(BAD_IMPORT, '');
-      fs.writeFileSync(file, modified);
-    },
-  };
-}
 
 // export default defineConfig({
 //   plugins: [ reactVirtualized() ], // add
@@ -116,7 +103,7 @@ export function reactVirtualized() {
 //     type: 'module',
 //     navigateFallback: 'index.html',
 //   },
-// }
+// };
 
 // const replaceOptions = { __DATE__: new Date().toISOString() }
 // const claims = process.env.CLAIMS === 'true'

@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
+// import styled from 'styled-components';
 import { PhotoView } from 'react-photo-view';
+import 'react-photo-view/dist/react-photo-view.css';
 import {
   RiFolder2Line,
   RiFileUnknowLine,
@@ -7,20 +9,21 @@ import {
   RiFolderZipLine,
   RiMarkdownLine,
 } from 'react-icons/ri';
+
 import { getFileTypeExhaustive, getIsImage } from '../../utils/files';
 import { previewStyles, docStyles } from './styles';
 import { useStore } from '../../state/store';
 import { DISPLAY_NON_IMAGE_FILES_IN_GALLERY } from '../../utils/config';
+// import useFileUpload from 'landscape-apps/dist/src/logic/useFileUpload';
 
 export const FilePreview = ({ file }) => {
   const setSelectedPath = useStore((state) => state.setSelectedPath);
-  const showSingleItemPreview = useStore(
-    (state) => state.showSingleItemPreview
-  );
+  const showSingleItemPreview = useStore((state) => state.showSingleItemPreview);
   const previewSingleItem = useStore((state) => state.previewSingleItem);
   const fileType = getFileTypeExhaustive(file);
   const isImage = getIsImage(fileType);
   const preview = previewImages[fileType.toLowerCase()];
+  // const fileUpload = useFileUpload();
 
   const handleClick = (evt, path, fileType) => {
     if (evt.detail === 1) return;
@@ -57,11 +60,13 @@ export const NonImageDisplayGate = ({
     supported ? (
       _render({
         style: docStyles,
+        size: 50,
         onClick: (evt) => handleClick(evt, file.path, file.type),
       })
     ) : (
       <RiFileUnknowLine
         style={docStyles}
+        size={50}
         onClick={(evt) => handleClick(evt, file.path, file.type)}
       />
     )

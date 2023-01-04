@@ -1,27 +1,20 @@
 import React from 'react';
 import { Box } from '@mui/material';
-import { WindowContainer } from './WindowContainer';
-import { TopBar } from './TopBar';
-import { MainContainer } from './MainContainer';
-import { LocationBar } from './LocationBar';
-import { MainContentContainer } from './MainContent';
+import { useLookupTable } from '../../state/store';
 import { Sidebar } from '../Sidebar';
+import { LocationBar } from './LocationBar';
+import { MenuBar } from './MenuBar';
 import { MainContentWindow } from '../MainContentWindow';
-import { useStore, getShorthandHost, useLookupTable } from '../../state/store';
+import { MainContainer, MainContentContainer, WindowContainer } from './styles';
 
 export default function TroveWindow() {
-  const shorthandHost = useStore(getShorthandHost);
   useLookupTable();
-  // TODO: Make this based off current trove; move to utils
   return (
-    <Box>
+    <Box sx={{ height: '100%' }}>
       <WindowContainer>
-        <TopBar appTitle="Trove" />
+        <MenuBar appTitle="Trove" />
         <MainContainer>
-          <LocationBar
-            patP={shorthandHost || '~sampel-planet'}
-            bucketText="Books"
-          />
+          <LocationBar />
           <MainContentContainer>
             <Sidebar />
             <MainContentWindow />

@@ -1,132 +1,125 @@
-import React, { useState } from 'react';
-import PropTypes from 'prop-types';
-import TreeView from '@mui/lab/TreeView';
-import TreeItem, { useTreeItem } from '@mui/lab/TreeItem';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import Typography from '@mui/material/Typography';
 import styled from 'styled-components';
-import clsx from 'clsx';
-import {
-  RiArrowDownSLine,
-  RiAddLine,
-  RiUser3Line,
-  RiSettings3Line,
-} from 'react-icons/ri';
-import Avatar from '@mui/material/Avatar';
-import Stack from '@mui/material/Stack';
-import useMenu, { SimpleMenu } from '../AddMenu/SimpleMenu';
-// import { deepOrange, green } from '@mui/material/colors';
-// import AssignmentIcon from '@mui/icons-material/Assignment';
-import {
-  AddPassportCard,
-  FileUploadCard,
-  FileUploadIcon,
-  FileUploadText,
-  NewFolderCard,
-  NewFolderIcon,
-  NewFolderText,
-} from '../AddMenu/styles';
-import { useStore } from '../../state/store';
-import { getShipName } from '../../utils';
 
-export default function VariantAvatars() {
+export const SidebarRow = ({ title, selected }) => {
   return (
-    // <Stack direction="row" spacing={2}>
-    //   <Avatar sx={{ bgcolor: deepOrange[500] }} variant="square">
-    //     N
-    //   </Avatar>
-    <Avatar
-      variant="rounded"
-      src="http://dhs3.nyc3.cdn.digitaloceanspaces.com/sigil.png"
-    >
-      {/* <Avatar variant="rounded" src="../../assets/sigil.png"> */}
-      {/* <AssignmentIcon /> */}
-    </Avatar>
-    // </Stack>
-  );
-}
-export const SpaceInfo = ({ toggleAddFolder }) => {
-  // const { anchorEl, open, handleClick, handleClose } = useMenu();
-  const [anchorEl, setAnchorEl] = useState(null);
-  const selectedPath = useStore((state) => state.selectedPath);
-  const [_host, space] = selectedPath?.slice().split('/');
-  const host = getShipName(_host);
-  const open = Boolean(anchorEl);
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  return (
-    <SpaceInfoContainer>
-      <SpaceInfoCard>
-        <InnerSpaceInfoCard>
-          <SpaceInfoCardElements>
-            <SpaceImage>
-              {/* <Avatar
-                sx={{ widthe: '100%', height: '80%' }}
-                variant="rounded"
-                src="../../assets/sigil.png"
-              >
-              </Avatar> */}
-            </SpaceImage>
-            <SpaceName>
-              <SpaceNameSmall>
-                <SpaceNameSmallText>Group</SpaceNameSmallText>
-              </SpaceNameSmall>
-              <SpaceNameBigText>
-                {host}/{space}
-              </SpaceNameBigText>
-            </SpaceName>
-          </SpaceInfoCardElements>
-        </InnerSpaceInfoCard>
-      </SpaceInfoCard>
-      <SpaceInfoToolbar>
-        <SpaceInfoInnerToolbar>
-          <FolderPlusContainer onClick={toggleAddFolder}>
-            <RiAddLine />
-            {/* <RiAddLine onClick={handleClick} /> */}
-          </FolderPlusContainer>
-          {/* <SimpleMenu
-            anchorEl={anchorEl}
-            open={open}
-            handleClick={handleClick}
-            handleClose={handleClose}
-          /> */}
-          {/* <AddPassportCard
-            // id="basic-menu"
-            anchorEl={anchorEl}
-            open={open}
-            onClose={handleClose}
-            // MenuListProps={{
-            //   'aria-labelledby': 'basic-button',
-            // }}
-          > */}
-          {/* <NewFolderCard onClick={handleClose}> */}
-          {/* <NewFolderIcon />
-              <NewFolderText>New Folder</NewFolderText> */}
-          {/* </NewFolderCard> */}
-          {/* <FileUploadCard onClick={handleClose}> */}
-          {/* <FileUploadIcon />
-              <FileUploadText>Upload File</FileUploadText> */}
-          {/* </FileUploadCard> */}
-          {/* </AddPassportCard> */}
-          <ToolbarIconContainer>
-            <ToolbarPeopleContainer>
-              <RiUser3Line />
-            </ToolbarPeopleContainer>
-            <ToolbarSettingsContainer>
-              <RiSettings3Line />
-            </ToolbarSettingsContainer>
-          </ToolbarIconContainer>
-        </SpaceInfoInnerToolbar>
-      </SpaceInfoToolbar>
-    </SpaceInfoContainer>
+    <_SidebarRow selected={selected}>
+      <RowDropDownArrow>
+        <RiArrowDownSLine />
+      </RowDropDownArrow>
+      <RowTitle>{title}</RowTitle>
+    </_SidebarRow>
   );
 };
+
+export const treeStyles = {
+  // height: 110,
+  flexGrow: 1,
+  maxWidth: 400,
+  // overflowY: 'auto',
+  fontFamily: 'Rubik',
+  fontStyle: 'normal',
+  fontWeight: '400',
+  fontSize: '14px',
+  lineHeight: '14.22px',
+};
+
+export const SidebarContainer = styled.div`
+  /* Frame 2123 */
+
+  box-sizing: border-box;
+
+  /* Auto layout */
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 6px;
+  gap: 4px;
+
+  width: 180px;
+  /* height: 430px; */
+
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.09);
+  border-radius: 6px;
+
+  font-family: 'Rubik';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  /* line-height: 14px; */
+  /* Inside auto layout */
+
+  flex: none;
+  order: 0;
+  align-self: stretch;
+  flex-grow: 0;
+`;
+
+export const _SidebarRow = styled.div`
+  /* Frame 2155 */
+
+  /* Auto layout */
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0px 6px 0px 2px;
+  /* padding: 2px 6px 2px 2px; */
+  gap: 6px;
+
+  width: 168px;
+  height: 24px;
+
+  background: ${(props) => (props.selected ? '#F4F4F4' : '#ffffff')};
+  border-radius: 4px;
+  /* border-radius: 6px; */
+
+  /* Inside auto layout */
+
+  flex: none;
+  order: 0;
+  align-self: stretch;
+  flex-grow: 0;
+`;
+
+export const RowDropDownArrow = styled.div`
+  /* remix-icons/line/system/arrow-down-s-line */
+
+  width: 14px;
+  height: 14px;
+
+  /* transform: rotate(-90deg); */
+
+  /* Inside auto layout */
+
+  flex: none;
+  order: 0;
+  flex-grow: 0;
+`;
+
+export const RowTitle = styled.div`
+  /* Memes */
+
+  /* width: 40px; */
+  height: 14px;
+
+  font-family: 'Rubik';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 14.22px;
+  display: flex;
+  align-items: center;
+
+  color: #333333;
+
+  /* Inside auto layout */
+
+  flex: none;
+  order: 1;
+  flex-grow: 0;
+`;
 
 export const SpaceInfoContainer = styled.div`
   /* Frame 2241 */
@@ -227,7 +220,7 @@ export const FolderPlusContainer = styled.div`
   justify-content: center;
   align-items: center;
   /* flex-direction: row;
-  align-items: flex-start; */
+align-items: flex-start; */
   padding: 0px;
   gap: 4px;
 
@@ -351,10 +344,11 @@ export const SpaceImage = styled.div`
 
   box-sizing: border-box;
 
-  width: 22px;
   height: 22px;
+  /* height: 100%; */
+  width: 22px;
 
-  background: url(http://dhs3.nyc3.cdn.digitaloceanspaces.com/sigil.png);
+  /* background: url(http://dhs3.nyc3.cdn.digitaloceanspaces.com/sigil.png); */
   /* background: url(../../assets/sigil.png); */
   border-radius: 4px;
 

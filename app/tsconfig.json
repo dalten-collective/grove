@@ -23,7 +23,7 @@
   "exclude": [
     "node_modules",
     "dist",
-    "src/components/archive/app.jsx",
+    "src/archive/app.jsx",
     "src/modules/main.tsx",
     "src/modules/main.jsx",
     "src/modules/main.js",

@@ -3,78 +3,206 @@ import shallow from 'zustand/shallow';
 import produce from 'immer';
 import mergeDeepRight from 'ramda/es/mergeDeepRight';
 
-import { events } from './faces';
-import { getStateFromEvt, getShipName, getHostSpace } from '../utils';
+import { getStateFromEvt } from '../utils';
 import { indexTree, createLookupTable } from '../utils/indexTree';
 import { getHostSpaceShape } from '../utils/config';
 import { scries, scriesWithCb } from '../urbit/scries';
 import { createStore } from './storeMiddleware';
+// import { createStore, storageSlice } from './storeMiddleware';
+import { getTreeAtSelectedSpace, getTrees } from './selectors';
+import { getFragsAndAssertPath } from '../utils/path';
+import {
+  clearStorageMigration,
+  createStorageKey,
+} from 'landscape-apps/dist/src/logic/utils';
 
-// const [] = useStore((state) => (state.tree), shallow)
-export const getShorthandHost = (state) =>
-  getShipName(state.selectedTrove.host);
+const USE_SELECTED_TROVE = true;
+const USE_SET_PATH_ON_TROVE = false;
 
-export const getTree = (state) =>
-  Object.values(state.troves) && Object.values(state.troves)[0]?.tree;
-
-export const getLookupTableAtSelectedSpace = (state) =>
-  state.lookupTable[state.selectedHostSpace];
-
-export const getLookupTableAtSelectedPath = (state) =>
-  state.lookupTable[state.selectedPath];
-
-// export const getDateUploaded = (state) =>
-export const getActions = (state) => ({
-  onFact: {
-    [events.TROVE.INITIAL_STATE.FACE]: [state.setTroves],
-    [events.TROVE.NEW.FACE]: [state.newTrove],
-
-    [events.NODE.ADD.FACE]: [state.fetchTree],
-    [events.NODE.REM.FACE]: [state.remNode],
-    [events.NODE.EDIT.FACE]: [state.editNode],
-    // [events.NODE.MOVE.FACE]: [state.moveNode],
-
-    [events.FOLDER.ADD.FACE]: [state.fetchTree],
-    [events.FOLDER.REM.FACE]: [state.fetchTree],
-    [events.FOLDER.MOVE.FACE]: [state.fetchTree],
-
-    [events.MODERATORS.ADD.FACE]: [state.addModerators],
-    [events.MODERATORS.REM.FACE]: [state.removeModerators],
-  },
-});
-
-export const getScryActions = (state) => ({
-  tree: state.fetchTree,
-  troves: state.fetchTroves,
-  hosts: state.fetchHosts,
-  allTrees: state.fetchTreesForAllTroves,
-});
+// TODO: Split into multiple store slices
 
 export const useStore = createStore(
   (set, get) => ({
     // ...initialState,
     troves: {},
     hosts: [],
-    moderators: {},
-    regulations: {},
     lookupTable: {},
     // =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-    selectedTrove: { initialized: false, host: '', space: '', path: '' },
+    selectedTrove: {
+      initialized: false,
+      host: '',
+      space: '',
+      path: '',
+      reletivePath: '',
+    },
     selectedPath: '',
     selectedHostSpace: '',
+    selectedRelativePath: '',
+
+    // storage: storageSlice(),
+    // =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+    setHosts: (hosts) =>
+      set(
+        produce((draft) => {
+          draft.hosts = getStateFromEvt(hosts);
+        })
+      ),
+    setSelectedHostSpace: (hostSpace) =>
+      set(
+        produce((draft) => {
+          draft.selectedHostSpace = hostSpace;
+        })
+      ),
+    // =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+    fetchHosts: async (urbit) => {
+      const hosts = await scries.hosts(urbit);
+      get().setHosts(hosts);
+      get().setInitialTrove(hosts);
+    },
+    setSelectedPath: (path) =>
+      set(
+        produce((draft) => {
+          const [host, space, ...relFrags] = getFragsAndAssertPath(path);
+
+          draft.selectedPath = path;
+          draft.selectedHostSpace = `${host}/${space}`;
+          draft.selectedRelativePath = relFrags.length ? relFrags.join('/') : '';
+
+          if (USE_SELECTED_TROVE) get().setSelectedTrove(path);
+        })
+      ),
+    setSelectedTrove: (path = '') =>
+      set(
+        produce((draft) => {
+          const [host, space, ...relFrags] = getFragsAndAssertPath(path);
+
+          draft.selectedTrove = {
+            initialized: true,
+            host,
+            space,
+            path,
+            relativePath: relFrags.length ? relFrags.join('/') : '',
+          };
+
+          if (USE_SET_PATH_ON_TROVE) get().setSelectedPath(path);
+        })
+      ),
+    // TODO: Consider removing this
+    setInitialTrove: (withHosts = []) => {
+      const [selectedPath, hostSpace] = [
+        get().selectedPath,
+        get().selectedHostSpace,
+      ];
+      const currentPath = selectedPath?.length ? selectedPath : null;
+
+      if (!currentPath || !hostSpace?.length) {
+        get().setSelectedPath(currentPath || withHosts[0]);
+      } else if (USE_SELECTED_TROVE) {
+        get().setSelectedTrove(withHosts[0]);
+      }
+    },
+    setTree: (hostSpace, tree) =>
+      set(
+        produce((draft) => {
+          draft.troves[hostSpace].tree = tree;
+        })
+      ),
+    fetchTree: async (urbit, args) => {
+      const _tree = await scries.tree(urbit, args);
+      const hostSpaceShape = getHostSpaceShape(args);
+      const tree = indexTree(getStateFromEvt(_tree), hostSpaceShape);
+      get().setTree(hostSpaceShape, tree);
+      // get().createLookupTable(hostSpaceShape, tree);
+    },
+    fetchTreesForAllTroves: async (urbit) => {
+      const hosts = get().hosts;
+      if (hosts && hosts.length) {
+        await Promise.all([
+          hosts.forEach(
+            async (hostSpace) =>
+              await get().fetchTree(urbit, { host: hostSpace })
+          ),
+        ]);
+      }
+    },
+    // =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+    createLookupTable: (hostSpace, _tree) => {
+      const tree = _tree || get().troves[hostSpace]?.tree;
+      const lookupTable = createLookupTable(tree);
+      get().setTreeLookupTable(hostSpace, lookupTable);
+    },
+    createLookupTables: (_trees) => {
+      const troves = get().troves;
+      const trees = Array.isArray(_trees)
+        ? _trees
+        : Object.values(troves).map((t) => t.tree);
+
+      trees.forEach((tree) => {
+        get().createLookupTable(tree.hostSpace, tree);
+      });
+    },
+    setTreeLookupTable: (hostSpace, lookupTable) =>
+      set(
+        produce((draft) => {
+          draft.lookupTable[hostSpace] = lookupTable;
+        })
+      ),
+    // =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+    setTroves: (urbit, _troveState) =>
+      set(
+        produce((draft) => {
+          const troveState = getStateFromEvt(_troveState);
+          Object.keys(troveState.troves).forEach((hostSpace) => {
+            if (draft.troves[hostSpace]) {
+              draft.troves[hostSpace].regs = troveState.troves[hostSpace].regs;
+              draft.troves[hostSpace].team = troveState.troves[hostSpace].team;
+              draft.troves[hostSpace].trove = troveState.troves[hostSpace].trove;
+            } else {
+              draft.troves[hostSpace] = troveState.troves[hostSpace];
+            }
+          });
+        })
+      ),
+    fetchTroves: async (urbit) => {
+      const troveState = await scries.troveState(urbit);
+      get().setTroves(troveState);
+    },
+    // =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+    addNode: (host, space, folder, node) =>
+      set(
+        produce((draft) => {
+          const path = `${host}/${space}/${folder}`;
+          draft.trove[path] = draft.trove[path] || {};
+          draft.trove[path][node.id] = node;
+        })
+      ),
+    editNode: (host, space, folder, nodeId, updates) =>
+      set(
+        produce((draft) => {
+          const path = `${host}/${space}/${folder}`;
+          if (draft.trove[path]) {
+            draft.trove[path][nodeId] = {
+              ...draft.trove[path][nodeId],
+              ...updates,
+            };
+          }
+        })
+      ),
+    remNode: (host, space, folder, nodeId) =>
+      set(
+        produce((draft) => {
+          const path = `${host}/${space}/${folder}`;
+          if (draft.trove[path]) {
+            delete draft.trove[path][nodeId];
+          }
+        })
+      ),
+    // =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+    //                                 VIEW STATE
     selectedViewOption: 'list',
     showSingleItemPreview: false,
     itemPreviewPath: '',
 
-    _hasHydrated: false,
-
-    // storage: storageSlice(),
-    setHasHydrated: (state) =>
-      set(
-        produce((draft) => {
-          draft._hasHydrated = state;
-        })
-      ),
     setSelectedViewOption: (option) =>
       set(
         produce((draft) => {
@@ -108,169 +236,10 @@ export const useStore = createStore(
           draft.itemPreviewPath = path;
         })
       ),
-
-    setSelectedHostSpace: (hostSpace) =>
-      set(
-        produce((draft) => {
-          draft.selectedHostSpace = hostSpace;
-        })
-      ),
     // =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-    getSelectedTrove: () => get().selectedTrove,
-    getSelectedPath: () => get().selectedPath,
-
-    setSelectedTrove: (host, space, path = '') =>
-      set(
-        produce((draft) => {
-          draft.selectedTrove = { initialized: true, host, space, path };
-          draft.selectedPath = path;
-        })
-      ),
-    setSelectedPath: (path, trove = null) =>
-      set(
-        produce((draft) => {
-          const pathFrags = path.slice().split('/');
-          if (pathFrags.length > 1) {
-            const [host, space] = pathFrags;
-            draft.selectedTrove = {
-              initialized: true,
-              host,
-              space,
-              path: `${host}/${space}`,
-            };
-          }
-          draft.selectedTrove = trove || draft.selectedTrove;
-          draft.selectedPath = path;
-          draft.selectedTrove.path = draft.selectedTrove.path || path;
-        })
-      ),
-    setInitialTrove: (withHosts = []) => {
-      const hosts = withHosts.length ? withHosts : get().hosts;
-      const [host, space] = getHostSpace(hosts[0]);
-      get().setSelectedTrove(host, space, hosts[0]);
-      get().setSelectedHostSpace(hosts[0]);
-    },
-    selectInitialTrove: () => {},
     // =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-    getTree: () => get().tree,
-    setTree: (hostSpace, tree) =>
-      set(
-        produce((draft) => {
-          if (draft.troves[hostSpace]) {
-            draft.troves[hostSpace].tree = tree;
-          } else {
-            draft.troves = { [hostSpace]: { tree } };
-          }
-        })
-      ),
-    createLookupTable: (hostSpace, _tree) => {
-      const tree = _tree || get().troves[hostSpace]?.tree;
-      const lookupTable = createLookupTable(tree);
-      get().setTreeLookupTable(hostSpace, lookupTable);
-    },
-
-    setTreeLookupTable: (hostSpace, lookupTable) =>
-      set(
-        produce((draft) => {
-          if (draft.lookupTable[hostSpace]) {
-            draft.lookupTable[hostSpace] = lookupTable;
-          } else {
-            draft.lookupTable = { [hostSpace]: lookupTable };
-          }
-        })
-      ),
-
-    fetchTree: async (urbit, args) => {
-      const _tree = await scries.tree(urbit, args);
-      const hostSpaceShape = getHostSpaceShape(args);
-      const tree = indexTree(getStateFromEvt(_tree), hostSpaceShape);
-      get().setTree(hostSpaceShape, tree);
-      // get().createLookupTable(hostSpaceShape, tree);
-    },
-    fetchTreesForAllTroves: async (urbit) => {
-      const hosts = get().hosts;
-      if (hosts && hosts.length) {
-        await Promise.all([
-          hosts.forEach(
-            async (hostSpace) =>
-              await get().fetchTree(urbit, { host: hostSpace })
-          ),
-        ]);
-      }
-    },
-    // Example of using a callback to set state
-    cbStyleFetchTree: async (urbit, { cb = get().setTree, ...args }) => {
-      const tree = await scriesWithCb.tree(urbit, { cb, ...args });
-      return tree;
-      // cb(tree);
-    },
-    // =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-    getTroves: () => get().troves,
-    setTroves: (urbit, _troveState) =>
-      set(
-        produce((draft) => {
-          const troveState = getStateFromEvt(_troveState);
-          Object.keys(troveState.troves).forEach((hostSpace) => {
-            if (draft.troves[hostSpace]) {
-              // This is ugly but actually immutable
-              draft.troves[hostSpace].regs = troveState.troves[hostSpace].regs;
-              draft.troves[hostSpace].team = troveState.troves[hostSpace].team;
-              draft.troves[hostSpace].trove =
-                troveState.troves[hostSpace].trove;
-            } else {
-              draft.troves[hostSpace] = troveState.troves[hostSpace];
-            }
-          });
-        })
-      ),
-    fetchTroves: async (urbit) => {
-      const troveState = await scries.troveState(urbit);
-      get().setTroves(troveState);
-    },
-    // =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-    getHosts: () => get().hosts,
-    setHosts: (hosts) =>
-      set(
-        produce((draft) => {
-          draft.hosts = getStateFromEvt(hosts);
-        })
-      ),
-    fetchHosts: async (urbit) => {
-      const hosts = await scries.hosts(urbit);
-      get().setHosts(hosts);
-      get().setInitialTrove(hosts);
-    },
-    // =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-    addNode: (host, space, folder, node) =>
-      set(
-        produce((draft) => {
-          const path = `${host}/${space}/${folder}`;
-          draft.trove[path] = draft.trove[path] || {};
-          draft.trove[path][node.id] = node;
-        })
-      ),
-    remNode: (host, space, folder, nodeId) =>
-      set(
-        produce((draft) => {
-          const path = `${host}/${space}/${folder}`;
-          if (draft.trove[path]) {
-            delete draft.trove[path][nodeId];
-          }
-        })
-      ),
-    editNode: (host, space, folder, nodeId, updates) =>
-      set(
-        produce((draft) => {
-          const path = `${host}/${space}/${folder}`;
-          if (draft.trove[path]) {
-            draft.trove[path][nodeId] = {
-              ...draft.trove[path][nodeId],
-              ...updates,
-            };
-          }
-        })
-      ),
-    // =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+    moderators: {},
+    regulations: {},
     getModerators: () => get().moderators,
     addModerators: (host, space, moderators) =>
       set(
@@ -289,7 +258,6 @@ export const useStore = createStore(
           );
         })
       ),
-    // =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
     updateRegs: (host, space, folder, regulations) =>
       set(
         produce((draft) => {
@@ -297,7 +265,7 @@ export const useStore = createStore(
           draft.regulations[key] = regulations;
         })
       ),
-
+    // =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
     repeat: (fromSpace, fromFolder, fromFile, toSpace, toFolder, toFile) => {
       set((state) => {
         return produce(state, (draft) => {
@@ -307,7 +275,6 @@ export const useStore = createStore(
         });
       });
     },
-
     repermissions: (host, space, folder, permissions) => {
       set((state) => {
         return produce(state, (draft) => {
@@ -316,30 +283,61 @@ export const useStore = createStore(
         });
       });
     },
+    // =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+    // TODO: Consider removing this
+    _hasHydrated: false,
+    setHasHydrated: (state) =>
+      set(
+        produce((draft) => {
+          draft._hasHydrated = state;
+        })
+      ),
+    // Unused example of using a callback to set state
+    cbStyleFetchTree: async (urbit, { cb = get().setTree, ...args }) => {
+      const tree = await scriesWithCb.tree(urbit, { cb, ...args });
+      return tree;
+      // cb(tree);
+    },
+    // =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
   }),
+  // {},
   {
-    name: 'trove',
-    version: 0,
+    name: createStorageKey('trove-local'),
+    version: 0.2,
+    migrate: clearStorageMigration,
     partialize: (state) => ({
       hosts: state.hosts,
       selectedPath: state.selectedPath,
       selectedHostSpace: state.selectedHostSpace,
+      selectedTrove: state.selectedTrove,
       troves: state.troves,
       lookupTable: state.lookupTable,
     }),
     merge: (persistedState, currentState) =>
       mergeDeepRight(currentState, persistedState),
-    onRehydrateStorage: () => (state) => {
-      state.setHasHydrated(true);
+    onRehydrateStorage: (state) => {
+      console.log('hydrating state from persisted storage');
+      return (state, error) => {
+        if (error) {
+          console.error(error);
+        } else {
+          // console.log('rehydrated state', state);
+          state.setHasHydrated(true);
+        }
+      };
     },
   }
 );
 
 export const useLookupTable = () => {
-  const _createLookupTable = useStore((state) => state.createLookupTable);
-  useEffect(() =>
-    useStore.subscribe(getTree, (tree) =>
-      _createLookupTable(tree.hostSpace, tree)
-    )
-  );
+  const _createLookupTables = useStore((state) => state.createLookupTables);
+  const bloop = 'bloop';
+  useEffect(() => {
+    const unsub = useStore.subscribe(
+      getTreeAtSelectedSpace,
+      (trees) => _createLookupTables(trees),
+      shallow
+    );
+    return unsub;
+  }, [bloop]);
 };

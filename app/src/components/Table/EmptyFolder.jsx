@@ -72,23 +72,3 @@ export const CustomNoRowsOverlay = () => {
     </StyledGridOverlay>
   );
 };
-
-// export default function CustomEmptyOverlayGrid() {
-//   const { data } = useDemoData({
-//     dataSet: 'Commodity',
-//     rowLength: 100,
-//     maxColumns: 6,
-//   });
-
-//   return (
-//     <div style={{ height: 400, width: '100%' }}>
-//       <DataGrid
-//         components={{
-//           NoRowsOverlay: CustomNoRowsOverlay,
-//         }}
-//         rows={[]}
-//         columns={data.columns}
-//       />
-//     </div>
-//   );
-// }

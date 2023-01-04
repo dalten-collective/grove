@@ -92,7 +92,6 @@ export const errata = {
 // TODO: Add type checking
 const structurePokeData = (type, data) => {
   switch (type) {
-    // Folder
     case 'add-folder': {
       const { toPath, name, permissions } = data;
       return {
@@ -103,7 +102,6 @@ const structurePokeData = (type, data) => {
     }
     case 'rem-folder': {
       const { fromPath } = data;
-      debugger;
       return fromPath;
     }
     case 'move-folder': {

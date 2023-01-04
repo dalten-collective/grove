@@ -1,21 +1,4 @@
-import React from 'react';
 import styled from 'styled-components';
-import { RiMenu2Line, RiCloseLine } from 'react-icons/ri';
-import WindowButtonTopLeft from './WindowButtonTopLeft.svg';
-
-export const TopBar = ({ appTitle }) => (
-  <TopBarContainer>
-    <TopBarIcon>
-      {/* <IconVector> */}
-      <RiMenu2Line />
-      {/* </IconVector> */}
-    </TopBarIcon>
-    <AppTitle>{appTitle}</AppTitle>
-    <WindowCloseContainer>
-      <RiCloseLine />
-    </WindowCloseContainer>
-  </TopBarContainer>
-);
 
 export const TopBarContainer = styled.div`
   /* Frame 2120 */

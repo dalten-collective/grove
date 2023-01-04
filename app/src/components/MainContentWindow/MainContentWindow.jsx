@@ -1,7 +1,12 @@
 import React, { useState } from 'react';
-import { RiListCheck, RiFunctionLine, RiArrowUpSLine } from 'react-icons/ri';
-import styled from 'styled-components';
+import {
+  RiListCheck,
+  RiFunctionLine,
+  RiArrowUpSLine,
+  RiFunctions,
+} from 'react-icons/ri';
 import { useStore } from '../../state/store';
+import DialogSelect from '../Dialog/Dialog';
 
 import {
   ContentWindowContainer as _ContentWindowContainer,
@@ -14,33 +19,12 @@ import {
   DateText,
   DateDropDown,
   ActualMainContent,
+  FunctionView,
 } from './styles';
-// import CustomizedTreeView from '../Tree/OtherTree';
 
-const files = [
-  {
-    title: 'Mastering Mars.pdf',
-    size: '1.6 MB',
-    dateUploaded: 'timestamp',
-    kind: 'PDF',
-  },
-  {
-    title: 'The Machiavellians.pdf',
-    size: '8.4 MB',
-    dateUploaded: 'timestamp',
-    kind: 'PDF',
-  },
-  {
-    title: 'Atlas Shrugged.pdf',
-    size: '2.35 MB',
-    dateUploaded: 'timestamp',
-    kind: 'PDF',
-  },
-];
 export const ContentWindowContainer = ({ children }) => {
-  const setSelectedViewOption = useStore(
-    (state) => state.setSelectedViewOption
-  );
+  const setSelectedViewOption = useStore((state) => state.setSelectedViewOption);
+  const [open, setOpen] = React.useState(false);
   return (
     <_ContentWindowContainer>
       <_SortingBar>
@@ -51,6 +35,10 @@ export const ContentWindowContainer = ({ children }) => {
           <GridView onClick={(evt) => setSelectedViewOption('grid')}>
             <RiFunctionLine />
           </GridView>
+          <FunctionView onClick={(evt) => setOpen(true)}>
+            <RiFunctions />
+          </FunctionView>
+          <DialogSelect open={open} setOpen={setOpen} />
         </DisplayOptions>
         <DateSortContainer>
           <DateText>Date</DateText>
@@ -59,12 +47,7 @@ export const ContentWindowContainer = ({ children }) => {
           </DateDropDown>
         </DateSortContainer>
       </_SortingBar>
-      <ActualMainContent>
-        {/* <InfoSortingBar></InfoSortingBar> */}
-        {/* <RichObjectTreeView tree={contentAtPath} /> */}
-        {/* <CustomizedTreeView /> */}
-        {children}
-      </ActualMainContent>
+      <ActualMainContent>{children}</ActualMainContent>
     </_ContentWindowContainer>
   );
 };
