@@ -32,12 +32,23 @@ export default ({ mode }) => {
         // '@/': `${path.resolve(__dirname, 'src')}/`,
       },
     },
-    // mode: process.env.NODE_ENV,
+    mode: process.env.NODE_ENV,
     build: {
       target: 'esnext',
       minify: true,
       sourcemap: true,
       manifest: true,
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            'react-dom': ['react-dom'],
+            react: ['react'],
+            'styled-components': ['styled-components'],
+            lodash: ['lodash'],
+          },
+          minifyInternalExports: true,
+        },
+      },
     },
     server: {
       fs: {
@@ -52,14 +63,14 @@ export default ({ mode }) => {
         changeOrigin: true,
         secure: false,
       }),
-      reactRefresh(),
+      // reactRefresh(),
       // babel(),
-      // VitePWA({
-      //   registerType: 'autoUpdate',
-      //   devOptions: {
-      //     enabled: true,
-      //   },
-      // }),
+      VitePWA({
+        registerType: 'autoUpdate',
+        devOptions: {
+          enabled: true,
+        },
+      }),
     ],
   });
 };

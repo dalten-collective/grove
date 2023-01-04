@@ -1,5 +1,13 @@
 import styled from 'styled-components';
 
+export const EmptyOverlayContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+`;
+
 export const ImagesContainer = styled.div`
   max-width: 100%;
   max-height: 100%;

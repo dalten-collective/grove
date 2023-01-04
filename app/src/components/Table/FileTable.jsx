@@ -3,8 +3,7 @@ import Box from '@mui/material/Box';
 import { DataGrid } from '@mui/x-data-grid';
 import { styled } from '@mui/material/styles';
 import { useStore } from '../../state/store';
-import { CustomNoRowsOverlay } from './EmptyFolder';
-import { ImageTable } from '../FilePreview/ImageTable';
+import CustomNoRowsOverlay from './EmptyFolder';
 import { columns } from './columns';
 
 // TODO: Remove unused styles
@@ -73,7 +72,7 @@ function _FileTable({ rows = [], selectedPath, parent }) {
         rowHeight={30}
         pdateUploadedSize={5}
         rowsPerPdateUploadedOptions={[5]}
-        experimentalFeatures={{ newEditingApi: true }}
+        // experimentalFeatures={{ newEditingApi: true }}
         components={{
           // Toolbar: CustomToolbar,
           NoRowsOverlay: CustomNoRowsOverlay,

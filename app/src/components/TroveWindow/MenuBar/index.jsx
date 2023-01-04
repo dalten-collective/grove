@@ -7,16 +7,18 @@ import {
   WindowCloseContainer,
 } from './styles';
 
-export const MenuBar = ({ appTitle }) => (
-  <TopBarContainer>
-    <TopBarIcon>
-      {/* <IconVector> */}
-      <RiMenu2Line />
-      {/* </IconVector> */}
-    </TopBarIcon>
-    <AppTitle>{appTitle}</AppTitle>
-    <WindowCloseContainer>
-      <RiCloseLine />
-    </WindowCloseContainer>
-  </TopBarContainer>
-);
+export default function MenuBar({ appTitle }) {
+  return (
+    <TopBarContainer>
+      <TopBarIcon>
+        {/* <IconVector> */}
+        <RiMenu2Line />
+        {/* </IconVector> */}
+      </TopBarIcon>
+      <AppTitle>{appTitle}</AppTitle>
+      <WindowCloseContainer>
+        <RiCloseLine />
+      </WindowCloseContainer>
+    </TopBarContainer>
+  );
+}

@@ -19,7 +19,7 @@ import {
   Slash,
 } from './LocationBar.jsx';
 
-export const LocationBar = () => {
+export default function LocationBar() {
   const selectedPath = useStore((state) => state.selectedPath);
   const setSelectedPath = useStore((state) => state.setSelectedPath);
   const selectedHostSpace = useStore((state) => state.selectedHostSpace);
@@ -63,7 +63,7 @@ export const LocationBar = () => {
       </LocationInfo>
     </_LocationBar>
   );
-};
+}
 
 export const PathPill = ({ name, path, navigateToPillPath }) =>
   name && path ? (

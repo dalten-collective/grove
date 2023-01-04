@@ -27,7 +27,7 @@ import {
   ToolbarSettingsContainer,
 } from './styles';
 
-export const SpaceInfo = ({ toggleAddFolder, toggleUploadFile }) => {
+export default function SpaceInfo({ toggleAddFolder, toggleUploadFile }) {
   const selectedPath = useStore((state) => state.selectedPath);
   const [_host, space] = selectedPath?.slice().split('/');
   const host = getShipName(_host);
@@ -67,16 +67,8 @@ export const SpaceInfo = ({ toggleAddFolder, toggleUploadFile }) => {
       </SpaceInfoToolbar>
     </SpaceInfoContainer>
   );
-};
+}
 
-export const VariantAvatars = () => {
-  return (
-    <Avatar
-      variant="rounded"
-      src="http://dhs3.nyc3.cdn.digitaloceanspaces.com/sigil.png"
-    ></Avatar>
-  );
-};
 // const [anchorEl, setAnchorEl] = useState(null);
 // const { anchorEl, open, handleClick, handleClose } = useMenu();
 // const open = Boolean(anchorEl);

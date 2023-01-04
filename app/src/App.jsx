@@ -1,11 +1,10 @@
 import React, { useState, useEffect, useLayoutEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
 // import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { MotionConfig } from 'framer-motion';
 import isEmpty from 'lodash/isEmpty';
 
-import TroveWindow from './components/TroveWindow/index';
 import { useStore } from './state/store';
 import { useSwitchSpaceOnSearch } from './state/hooks';
 import { useTrove, useTroveSubscription } from './urbit';
@@ -13,6 +12,7 @@ import { useAirlock } from './urbit/auth';
 import { defaultTheme, GlobalStyle } from './theme/App.styles';
 import { theme as baseTheme } from './theme/theme.jsx';
 // import { addTilde } from './utils';
+const TroveWindow = React.lazy(() => import('./components/TroveWindow/index'));
 
 // let appUrl = `${ship.url}/apps/${window.id}/?spaceId=${spaces.selected?.path}`;
 // selectSpace

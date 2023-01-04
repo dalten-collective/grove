@@ -6,7 +6,8 @@ import {
   RiFunctions,
 } from 'react-icons/ri';
 import { useStore } from '../../state/store';
-import DialogSelect from '../Dialog/Dialog';
+
+const DialogSelect = React.lazy(() => import('../Dialog/Dialog'));
 
 import {
   ContentWindowContainer as _ContentWindowContainer,
@@ -22,7 +23,7 @@ import {
   FunctionView,
 } from './styles';
 
-export const ContentWindowContainer = ({ children }) => {
+export default function ContentWindowContainer({ children }) {
   const setSelectedViewOption = useStore((state) => state.setSelectedViewOption);
   const [open, setOpen] = React.useState(false);
   return (
@@ -50,4 +51,4 @@ export const ContentWindowContainer = ({ children }) => {
       <ActualMainContent>{children}</ActualMainContent>
     </_ContentWindowContainer>
   );
-};
+}
