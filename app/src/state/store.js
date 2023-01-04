@@ -11,10 +11,7 @@ import { createStore } from './storeMiddleware';
 // import { createStore, storageSlice } from './storeMiddleware';
 import { getTreeAtSelectedSpace, getTrees } from './selectors';
 import { getFragsAndAssertPath } from '../utils/path';
-import {
-  clearStorageMigration,
-  createStorageKey,
-} from 'landscape-apps/dist/src/logic/utils';
+import { clearStorageMigration, createStorageKey } from '../lib/logic/utils';
 
 const USE_SELECTED_TROVE = true;
 const USE_SET_PATH_ON_TROVE = false;
