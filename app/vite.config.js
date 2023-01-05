@@ -3,7 +3,7 @@ import { fileURLToPath, URL } from 'url';
 import packageJson from './package.json';
 import path from 'path';
 import { loadEnv, defineConfig } from 'vite';
-// import reactRefresh from '@vitejs/plugin-react-refresh';
+import reactRefresh from '@vitejs/plugin-react-refresh';
 import analyze from 'rollup-plugin-analyzer';
 // import { visualizer } from 'rollup-plugin-visualizer';
 import { urbitPlugin } from '@urbit/vite-plugin-urbit';
@@ -13,20 +13,23 @@ import { VitePWA } from 'vite-plugin-pwa';
 
 // https://vitejs.dev/config/
 export default ({ mode }) => {
-  const app = 'trove';
+  const app = process.env.APP || 'trove';
   process.env.VITE_APP = app;
   process.env.VITE_STORAGE_VERSION =
     mode === 'dev' ? Date.now().toString() : packageJson.version;
 
   Object.assign(process.env, loadEnv(mode, process.cwd()));
   const SHIP_URL =
-    process.env.SHIP_URL || process.env.VITE_SHIP_URL || 'http://localhost:80';
+    process.env.SHIP_URL || process.env.VITE_SHIP_URL || 'http://localhost:8080';
   console.log(SHIP_URL);
 
-  const base = () => '/apps/trove/';
+  const base = (mode, app) => {
+    console.log(mode, app);
+    return '/apps/trove/';
+  };
   return defineConfig({
     // vite: {
-    base: base(),
+    base: base(mode, app),
     resolve: {
       alias: {
         './runtimeConfig': './runtimeConfig.browser',
@@ -44,7 +47,7 @@ export default ({ mode }) => {
         // '@/': `${path.resolve(__dirname, 'src')}/`,
       },
     },
-    mode: process.env.NODE_ENV,
+    // mode: process.env.NODE_ENV,
     build: {
       target: 'esnext',
       minify: true,
@@ -83,7 +86,7 @@ export default ({ mode }) => {
         changeOrigin: true,
         secure: false,
       }),
-      // reactRefresh(),
+      reactRefresh(),
       // babel(),
       // VitePWA({
       //   registerType: 'autoUpdate',

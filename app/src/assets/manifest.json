@@ -1,6 +1,8 @@
 {
   "name": "trove",
   "short_name": "trove",
+  "start_url": "./apps/trove",
+  "scope": "./",
   "icons": [
     {
       "src": "android-chrome-192x192.png",

@@ -61,12 +61,12 @@ function LandscapeAppWrapper({ children }) {
   const errorCount = useErrorCount();
   const airLockErrorCount = useAirLockErrorCount();
 
-  useEffect(() => {
-    handleError(() => {
-      checkIfLoggedIn();
-      handleGridRedirect(navigate);
-    })();
-  }, [handleError, navigate]);
+  // useEffect(() => {
+  //   handleError(() => {
+  //     checkIfLoggedIn();
+  //     handleGridRedirect(navigate);
+  //   })();
+  // }, [handleError, navigate]);
 
   useEffect(() => {
     handleError(() => {
