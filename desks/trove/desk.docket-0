@@ -1,8 +1,8 @@
 :~  title+'trove'
     info+'group file drive'
     color+0xd0.aad0
-    site+/apps/trove
+    base+'trove'
+    glob-http+['https://freedom-club.sfo2.digitaloceanspaces.com/glob-0v2.9cos0.iessr.6tilt.hsofp.crvsu.glob' 0v2.9cos0.iessr.6tilt.hsofp.crvsu]
     version+[0 0 1]
-    website+'https://stp.world/'
     license+'REKT'
 ==
