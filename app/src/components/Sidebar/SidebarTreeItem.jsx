@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import TreeItem, { useTreeItem } from '@mui/lab/TreeItem';
 import clsx from 'clsx';
+
 import { _SidebarRow, RowDropDownArrow, RowTitle } from './styles';
 
 const CustomContent = React.forwardRef(function CustomContent(props, ref) {
@@ -48,9 +49,7 @@ const CustomContent = React.forwardRef(function CustomContent(props, ref) {
       >
         {icon}
       </RowDropDownArrow>
-      <RowTitle
-        onClick={(evt) => handleRowClick(evt, { nodeId: props.nodeId })}
-      >
+      <RowTitle onClick={(evt) => handleRowClick(evt, { nodeId: props.nodeId })}>
         {props.label}
       </RowTitle>
     </div>

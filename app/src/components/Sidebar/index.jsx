@@ -4,10 +4,15 @@ import { getTrees } from '../../state/selectors';
 import { SidebarContainer, _SidebarRow } from './styles';
 import { initalSidebarItemsState } from './util';
 // import UploadFile from '../FileUpload/UploadFile';
-const SpaceInfo = React.lazy(() => import('./SidebarSpaceInfo'));
-const SidebarTree = React.lazy(() => import('./SidebarTree'));
-const FullWidthTextField = React.lazy(() => import('../Form'));
-const UploadFile = React.lazy(() => import('../FileUpload/UploadFile'));
+import SpaceInfo from './SidebarSpaceInfo';
+import SidebarTree from './SidebarTree';
+import FullWidthTextField from '../Form';
+import UploadFile from '../FileUpload/UploadFile';
+
+// const SpaceInfo = React.lazy(() => import('./SidebarSpaceInfo'));
+// const SidebarTree = React.lazy(() => import('./SidebarTree'));
+// const FullWidthTextField = React.lazy(() => import('../Form'));
+// const UploadFile = React.lazy(() => import('../FileUpload/UploadFile'));
 
 export default function Sidebar({}) {
   const [selectedRow, setSelectedRow] = useState(initalSidebarItemsState);

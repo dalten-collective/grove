@@ -5,8 +5,9 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 // import ClickAwayListener from '@mui/base/ClickAwayListener';
+
 import { useStore } from '../../state/store';
-import { PokeForm } from '../PokeForm/pokeform';
+import { PokeForm } from '../PokeForm/PokeForm';
 
 export default function DialogSelect({ open, setOpen }) {
   const selectedPath = useStore((state) => state.selectedPath);

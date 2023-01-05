@@ -1,14 +1,7 @@
 import React from 'react';
-import {
-  RiArrowDownSLine,
-  RiAddLine,
-  RiUser3Line,
-  RiSettings3Line,
-} from 'react-icons/ri';
-// import Avatar from '@mui/material/Avatar';
-// import Avatar from 'landscape-apps/dist/src/components/Avatar';
-// import Avatar from '../../lib/Avatar';
-const Avatar = React.lazy(() => import('../../lib/Avatar'));
+import { RiAddLine, RiUser3Line, RiSettings3Line } from 'react-icons/ri';
+import Avatar from '../../lib/Avatar';
+// const Avatar = React.lazy(() => import('../../lib/Avatar'));
 import { useStore } from '../../state/store';
 import { getShipName } from '../../utils';
 import {

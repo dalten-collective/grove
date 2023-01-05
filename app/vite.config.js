@@ -1,4 +1,5 @@
 // import fs from 'fs';
+import { fileURLToPath, URL } from 'url';
 import packageJson from './package.json';
 import path from 'path';
 import { loadEnv, defineConfig } from 'vite';
@@ -28,15 +29,17 @@ export default ({ mode }) => {
     base: base(),
     resolve: {
       alias: {
+        './runtimeConfig': './runtimeConfig.browser',
         react: path.resolve('./node_modules/react'),
         'react-dom': path.resolve('./node_modules/react-dom'),
         'styled-components': path.resolve('./node_modules/styled-components'),
         'styled-system': path.resolve('./node_modules/styled-system'),
+        '@mui/material': path.resolve('./node_modules/@mui/material'),
         '@urbit/vite-plugin-urbit': path.resolve(
           './node_modules/@urbit/vite-plugin-urbit'
         ),
         'landscape-apps': path.resolve('./node_modules/landscape-apps'),
-        '@/': `${path.resolve(__dirname, 'node_modules')}/landscape-apps/src/`,
+        '@/': fileURLToPath(new URL('./src', import.meta.url)),
         '@mui/styled-engine': path.resolve('./node_modules/@mui/styled-engine'),
         // '@/': `${path.resolve(__dirname, 'src')}/`,
       },
@@ -48,7 +51,7 @@ export default ({ mode }) => {
       sourcemap: false,
       manifest: true,
       rollupOptions: {
-        external: ['@aws-sdk/client-s3', '@aws-sdk/s3-request-presigner'],
+        // external: ['@aws-sdk/client-s3', '@aws-sdk/s3-request-presigner'],
         plugins: [
           analyze({
             limit: 20,
@@ -60,6 +63,7 @@ export default ({ mode }) => {
             'react-dom': ['react-dom'],
             react: ['react'],
             'styled-components': ['styled-components'],
+            '@mui/material': ['@mui/material'],
             lodash: ['lodash'],
           },
           minifyInternalExports: true,
@@ -81,12 +85,12 @@ export default ({ mode }) => {
       }),
       // reactRefresh(),
       // babel(),
-      VitePWA({
-        registerType: 'autoUpdate',
-        devOptions: {
-          enabled: false,
-        },
-      }),
+      // VitePWA({
+      //   registerType: 'autoUpdate',
+      //   devOptions: {
+      //     enabled: true,
+      //   },
+      // }),
     ],
   });
 };

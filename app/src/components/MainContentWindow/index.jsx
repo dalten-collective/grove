@@ -1,6 +1,7 @@
 import React from 'react';
 import { isEmpty } from 'lodash';
 // import ClickAwayListener from '@mui/base/ClickAwayListener';
+
 import { useStore } from '../../state/store';
 import {
   getLookupTableAtSelectedSpace,
@@ -9,10 +10,12 @@ import {
 // import NewCurioForm from 'landscape-apps/dist/src/heap/NewCurioForm';
 // import MultiDMEditModal from '../../lib/EditFolder';
 // import ChatChannel from 'landscape-apps/dist/src/chat/ChatChannel';
-
-const ContentWindowContainer = React.lazy(() => import('./MainContentWindow'));
-const FileTable = React.lazy(() => import('../Table/FileTable'));
-const ImageTable = React.lazy(() => import('../FilePreview/ImageTable'));
+import ContentWindowContainer from './MainContentWindow';
+import FileTable from '../Table/FileTable';
+import ImageTable from '../FilePreview/ImageTable';
+// const ContentWindowContainer = React.lazy(() => import('./MainContentWindow'));
+// const FileTable = React.lazy(() => import('../Table/FileTable'));
+// const ImageTable = React.lazy(() => import('../FilePreview/ImageTable'));
 
 export default function MainContentWindow() {
   const selectedPath = useStore((state) => state.selectedPath);

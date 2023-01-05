@@ -6,7 +6,8 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 // import ClickAwayListener from '@mui/base/ClickAwayListener';
 import toPairs from 'lodash/toPairs';
-import { useTheme } from 'styled-components';
+// import { useTheme } from 'styled-components';
+
 import { useStore } from '../../state/store';
 import { useForm } from '../../state/form';
 // import { getLookupTableAtSelectedPath } from '../../state/selectors';

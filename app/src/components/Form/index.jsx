@@ -1,11 +1,12 @@
-import React, { Fragment } from 'react';
+import React, { useState } from 'react';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Divider from '@mui/material/Divider';
 import InputBase from '@mui/material/InputBase';
 import IconButton from '@mui/material/IconButton';
-import { useStore } from '../../state/store';
 import { RiSave3Line, RiFileTextLine, RiFolder2Line } from 'react-icons/ri';
+
+import { useStore } from '../../state/store';
 import { useTrove } from '../../urbit';
 import { formatImplicitExtension } from '../../utils/files';
 
@@ -14,7 +15,7 @@ export default function FullWidthTextField() {
   const selectedPath = useStore((state) => state.selectedPath);
   const selectedHostSpace = useStore((state) => state.selectedHostSpace);
   const selectedRelativePath = useStore((state) => state.selectedRelativePath);
-  const [name, setName] = React.useState('');
+  const [name, setName] = useState('');
   const { urbit, ship, pokes } = useTrove();
 
   const getSelectedSpace = (path) => {
@@ -24,7 +25,7 @@ export default function FullWidthTextField() {
     return selectedHostSpace;
   };
 
-  const [fileType, setFileType] = React.useState('folder');
+  const [fileType, setFileType] = useState('folder');
   const handleChange = (event) => {
     setName(event.target.value);
   };

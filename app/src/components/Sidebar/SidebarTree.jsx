@@ -1,9 +1,10 @@
 import React from 'react';
 import TreeView from '@mui/lab/TreeView';
 import { RiArrowDownSLine, RiArrowRightSLine } from 'react-icons/ri';
+
 import { useStore } from '../../state/store';
-import { treeStyles, _SidebarRow } from './styles';
 import SidebarTreeItem from './SidebarTreeItem';
+import { treeStyles, _SidebarRow } from './styles';
 import { getContentProps } from './util';
 
 export default function SidebarTree({ trees }) {
