@@ -32,18 +32,19 @@ export const getLookupTableAtSelectedPath = (state) =>
   state.lookupTable[state.selectedPath];
 // export const getDateUploaded = (state) =>
 
+// TODO: Check all of these effects are passing the correct arguments.
 export const getActions = (state) => ({
   onFact: {
     [events.TROVE.INITIAL_STATE.FACE]: [state.setTroves],
     [events.TROVE.NEW.FACE]: [state.newTrove],
 
     [events.NODE.ADD.FACE]: [state.fetchTree],
-    [events.NODE.REM.FACE]: [state.remNode],
-    [events.NODE.EDIT.FACE]: [state.editNode],
+    [events.NODE.REM.FACE]: [state.setPathOneLevelUp, state.remNode],
+    [events.NODE.EDIT.FACE]: [state.setPathOneLevelUp, state.editNode],
     // [events.NODE.MOVE.FACE]: [state.moveNode],
     [events.FOLDER.ADD.FACE]: [state.fetchTree],
-    [events.FOLDER.REM.FACE]: [state.fetchTree],
-    [events.FOLDER.MOVE.FACE]: [state.fetchTree],
+    [events.FOLDER.REM.FACE]: [state.getNewPathOnFact, state.fetchTree],
+    [events.FOLDER.MOVE.FACE]: [state.getNewPathOnFact, state.fetchTree],
 
     [events.MODERATORS.ADD.FACE]: [state.addModerators],
     [events.MODERATORS.REM.FACE]: [state.removeModerators],

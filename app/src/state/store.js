@@ -12,6 +12,7 @@ import { createStore } from './storeMiddleware';
 import { getTreeAtSelectedSpace, getTrees } from './selectors';
 import { getFragsAndAssertPath } from '../utils/path';
 import { clearStorageMigration, createStorageKey } from '../lib/logic/utils';
+import { events } from './faces';
 
 const USE_SELECTED_TROVE = true;
 const USE_SET_PATH_ON_TROVE = false;
@@ -51,6 +52,35 @@ export const useStore = createStore(
         })
       ),
     // =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+    setPathOneLevelUp: () => {
+      const [host, space, ...relFrags] = getFragsAndAssertPath(
+        get().selectedPath
+      );
+      const newPath = relFrags.length
+        ? `${host}/${space}/${relFrags.slice(0, -1).join('/')}`
+        : `${host}/${space}`;
+      get().setSelectedPath(newPath);
+    },
+    getNewPathOnFact: (urbit, evt) => {
+      const setPathOneLevelUp = get().setPathOneLevelUp;
+      const setSelectedPath = get().setSelectedPath;
+      switch (evt.face) {
+        case events.FOLDER.REM.FACE:
+          setPathOneLevelUp();
+          break;
+        case events.FOLDER.ADD.FACE:
+          setSelectedPath(evt.fact.add.folder.trail);
+          break;
+        case events.FOLDER.MOVE.FACE:
+          setSelectedPath(evt.fact.mov.folder.trail);
+          break;
+        case events.FOLDER.EDIT.FACE:
+          setSelectedPath(evt.fact.edit.folder.trail);
+          break;
+        default:
+          break;
+      }
+    },
     fetchHosts: async (urbit) => {
       const hosts = await scries.hosts(urbit);
       get().setHosts(hosts);
