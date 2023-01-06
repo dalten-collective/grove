@@ -18,6 +18,7 @@ import { fieldsByAction } from './fieldsByAction';
 export const PokeForm = ({ selectedPath, handleClose }) => {
   const { urbit, ship, pokes } = useTrove();
   const selectedHostSpace = useStore((state) => state.selectedHostSpace);
+  const selectedPath = useStore((state) => state.selectedPath);
   const selectedRelativePath = useStore((state) => state.selectedRelativePath);
   const { formAction, formData, setFormAction, setFormData, initFormData } =
     useForm();
@@ -93,7 +94,7 @@ export const PokeForm = ({ selectedPath, handleClose }) => {
         // by: window.ship,
         id: '',
       });
-  }, [selectedRelativePath]);
+  }, [selectedRelativePath, selectedPath]);
 
   const getPathDefaults = (field) => {
     if (field.name === 'toPath') return selectedPath;
