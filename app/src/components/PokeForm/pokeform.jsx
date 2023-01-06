@@ -18,7 +18,6 @@ import { fieldsByAction } from './fieldsByAction';
 export const PokeForm = ({ selectedPath, handleClose }) => {
   const { urbit, ship, pokes } = useTrove();
   const selectedHostSpace = useStore((state) => state.selectedHostSpace);
-  const selectedPath = useStore((state) => state.selectedPath);
   const selectedRelativePath = useStore((state) => state.selectedRelativePath);
   const { formAction, formData, setFormAction, setFormData, initFormData } =
     useForm();
@@ -59,6 +58,7 @@ export const PokeForm = ({ selectedPath, handleClose }) => {
     const fromPath = getLeadingSlash(formData.fromPath);
     const [predicate, noun] = getActionStructure(formAction);
     if (selectedPath && space) {
+      console.log('selectedPath', selectedPath);
       pokes[noun][predicate](
         urbit,
         selectedHostSpace,
