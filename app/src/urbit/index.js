@@ -4,7 +4,8 @@ import Urbit from '@urbit/http-api';
 import { getSubscription } from './subscription';
 import { pokes } from './pokes';
 import { handleEvent } from '../state/events';
-import { getActions, getScryActions, useStore } from '../state/store';
+import { useStore } from '../state/store';
+import { getActions, getScryActions } from '../state/selectors';
 
 export const useTroveSubscription = () => {
   const [ship, urbit] = useUrbit();

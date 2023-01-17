@@ -1,4 +1,3 @@
-import React from 'react';
 import styled from 'styled-components';
 import { Typography } from '@mui/material';
 
@@ -15,7 +14,7 @@ export const contentWindowStylesObj = {
   padding: `0px 12px`,
 
   width: `512px`,
-  height: `430px`,
+  // height: `430px`,
   maxWidth: `100%`,
   maxHeight: `100%`,
 
@@ -71,7 +70,7 @@ export const ContentWindowContainer = styled.div`
 
   /* width: 512px; */
   height: 430px;
-
+  /* height: 100%; */
   background: #ffffff;
   border: 1px solid rgba(0, 0, 0, 0.09);
   border-radius: 6px;
@@ -118,7 +117,7 @@ export const DisplayOptions = styled.div`
   padding: 0px;
   gap: 8px;
 
-  width: 40px;
+  /* width: 40px; */
   height: 16px;
 
   /* Inside auto layout */
@@ -151,6 +150,19 @@ export const GridView = styled.div`
 
   flex: none;
   order: 1;
+  flex-grow: 0;
+`;
+
+export const FunctionView = styled.div`
+  /* remix-icons/line/system/function-line */
+
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  /* Inside auto layout */
+
+  flex: none;
+  order: 2;
   flex-grow: 0;
 `;
 
@@ -225,6 +237,7 @@ export const ActualMainContent = styled.div`
   align-items: flex-start;
   padding: 0px;
 
+  /* height: 100%; */
   /* width: 488px; */
   height: 398px;
 

@@ -1,5 +1,6 @@
 import isEmpty from 'lodash/isEmpty';
-import { getHostSpace, getShipName, getChildPath, getNodeName } from './index';
+import { getShipName, getChildPath, getNodeName } from './index';
+import { getHostSpace } from './hostSpaces';
 
 export const types = { FOLDER: 'folder', FILE: 'file' };
 export const getParentPath = (path) => path.split('/').slice(0, -1).join('/');
@@ -25,6 +26,7 @@ export const addRootProperties = (obj, hostSpace) => {
     const shipName = getShipName(hostSpace);
     const [host, space, isFullHostSpace] = getHostSpace(shipName);
     obj.id = 'root';
+    obj.isRoot = true;
     obj.name = space;
     obj.isRoot = true;
     obj.space = space;

@@ -26,7 +26,7 @@ const StyledGridOverlay = styled('div')(({ theme }) => ({
   },
 }));
 
-export const CustomNoRowsOverlay = () => {
+export default function CustomNoRowsOverlay() {
   return (
     <StyledGridOverlay>
       <svg
@@ -71,24 +71,4 @@ export const CustomNoRowsOverlay = () => {
       <Box sx={{ mt: 1 }}>Empty Folder</Box>
     </StyledGridOverlay>
   );
-};
-
-// export default function CustomEmptyOverlayGrid() {
-//   const { data } = useDemoData({
-//     dataSet: 'Commodity',
-//     rowLength: 100,
-//     maxColumns: 6,
-//   });
-
-//   return (
-//     <div style={{ height: 400, width: '100%' }}>
-//       <DataGrid
-//         components={{
-//           NoRowsOverlay: CustomNoRowsOverlay,
-//         }}
-//         rows={[]}
-//         columns={data.columns}
-//       />
-//     </div>
-//   );
-// }
+}
