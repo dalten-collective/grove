@@ -5,14 +5,20 @@ import { styled } from '@mui/material/styles';
 import { useStore } from '../../state/store';
 import CustomNoRowsOverlay from './EmptyFolder';
 import { columns } from './columns';
+import { useForm } from '../../state/form';
 
 // TODO: Remove unused styles
 
 function _FileTable({ rows = [], selectedPath, parent }) {
   const setSelectedPath = useStore((state) => state.setSelectedPath);
   const previewSingleItem = useStore((state) => state.previewSingleItem);
+  const hydrateFormData = useForm((state) => state.hydrateFormData);
+  const hydrateSingleItemActionPreview = useStore(
+    (state) => state.hydrateSingleItemActionPreview
+  );
   const [_rows, setRows] = useState(() => []);
 
+  console.log('rows', rows);
   useEffect(() => {
     if (!_rows?.length || _rows !== rows) {
       setRows(rows);
@@ -20,10 +26,15 @@ function _FileTable({ rows = [], selectedPath, parent }) {
   }, [rows, selectedPath]);
 
   const openAtPath = (params) => {
-    const isFile = params.row?.dat || params.row?.type === 'record';
+    const isFile = Boolean(params.row?.dat || params.row?.type === 'record');
+    // debugger;
     // TODO: Reset preview on next click if not same file
-    if (isFile) previewSingleItem(params.row.path);
-    else setSelectedPath(params.id);
+    // TODO: Handle file preview, maybe open poke form
+    if (isFile) {
+      // debugger;
+      hydrateSingleItemActionPreview(params.row, hydrateFormData);
+      // previewSingleItem(params.row.path);
+    } else setSelectedPath(params.id);
   };
 
   return (

@@ -1,10 +1,13 @@
 import { S3Client } from '@aws-sdk/client-s3';
 import create from 'zustand';
 import produce from 'immer';
-
+// import { devtools } from 'zustand/middleware';
+// import pipe from 'ramda/es/pipe';
+import { createStore } from './middleware';
 import { prefixEndpoint } from './storage/util';
 
-const useFileStore = create((set) => ({
+const useFileStore = createStore((set) => ({
+  // const useFileStore = create((set) => ({
   client: null,
   status: 'initial',
   files: {},
@@ -12,7 +15,7 @@ const useFileStore = create((set) => ({
     const endpoint = new URL(prefixEndpoint(credentials.endpoint));
     const client = new S3Client({
       endpoint: {
-        protocol: endpoint.protocol.slice(0, -1),
+        protocol: endpoint.protocol, // .slice(0, -1), why was this here?
         hostname: endpoint.host,
         path: endpoint.pathname || '/',
       },
@@ -53,18 +56,21 @@ const useFileStore = create((set) => ({
     set(
       produce((draft) => {
         const [key, url] = file;
+        console.log('setFileURL', key, url);
         draft.files[key].url = url;
       })
     ),
   clearFiles: () =>
     set(
       produce((draft) => {
+        debugger;
         draft.files = {};
       })
     ),
   removeFileByURL: (i) =>
     set(
       produce((draft) => {
+        debugger;
         draft.files = Object.fromEntries(
           Object.entries(draft.files).filter(([_k, f]) => f.url !== i.image.src)
         );

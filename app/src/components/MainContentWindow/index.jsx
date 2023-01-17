@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { isEmpty } from 'lodash';
 // import ClickAwayListener from '@mui/base/ClickAwayListener';
 
@@ -21,12 +21,39 @@ export default function MainContentWindow() {
   const selectedPath = useStore((state) => state.selectedPath);
   const showSingleItemPreview = useStore((state) => state.showSingleItemPreview);
   const resetPreviewState = useStore((state) => state.resetPreviewState);
+  const resetSelectedViewOption = useStore(
+    (state) => state.resetSelectedViewOption
+  );
   const singlePreviewItem = useStore((state) => state.getSinglePreviewItem());
   const itemPreviewPath = useStore((state) => state.itemPreviewPath);
   const lookupTable = useStore(getLookupTableAtSelectedSpace);
   const tree = useStore(getTreeAtSelectedSpace);
   const selectedViewOption = useStore((state) => state.selectedViewOption);
 
+  useEffect(() => {
+    // if (showSingleItemPreview && itemPreviewPath) {
+    //   const item = lookupTable[itemPreviewPath];
+    //   if (item) {
+    //     const { id, name, path, children, nodes } = item;
+    //     const files = nodes?.files;
+    //     const parentObj = { id, name, path, children, nodes, files };
+    //     const _rows = [...(files ? files : []), ...children];
+    //     const rows = _rows.length ? _rows : [];
+    //     const index = rows.findIndex((row) => row.path === itemPreviewPath);
+    //     if (index > -1) {
+    //       resetPreviewState();
+    //       // setSelectedRow(rows[index]);
+    //       // setSelectedRowParent(parentObj);
+    //       // setShowSingleItemPreview(true);
+    //     }
+    //   }
+    // }
+    return () => {
+      resetPreviewState();
+      resetSelectedViewOption();
+    };
+  }, []);
+  // }, [itemPreviewPath, lookupTable, resetPreviewState, showSingleItemPreview]);
   const contentAtPath =
     selectedPath && !isEmpty(lookupTable) && !isEmpty(lookupTable[selectedPath])
       ? lookupTable[selectedPath]
@@ -56,9 +83,9 @@ export default function MainContentWindow() {
 
   return (
     <ContentWindowContainer>
-      {selectedViewOption === 'list' && !showPreview ? (
+      {selectedViewOption === 'list' ? (
         <FileTable rows={rows} parent={parent} selectedPath={selectedPath} />
-      ) : selectedViewOption === 'grid' && !showPreview ? (
+      ) : selectedViewOption === 'grid' ? (
         <ImageTable files={rows} parent={parent} selectedPath={selectedPath} />
       ) : null}
     </ContentWindowContainer>

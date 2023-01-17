@@ -7,6 +7,7 @@ import { dateToDa, deSig } from '@urbit/api';
 
 import useFileStore from './state/useFileStore';
 import { useStorage } from './state/useStorage';
+import { handleMissingCredentials, storageErrorCopy } from '../utils/storage';
 
 function useFileUpload() {
   const { s3, ...storage } = useStorage();
@@ -34,6 +35,9 @@ function useFileUpload() {
     if (credentials) {
       await createClient(credentials);
       setStatus('success');
+    } else {
+      setErrorMessage(storageErrorCopy.missingCredentials);
+      handleMissingCredentials();
     }
   }, [createClient, credentials, setStatus]);
   useEffect(() => {
@@ -43,7 +47,18 @@ function useFileUpload() {
   }, [client, hasCredentials, initClient]);
   const uploadFile = useCallback(
     async (upload) => {
-      if (!client) {
+      if (!client && credentials) {
+        try {
+          await initClient();
+        } catch (error) {
+          // TODO: Replace with user-facing error state
+          console.error(error);
+          return;
+        }
+      }
+      if (!client && !credentials) {
+        // TODO: Replace with user-facing error state
+        handleMissingCredentials();
         return;
       }
       const { file, key } = upload;

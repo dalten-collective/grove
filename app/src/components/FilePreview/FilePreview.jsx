@@ -19,6 +19,12 @@ import { DISPLAY_NON_IMAGE_FILES_IN_GALLERY } from '../../utils/config';
 export const FilePreview = ({ file }) => {
   const setSelectedPath = useStore((state) => state.setSelectedPath);
   const showSingleItemPreview = useStore((state) => state.showSingleItemPreview);
+  const setShowSingleItemPreview = useStore(
+    (state) => state.setShowSingleItemPreview
+  );
+  const resetSelectedViewOption = useStore(
+    (state) => state.resetSelectedViewOption
+  );
   const previewSingleItem = useStore((state) => state.previewSingleItem);
   const fileType = getFileTypeExhaustive(file);
   const isImage = getIsImage(fileType);
@@ -28,8 +34,13 @@ export const FilePreview = ({ file }) => {
   const handleClick = (evt, path, fileType) => {
     if (evt.detail === 1) return;
     if (evt.detail === 2) {
-      if (fileType === 'folder') setSelectedPath(path);
-      else previewSingleItem(path);
+      if (fileType === 'folder') {
+        setSelectedPath(path);
+        setShowSingleItemPreview(false);
+        resetSelectedViewOption();
+      } else {
+        previewSingleItem(path);
+      }
     }
   };
 
