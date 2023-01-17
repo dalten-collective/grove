@@ -7,8 +7,9 @@ import {
 } from 'immer';
 import { compose } from 'lodash/fp';
 import _ from 'lodash';
-import create from 'zustand';
-import { persist } from 'zustand/middleware';
+// import create from 'zustand';
+// import { persist } from 'zustand/middleware';
+// import { persist, devtools } from 'zustand/middleware';
 import { FatalError } from '@urbit/http-api';
 
 import api from '../api';
@@ -17,6 +18,7 @@ import {
   createStorageKey,
   storageVersion,
 } from '../logic/utils';
+import { createStoreWithPersist } from './middleware';
 
 setAutoFreeze(false);
 enablePatches();
@@ -81,43 +83,43 @@ export const createState = (
   whitelist = [],
   subscriptions = []
 ) =>
-  create(
-    persist(
-      (set, get) => ({
-        initialize: async (airlock) => {
-          await Promise.all(
-            subscriptions.map((sub) => airlock.subscribe(sub(set, get)))
-          );
-        },
-        set: (fn) => stateSetter(fn, set, get),
-        optSet: (fn) => optStateSetter(fn, set, get),
-        patches: {},
-        addPatch: (id, patch) => {
-          set((s) => ({ ...s, patches: { ...s.patches, [id]: patch } }));
-        },
-        removePatch: (id) => {
-          set((s) => ({ ...s, patches: _.omit(s.patches, id) }));
-        },
-        rollback: (id) => {
-          set((state) => {
-            const applying = state.patches[id];
-            return {
-              ...applyPatches(state, applying),
-              patches: _.omit(state.patches, id),
-            };
-          });
-        },
-        ...(typeof properties === 'function'
-          ? properties(set, get)
-          : properties),
-      }),
-      {
-        whitelist,
-        name: stateStorageKey(name),
-        version: storageVersion,
-        migrate: clearStorageMigration,
-      }
-    )
+  createStoreWithPersist(
+    // create(
+    // devtools(
+    // persist(
+    (set, get) => ({
+      initialize: async (airlock) => {
+        await Promise.all(
+          subscriptions.map((sub) => airlock.subscribe(sub(set, get)))
+        );
+      },
+      set: (fn) => stateSetter(fn, set, get),
+      optSet: (fn) => optStateSetter(fn, set, get),
+      patches: {},
+      addPatch: (id, patch) => {
+        set((s) => ({ ...s, patches: { ...s.patches, [id]: patch } }));
+      },
+      removePatch: (id) => {
+        set((s) => ({ ...s, patches: _.omit(s.patches, id) }));
+      },
+      rollback: (id) => {
+        set((state) => {
+          const applying = state.patches[id];
+          return {
+            ...applyPatches(state, applying),
+            patches: _.omit(state.patches, id),
+          };
+        });
+      },
+      ...(typeof properties === 'function' ? properties(set, get) : properties),
+    }),
+    {
+      whitelist,
+      name: stateStorageKey(name),
+      version: storageVersion,
+      migrate: clearStorageMigration,
+    }
+    // )
   );
 export async function doOptimistically(state, action, call, reduce) {
   let num;

@@ -7,6 +7,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 // import ClickAwayListener from '@mui/base/ClickAwayListener';
+// import { RiUploadCloud2Line } from 'react-icons/ri';
 
 import { useStore } from '../../state/store';
 import useFileStore from '../../lib/state/useFileStore';
@@ -26,12 +27,15 @@ export default function UploadFile({ open, setOpen }) {
       setOpen(false);
     }
   };
-  const handleUpload = (evt) => {
-    // const shouldPrompot = loaded && hasCredentials;
+  const handleAction = (evt) => {
     evt.preventDefault();
-    promptUpload(fileId.current);
+    if (mostRecentFile && mostRecentFile.status === 'success') {
+      console.log('Add to Trove');
+      console.log(mostRecentFile);
+    } else {
+      promptUpload(fileId.current);
+    }
   };
-
   return (
     <Dialog disableEscapeKeyDown open={open} onClose={handleClose}>
       <DialogTitle>{selectedPath}</DialogTitle>
@@ -43,12 +47,15 @@ export default function UploadFile({ open, setOpen }) {
 
       <DialogActions>
         {open ? (
-          <Button title="Upload a file" onClick={handleUpload}>
-            {mostRecentFile && mostRecentFile.status === 'loading' ? (
-              <LoadingSpinner secondary="black" className="h-4 w-4" />
-            ) : (
-              'Upload File'
-            )}
+          <Button title="Upload a file" onClick={handleAction}>
+            {open &&
+              (mostRecentFile?.status === 'loading' ? (
+                <LoadingSpinner secondary="black" className="h-4 w-4" />
+              ) : mostRecentFile?.status === 'success' ? (
+                'Add to Trove'
+              ) : (
+                'Upload File'
+              ))}
           </Button>
         ) : null}
         <Button onClick={handleClose}>Ok</Button>

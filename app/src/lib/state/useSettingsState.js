@@ -41,6 +41,7 @@ function putEntry(json, draft) {
     }
     draft[data['bucket-key']][data['entry-key']] = data.value;
   }
+  debugger;
   return draft;
 }
 function delEntry(json, draft) {

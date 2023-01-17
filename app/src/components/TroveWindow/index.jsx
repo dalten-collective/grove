@@ -2,6 +2,11 @@ import React from 'react';
 import { Box } from '@mui/material';
 import { useLookupTable } from '../../state/store';
 import { MainContainer, MainContentContainer, WindowContainer } from './styles';
+// import MainContentWindow from '../MainContentWindow';
+// import MenuBar from './MenuBar';
+// import Sidebar from '../Sidebar';
+// import LocationBar from './LocationBar';
+
 const MainContentWindow = React.lazy(() => import('../MainContentWindow'));
 const MenuBar = React.lazy(() => import('./MenuBar'));
 const Sidebar = React.lazy(() => import('../Sidebar'));

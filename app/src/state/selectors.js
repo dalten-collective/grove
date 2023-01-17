@@ -38,9 +38,10 @@ export const getActions = (state) => ({
     [events.TROVE.INITIAL_STATE.FACE]: [state.setTroves],
     [events.TROVE.NEW.FACE]: [state.newTrove],
 
+    // TODO: Remove recently uploaded file from store after node add matching key
     [events.NODE.ADD.FACE]: [state.fetchTree],
-    [events.NODE.REM.FACE]: [state.setPathOneLevelUp, state.remNode],
-    [events.NODE.EDIT.FACE]: [state.setPathOneLevelUp, state.editNode],
+    [events.NODE.REM.FACE]: [state.fetchTree],
+    [events.NODE.EDIT.FACE]: [state.fetchTree],
     // [events.NODE.MOVE.FACE]: [state.moveNode],
     [events.FOLDER.ADD.FACE]: [state.fetchTree],
     [events.FOLDER.REM.FACE]: [state.getNewPathOnFact, state.fetchTree],

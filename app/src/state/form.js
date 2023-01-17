@@ -17,6 +17,14 @@ export const useForm = createStore(
       by: '',
       id: '',
     },
+    skipInit: false,
+    setSkipInit: (skip) =>
+      set(
+        produce((draft) => {
+          draft.skipInit = skip;
+        })
+      ),
+
     setFormAction: (action) =>
       set(
         produce((draft) => {
@@ -29,6 +37,14 @@ export const useForm = createStore(
           draft.formData[name] = value.toLowerCase();
         })
       ),
+    hydrateFormData: (data) =>
+      set(
+        produce((draft) => {
+          draft.formData = { ...draft.formData, ...data };
+          draft.skipInit = true;
+        })
+      ),
+
     initFormData: (data) =>
       set(
         produce((draft) => {

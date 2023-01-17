@@ -12,6 +12,17 @@ import { getFileType } from '../../utils/files';
 
 export const columns = [
   {
+    field: 'id',
+    headerName: 'ID',
+    flex: 1,
+    renderHeader: () => <Size>ID</Size>,
+    headerClassName: 'column-header-trove-explorer',
+    border: 'none',
+    valueGetter: ({ row: { id } }) =>
+      id?.slice().split('/').length > 1 ? '' : id,
+    // ...SizeType,
+  },
+  {
     field: 'name',
     headerName: 'Name',
     flex: 3,

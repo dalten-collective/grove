@@ -236,6 +236,12 @@ export const useStore = createStore(
           draft.selectedViewOption = option;
         })
       ),
+    resetSelectedViewOption: () =>
+      set(
+        produce((draft) => {
+          draft.selectedViewOption = 'list';
+        })
+      ),
     getSinglePreviewItem: () => {
       if (!get().showSingleItemPreview) return null;
       const pathFrags = get().itemPreviewPath.slice().split('/');
@@ -243,6 +249,13 @@ export const useStore = createStore(
       const basePath = pathFrags.join('/');
       return get().lookupTable[get().selectedHostSpace][basePath][nodeId];
     },
+    hydrateSingleItemActionPreview: (item, hydrateFormData) => {
+      const { path, id, name, url, dat } = item;
+      const { by, description } = dat;
+      hydrateFormData({ id, name, url, by, description });
+      get().previewSingleItem(path);
+    },
+
     previewSingleItem: (path) => {
       get().setItemPreviewPath(path);
       get().setShowSingleItemPreview(true);

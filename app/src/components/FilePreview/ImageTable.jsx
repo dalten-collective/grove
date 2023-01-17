@@ -4,7 +4,8 @@ import ImageList from '@mui/material/ImageList';
 import 'react-photo-view/dist/react-photo-view.css';
 import { FilePreview } from './FilePreview';
 import { EmptyOverlayContainer, ImagesContainer } from './styles';
-const CustomNoRowsOverlay = React.lazy(() => import('../Table/EmptyFolder'));
+import CustomNoRowsOverlay from '../Table/EmptyFolder';
+// const CustomNoRowsOverlay = React.lazy(() => import('../Table/EmptyFolder'));
 
 export default function ImageTable({ files = [] }) {
   return files?.length ? (
