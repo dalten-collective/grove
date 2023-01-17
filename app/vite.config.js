@@ -20,7 +20,7 @@ export default ({ mode }) => {
 
   Object.assign(process.env, loadEnv(mode, process.cwd()));
   const SHIP_URL =
-    process.env.SHIP_URL || process.env.VITE_SHIP_URL || 'http://localhost:80';
+    process.env.SHIP_URL || process.env.VITE_SHIP_URL || 'http://localhost:8080';
   console.log(SHIP_URL);
 
   const base = (mode, app) => {
