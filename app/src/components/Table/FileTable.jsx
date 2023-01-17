@@ -18,7 +18,7 @@ function _FileTable({ rows = [], selectedPath, parent }) {
   );
   const [_rows, setRows] = useState(() => []);
 
-  console.log('rows', rows);
+  // console.log('rows', rows);
   useEffect(() => {
     if (!_rows?.length || _rows !== rows) {
       setRows(rows);
