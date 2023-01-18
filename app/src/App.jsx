@@ -12,7 +12,8 @@ import { useAirlock } from './urbit/auth';
 import { defaultTheme, GlobalStyle } from './theme/App.styles';
 import { theme as baseTheme } from './theme/theme.jsx';
 // import { addTilde } from './utils';
-const TroveWindow = React.lazy(() => import('./components/TroveWindow/index'));
+import TroveWindow from './components/TroveWindow/index';
+// const TroveWindow = React.lazy(() => import('./components/TroveWindow/index'));
 
 // let appUrl = `${ship.url}/apps/${window.id}/?spaceId=${spaces.selected?.path}`;
 // selectSpace
