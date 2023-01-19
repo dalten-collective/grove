@@ -20,7 +20,7 @@ export default ({ mode }) => {
 
   Object.assign(process.env, loadEnv(mode, process.cwd()));
   const SHIP_URL =
-    process.env.SHIP_URL || process.env.VITE_SHIP_URL || 'http://localhost:8080';
+    process.env.SHIP_URL || process.env.VITE_SHIP_URL || 'http://localhost:80';
   console.log(SHIP_URL);
 
   const base = (mode, app) => {
@@ -66,7 +66,7 @@ export default ({ mode }) => {
             'react-dom': ['react-dom'],
             react: ['react'],
             // 'styled-components': ['styled-components'],
-            '@mui/material': ['@mui/material'],
+            // '@mui/material': ['@mui/material'],
             lodash: ['lodash'],
           },
           minifyInternalExports: true,

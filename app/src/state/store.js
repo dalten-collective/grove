@@ -131,6 +131,7 @@ export const useStore = createStore(
     setTree: (hostSpace, tree) =>
       set(
         produce((draft) => {
+          draft.troves[hostSpace] = draft.troves[hostSpace] || {};
           draft.troves[hostSpace].tree = tree;
         })
       ),
@@ -165,7 +166,9 @@ export const useStore = createStore(
         : Object.values(troves).map((t) => t.tree);
 
       trees.forEach((tree) => {
-        get().createLookupTable(tree.hostSpace, tree);
+        if (tree?.hostSpace) {
+          get().createLookupTable(tree.hostSpace, tree);
+        }
       });
     },
     setTreeLookupTable: (hostSpace, lookupTable) =>
