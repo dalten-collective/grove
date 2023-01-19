@@ -47,12 +47,18 @@ export default function UploadFile({ open, setOpen }) {
 
       <DialogActions>
         {open ? (
-          <Button title="Upload a file" onClick={handleAction}>
+          <Button
+            title="Upload a file"
+            onClick={handleAction}
+            disabled={!hasCredentials}
+          >
             {open &&
               (mostRecentFile?.status === 'loading' ? (
                 <LoadingSpinner secondary="black" className="h-4 w-4" />
               ) : mostRecentFile?.status === 'success' ? (
                 'Add to Trove'
+              ) : !hasCredentials ? (
+                'Check s3 creds'
               ) : (
                 'Upload File'
               ))}

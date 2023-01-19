@@ -4,7 +4,7 @@ import { createStore } from './storeMiddleware';
 // TODO: Use lighter weight createStore for form state
 export const useForm = createStore(
   (set, get) => ({
-    formAction: '',
+    formAction: 'add-folder',
     formData: {
       fromPath: '',
       toPath: '',

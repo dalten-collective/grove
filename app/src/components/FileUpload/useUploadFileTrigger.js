@@ -80,8 +80,8 @@ export default function useUploadFileTrigger({
   };
   const addAllFilesToCurrentTrove = (_files) => {
     const files = Object.values(_files);
-    const toPath = getLeadingSlash(formData.toPath);
-    const fromPath = getLeadingSlash(formData.fromPath);
+    const toPath = getLeadingSlash(selectedRelativePath);
+    const fromPath = getLeadingSlash(selectedRelativePath);
     const [predicate, noun] = getActionStructure(formAction);
 
     if (selectedPath) {
