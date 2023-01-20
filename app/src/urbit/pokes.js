@@ -1,5 +1,6 @@
-import { getSpace, mapTilde } from '../utils';
+import { addTilde, getSpace, mapTilde } from '../utils';
 
+// TODO: Remoe deleted folders and nodes from local storage
 export const poke = async (urbit, space, data, ship, pokeObj) => {
   try {
     const formedPoke = pokeObj(space, data, ship);
@@ -91,7 +92,6 @@ export const errata = {
 // TODO: Add type checking
 const structurePokeData = (type, data) => {
   switch (type) {
-    // Folder
     case 'add-folder': {
       const { toPath, name, permissions } = data;
       return {
@@ -102,14 +102,14 @@ const structurePokeData = (type, data) => {
     }
     case 'rem-folder': {
       const { fromPath } = data;
-      return { trail: fromPath };
+      return fromPath;
     }
     case 'move-folder': {
       const { fromPath, toPath } = data;
       return { from: fromPath, to: toPath };
     }
     case 'add-node': {
-      const { toPath, url, name, description, extension } = data;
+      const { toPath, url, name, description, extension, from, by } = data;
       return {
         trail: toPath,
         node: {
@@ -118,6 +118,8 @@ const structurePokeData = (type, data) => {
             title: name,
             description,
             extension,
+            from,
+            by: addTilde(by),
           },
         },
       };

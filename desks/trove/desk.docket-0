@@ -1,8 +1,10 @@
 :~  title+'trove'
     info+'group file drive'
-    color+0xd0.aad0
-    site+/apps/trove
+    color+0xdc.dcdc
+    image+'https://lomder-librun.sfo3.digitaloceanspaces.com/tiles/trove.svg'
+    base+'trove'
+    glob-http+['https://freedom-club.sfo2.digitaloceanspaces.com/glob-0v7.vfr3v.d9g7n.l721j.e0s7m.qi8dp.glob' 0v7.vfr3v.d9g7n.l721j.e0s7m.qi8dp]
     version+[0 0 1]
-    website+'https://stp.world/'
+    website+'https://quartus.co'
     license+'REKT'
 ==

@@ -884,6 +884,7 @@
       ?>  ?|  ?=(~ (~(get of `trove`tov) to.q.f))
               =(our.bol src.bol)
               =(p.sap src.bol)
+              !=(/ from.q.f)
               %-  ~(any in ewe)
               |=  r=role
               ?&  (~(has in move.folder.fer) r)
@@ -908,16 +909,18 @@
             %+  to-cher  [& & &]
             trove-fact+!>([p.f %rem-folder from.q.f])
         ==
+      =+  tuv=(~(lop of `trove`tov) from.q.f)
+      =+  pre=/[(head from.q.f)]
       |-
       ?~  held
-        =.  troves
-          %+  ~(put by troves)  sap
-          [mod rag (~(lop of `trove`tov) from.q.f)]
-        ^+  to  tu
-      =.  tov
-        (~(put of `trove`tov) (welp to.q.f p.i.held) q.i.held)
+        ^+  to
+        tu(troves (~(put by troves) sap [mod rag tuv]))
+      =+  nex=`path`:(welp to.q.f pre p.i.held)
+      =.  tuv
+        (~(put of `trove`tuv) [nex q.i.held])
+      ~&  >>  [%tuv tuv]
       =?    rag
-          ?=(~ (~(get by rag) (welp from.q.f p.i.held)))
+          !?=(~ (~(get by rag) (welp from.q.f p.i.held)))
         =+  hav=(~(got by rag) (welp from.q.f p.i.held))
         ?.  (fits ?~(perms ter u.perms) hav)
           (~(del by rag) (welp from.q.f p.i.held))
@@ -925,27 +928,27 @@
           (~(del by rag) (welp from.q.f p.i.held))
         %.  [(welp to.q.f p.i.held) hav]
         ~(put by `regs`(~(del by rag) (welp from.q.f p.i.held)))
-      =+  pat=`path`(welp to.q.f p.i.held)
+      ~&  >>  [%nex nex]
       =/  read=[? ? ?]
-        =+  red=~(has in read.folder:(to-perm pat))
+        =+  red=~(has in read.folder:(to-perm nex))
         [(red %member) (red %admin) (red %moderator)]
       %=    $
         held  t.held
       ::
           tu
-        =~  :-  [f=f pat=pat read=read]
+        =~  :-  [f=f nex=nex read=read]
             ^+  to
             %-  ~(rep by q.i.held)
             |=  [(pair id node) tw=_tu]
             %+  to-cher:tw  read
-            trove-fact+!>([p.f %add-node p pat q])
+            trove-fact+!>([p.f %add-node p nex q])
           ::
             %+  to-cher  read
             :-  %trove-fact
             !>  ^-  fact
             :-  p.f
             :-  %add-folder
-            [(snip pat) (rear pat) (~(get by rag) pat)]
+            [(snip nex) (rear nex) (~(get by rag) nex)]
         ==
       ==
     ==

@@ -1,14 +1,37 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useLayoutEffect } from 'react';
+import { Routes, Route } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
+// import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { MotionConfig } from 'framer-motion';
 import isEmpty from 'lodash/isEmpty';
 
-import TroveWindow from './components/TroveWindow/index';
 import { useStore } from './state/store';
+import { useSwitchSpaceOnSearch } from './state/hooks';
+import { useTrove, useTroveSubscription } from './urbit';
+import { useAirlock } from './urbit/auth';
+import { defaultTheme, GlobalStyle } from './theme/App.styles';
 import { theme as baseTheme } from './theme/theme.jsx';
-import { useTrove } from './urbit';
 // import { addTilde } from './utils';
+import TroveWindow from './components/TroveWindow/index';
+// const TroveWindow = React.lazy(() => import('./components/TroveWindow/index'));
 
-export const App = () => {
+// let appUrl = `${ship.url}/apps/${window.id}/?spaceId=${spaces.selected?.path}`;
+// selectSpace
+// spaceId=/~wolred-salnel/troveish
+
+export const RouterWrappedApp = ({ state, location, isMobile, isSmall }) => {
+  return (
+    <>
+      <Routes location={state?.backgroundLocation || location}>
+        <Route path="/" element={<App />}></Route>
+      </Routes>
+    </>
+  );
+};
+export const App = (props) => {
+  // useAirlock();
+  useTroveSubscription();
+  useSwitchSpaceOnSearch();
   const [isHydrated, setIsHydrated] = useState(false);
   const { urbit, ship, scries } = useTrove();
   const hosts = useStore((state) => state.hosts);
@@ -22,35 +45,27 @@ export const App = () => {
     // scries.tree(urbit, { host: addTilde(ship), space: 'our' });
   }, [ship, hosts]);
 
-  // Poke working here
-  // useAddFolderPokeTest();
+  // const state = location.state;
 
   return (
-    // <CoreProvider value={coreStore}>
     <>
-      <ThemeProvider theme={baseTheme['dark']}>
-        <TroveWindow />
-        <div id="portal-root" />
+      <ThemeProvider theme={baseTheme['light']}>
+        <GlobalStyle blur={true} realmTheme={defaultTheme.themes.default} />
+        <MotionConfig transition={{ duration: 1, reducedMotion: 'user' }}>
+          <TroveWindow />
+          <div id="portal-root" />
+        </MotionConfig>
       </ThemeProvider>
     </>
   );
 };
 
-export const useAddFolderPokeTest = () => {
-  const { getHosts, hosts } = useStore();
-  const { urbit, ship, pokes } = useTrove();
-  const _hosts = getHosts();
-  useEffect(() => {
-    const testPoke = async () => {
-      pokes.folder.add(
-        urbit,
-        'our',
-        { toPath: '/', name: 'test-folder-yoo/chicken', permissions: null },
-        ship
-      );
-    };
-    if (ship && _hosts?.length) {
-      testPoke();
-    }
-  }, [ship, hosts]);
-};
+// TODO: Extract currently unused preview state reset logic
+// const resetPreviewState = useStore((state) => state.resetPreviewState);
+
+// Reset (perseistent) preview state on unmount
+// useLayoutEffect(() => {
+//   return () => {
+//     resetPreviewState();
+//   };
+// }, []);
