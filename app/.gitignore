@@ -1,8 +1,4 @@
-node_modules
-.DS_Store
-dist
-dist-ssr
-*.local
-stats.html
-.eslintcache
-.vercel
+node_modules/
+package-lock.json
+yarn.lock
+.env
