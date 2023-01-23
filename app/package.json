@@ -11,8 +11,10 @@
     "@urbit/api": "^2.1.0",
     "@urbit/http-api": "^2.1.0",
     "core-js": "^3.8.3",
+    "lodash": "^4.17.21",
     "vue": "^3.2.25",
     "vue-router": "^4.1.6",
+    "vue3-treeview": "^0.4.1",
     "vuex": "^4.0.0"
   },
   "devDependencies": {

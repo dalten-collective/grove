@@ -9,6 +9,7 @@ import * as T from '@/types'
 import * as L from '@/types/loading-types'
 
 import airlock from "@/api";
+import { scryState as tScryState } from "@/api/troveAPI";
 
 type AugmentedActionContext = {
   commit<K extends keyof Mutations>(
@@ -26,6 +27,11 @@ type AugmentedActionContext = {
 } & Omit<ActionContext<State, State>, "commit">;
 
 export interface Actions {
+  [ActionTypes.SCRY_STATE](
+    { commit }: AugmentedActionContext,
+    payload: string
+  ): void;
+
   [ActionTypes.EXAMPLE](
     { commit }: AugmentedActionContext,
     payload: string
@@ -65,6 +71,8 @@ export const actions: ActionTree<State, State> & Actions = {
       (data: T.GallResponse) => {
         if (data.face === 'INITIAL_STATE') {
           commit(MutationTypes.TROVE_STATE_SET, data.fact)
+        } else { // TODO: handle specific responses
+          dispatch(ActionTypes.SCRY_STATE)
         }
         if (T.IsResponseOne(data)) {
           dispatch(ActionTypes.EXAMPLE, data.test.thing as string);
@@ -87,6 +95,16 @@ export const actions: ActionTree<State, State> & Actions = {
     console.log('dispatching EXAMPLE action...')
     console.log('getters ', getters) // Access to getters
     commit(MutationTypes.EXAMPLE, 'test')
+  },
+
+  [ActionTypes.SCRY_STATE](
+    { commit, getters },
+    payload: string
+  ) {
+    tScryState().then((r) => {
+      console.log('in action ', r)
+      commit(MutationTypes.TROVE_STATE_SET, r.fact)
+    })
   },
 
   [ActionTypes.INITIAL_SET](
