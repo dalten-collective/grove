@@ -342,11 +342,18 @@ const selectSpace = (spat) => {
 const buildFlatnest = () => {
   var fn = {};
   troveFolders.value.forEach((fullPath) => {
+
     const children = troveFolders.value
       .filter((fp) => {
-        return fp.startsWith(fullPath);
+        const ourLength = fp.split('/').length
+        return (
+          fp.startsWith(fullPath) &&
+          ourLength - fullPath.split('/').length == 1
+        )
+
       })
       .filter((fp) => fp !== fullPath);
+
     fn[fullPath] = {
       text: fullPath.split('/')[fullPath.split('/').length - 1],
       children,
