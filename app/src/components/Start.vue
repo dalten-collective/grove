@@ -1,74 +1,233 @@
 <template>
-  <div class="flex flex-row">
-    <div class="flex-1">
-      <ul>
-        <li v-for="space in Object.keys(troves)">
-          <div @click="selectSpace(space)" class="text-blue-400 underline cursor-pointer">
-            {{ space }}
+  <div class="flex items-center">
+    <div>
+      <select class="p-3 rounded-md" v-model="selectedSpace">
+        <option v-for="spat in Object.keys(troves)" :value="spat" :key="spat">
+          {{
+            `${spat.split('/')[0].substring(0, 7)}.../${spat.split('/')[1]}`
+          }}
+        </option>
+      </select>
+    </div>
+    <div class="px-2 py-2 ml-2 border rounded-md">
+      <div class="flex flex-row">
+        <div v-for="(t, i) in selectedTrail.split('/')" :key="i">
+          <span class="mx-1 text-stone-500">/</span>
+          <span
+          @click="changeTrail(selectedTrail, i)"
+          class="p-2 mr-2 cursor-pointer bg-stone-200 rounded-md text-stone-700">
+            {{ t }}
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-3 gap-4">
+    <div class="pr-4 border-r col-span-1">
+
+      <div class="flex flex-row">
+        <button
+          @click="menuShown = !menuShown"
+          class="p-2 px-4 border shadow-md rounded-md"
+        >
+          +
+        </button>
+      </div>
+
+      <div
+        v-if="menuShown"
+        class="absolute p-4 bg-white shadow-md"
+        style="width: 200px; height: 100px; z-index: 100"
+      >
+        <div>
+          <span
+            class="text-blue-500 underline cursor-pointer"
+            @click="doAddFolder"
+            >New Folder</span
+          >
+        </div>
+        <div>
+          <span class="text-blue-500 underline cursor-pointer" @click="doAddNode"
+            >New File</span
+          >
+        </div>
+      </div>
+
+      <div
+        v-if="addFolderMenu"
+        class="absolute p-4 bg-white shadow-md w-34 h-34"
+        style="z-index: 100"
+      >
+        <div>
+          <div class="mb-2">
+            <input
+              hidden
+              type="text"
+              disabled
+              placeholder="/"
+              v-model="newFolder.trail"
+            />
+            <span class="pr-1 opacity-50">{{ newFolder.trail }}/</span
+            ><input
+              class="p-2 rounded-sm bg-stone-100"
+              type="text"
+              placeholder="folder name"
+              v-model="newFolder.name"
+            />
+            <button
+              @click="addFolder"
+              class="px-4 py-2 text-white bg-blue-500 shadow-md hover:shadow-lg hover:opacity-80 rounded-md"
+            >
+              Add Folder
+            </button>
           </div>
-        </li>
-      </ul>
+
+          <div class="flex flex-col">
+            <div class="flex flex-row justify-between">
+              <div>
+                <span
+                  class="text-green-500 underline cursor-pointer"
+                  @click="somewhereElse = !somewhereElse"
+                  >Change path...</span
+                >
+              </div>
+              <div>
+                <button
+                  class="px-4 py-2 text-white shadow-md bg-stone-400 hover:shadlow-lg hover:opacity-80 rounded-md"
+                  @click="addFolderMenu = false"
+                >
+                  cancel
+                </button>
+              </div>
+            </div>
+
+            <div v-if="somewhereElse">
+              <treeview
+                @nodeFocus="gotFocus($event)"
+                :nodes="flatNest"
+                :config="treeConfig"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div
+        v-if="addNodeMenu"
+        class="absolute p-4 bg-white shadow-md w-34 h-34"
+        style="z-index: 100"
+      >
+        <div>
+          <div class="mb-2 grid grid-cols-2 gap-4">
+            <div>
+              <span
+                class="text-green-500 underline cursor-pointer"
+                @click="somewhereElse = !somewhereElse"
+                >Change path...</span
+              >
+            </div>
+            <div v-if="somewhereElse">
+              <treeview
+                @nodeFocus="gotFocus($event)"
+                :nodes="flatNest"
+                :config="treeConfig"
+              />
+            </div>
+          </div>
+
+          <div class="flex flex-col">
+            <input
+              hidden
+              type="text"
+              class="p-2 rounded-sm bg-stone-100"
+              placeholder="path"
+              v-model="newFile.trail"
+            />
+            <div class="flex flex-row items-center">
+              <span class="pr-1 opacity-50">{{ newFile.trail }}/</span>
+              <div class="grid grid-cols-3 gap-4">
+                <div class="col-span-2">
+                  <input
+                    type="text"
+                    class="p-2 mr-1 rounded-sm bg-stone-100"
+                    placeholder="filename"
+                    v-model="newFile.name"
+                  />
+                  <input
+                    type="text"
+                    class="p-2 rounded-sm bg-stone-100"
+                    placeholder="extension"
+                    v-model="newFile.extension"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-2">
+              <input
+                type="text"
+                class="p-2 rounded-sm bg-stone-100"
+                placeholder="url"
+                v-model="newFile.url"
+              />
+            </div>
+          </div>
+          <div class="flex flex-row justify-end">
+            <button
+              @click="addNode"
+              class="px-4 py-2 text-white bg-blue-500 shadow-md hover:shadow-lg hover:opacity-80 rounded-md"
+            >
+              Add File
+            </button>
+            <button
+              class="px-4 py-2 text-white shadow-md bg-stone-400 hover:shadlow-lg hover:opacity-80 rounded-md"
+              @click="addNodeMenu = false"
+            >
+              cancel
+            </button>
+          </div>
+        </div>
+      </div>
 
       <div>
-        <div>
-        <input type="text" placeholder="path" v-model="newFile.trail">
-        <input type="text" placeholder="filename" v-model="newFile.name">
-        <input type="text" placeholder="extension" v-model="newFile.extension">
-        <input type="text" placeholder="url" v-model="newFile.url">
-        <button @click="addNode">Add Node</button>
-        </div>
-
-        <div>
-          <input type="text" placeholder="folder name" v-model="newFolder.name">
-          <input type="text" disabled placeholder="/" v-model="newFolder.trail">
-          <button @click="addFolder">Add Folder</button>
-        </div>
-
         <treeview
           @nodeFocus="gotFocus($event)"
           :nodes="flatNest"
           :config="treeConfig"
         />
-
-        <pre>
-        selectedTrail: {{ selectedTrail }}
-        flatNest: 
-          {{ flatNest }}
-        </pre>
-
-        <pre>
-          {{ troveFolders }}
-          ---
-          {{ theSelectedSpace.trove }}
-        </pre>
       </div>
     </div>
 
-    <div class="flex-1">
-      <div>
-        <table>
+    <div class="pl-4 col-span-2">
+      <div
+        v-if="
+          filesInFolder === undefined ||
+          filesInFolder.length === 0 ||
+          Object.keys(filesInFolder).length === 0
+        "
+      >
+        This folder is empty
+      </div>
+      <div v-else>
+        <table class="w-full" striped>
           <thead>
-            <th>
-              Name
-            </th>
-            <th>
-              Size
-            </th>
-            <th>
-              Date
-            </th>
-            <th>
-              Kind
-            </th>
+            <th>Name</th>
+            <th>Size</th>
+            <th>Date</th>
+            <th>Kind</th>
           </thead>
           <tbody>
             <tr v-for="f in filesInFolder">
               <td>
-                <a :href="f.url" target="_blank" class="text-blue-400 underline">{{ f.dat.title }}</a>
+                <a
+                  :href="f.url"
+                  target="_blank"
+                  class="text-blue-400 underline"
+                  >{{ f.dat.title }}</a
+                >
               </td>
-              <td>
-                0
-              </td>
+              <td>0</td>
               <td>
                 {{ new Date(f.dat.from * 1000).toLocaleString() }}
               </td>
@@ -80,158 +239,191 @@
         </table>
       </div>
     </div>
-
   </div>
 </template>
 
 <script setup lang="ts">
 import { onMounted, onUnmounted, computed, ref, watch } from 'vue';
-import { useStore } from '@/store/store'
+import { useStore } from '@/store/store';
 import { ActionTypes } from '@/store/action-types';
 import { GetterTypes } from '@/store/getter-types';
 
-import { addNode  as troveAddNode } from '@/api/troveAPI'
-import { addFolder  as troveAddFolder } from '@/api/troveAPI'
+import { addNode as troveAddNode } from '@/api/troveAPI';
+import { addFolder as troveAddFolder } from '@/api/troveAPI';
 
-import "vue3-treeview/dist/style.css";
-import treeview from "vue3-treeview";
+import 'vue3-treeview/dist/style.css';
+import treeview from 'vue3-treeview';
 
-const store = useStore()
+const store = useStore();
 
-const selectedSpace = ref('')
-const selectedTrail = ref('/')
-const newFile = ref({})
-const newFolder = ref({})
-const flatNest = ref({})
+const selectedSpace = ref('');
+const selectedTrail = ref('/');
+const newFile = ref({});
+const newFolder = ref({});
+const flatNest = ref({});
+const menuShown = ref(false);
+
+const addFolderMenu = ref(false);
+const somewhereElse = ref(false);
+
+const addNodeMenu = ref(false);
 
 const treeConfig = computed(() => {
-  const manyRoots = new Set()
-   troveFolders.value.forEach((fullPath) => {
-     manyRoots.add(`/${fullPath.split('/')[1]}`)
-  })
-  const roots = Array.from(manyRoots).filter((fp) => fp !== "/")
-  console.log('roots ', roots)
+  const manyRoots = new Set();
+  troveFolders.value.forEach((fullPath) => {
+    manyRoots.add(`/${fullPath.split('/')[1]}`);
+  });
+  const roots = Array.from(manyRoots).filter((fp) => fp !== '/');
+  console.log('roots ', roots);
   return {
     disabled: false,
     roots,
     padding: 25,
-  }
-})
+  };
+});
 
-const troves = computed(() => store.state.troves)
+const troves = computed(() => store.state.troves);
 
 onMounted(() => {
   // TODO:
-  const deskname = 'trove'
+  const deskname = 'trove';
   // TODO:
-  startAirlock(deskname)
-})
+  startAirlock(deskname);
+});
 
 onUnmounted(() => {
   // Maybe:
   // closeAirlock()
-})
+});
 
 const gotFocus = (node) => {
-  const path = node.id
-  console.log('focused path ', path)
-  selectedTrail.value = node.id
+  const path = node.id;
+  console.log('focused path ', path);
+  selectedTrail.value = node.id;
+};
+
+const changeTrail = (wholeTrail, index) => {
+  const newTrail = wholeTrail.split('/').slice(0, index+1).join('/')
+  selectedTrail.value = newTrail
+  Object.keys(flatNest.value).forEach((key) => {
+    flatNest.value[key].state.opened = false
+  })
+  const parent = flatNest.value[newTrail].parent
+  // TODO: fix.
+  console.log('parent ', parent)
+  parent.state.opened = true
 }
+
+const doAddFolder = () => {
+  menuShown.value = false;
+  addFolderMenu.value = true;
+};
+
+const doAddNode = () => {
+  menuShown.value = false;
+  addNodeMenu.value = true;
+};
 
 const addNode = () => {
-  troveAddNode(selectedSpace.value, newFile.value)
-}
+  troveAddNode(selectedSpace.value, newFile.value);
+  addNodeMenu.value = false;
+  somewhereElse.value = false;
+};
 const addFolder = () => {
-  troveAddFolder(selectedSpace.value, newFolder.value)
-}
+  troveAddFolder(selectedSpace.value, newFolder.value);
+  addFolderMenu.value = false;
+  somewhereElse.value = false;
+};
 
 const selectSpace = (spat) => {
-  selectedSpace.value = spat
-}
+  selectedSpace.value = spat;
+};
 
 const buildFlatnest = () => {
-  var fn = {}
+  var fn = {};
   troveFolders.value.forEach((fullPath) => {
-    const children = troveFolders.value.filter((fp) => {
-      return fp.startsWith(fullPath)
-    }).filter((fp) => fp !== fullPath)
+    const children = troveFolders.value
+      .filter((fp) => {
+        return fp.startsWith(fullPath);
+      })
+      .filter((fp) => fp !== fullPath);
     fn[fullPath] = {
       text: fullPath.split('/')[fullPath.split('/').length - 1],
       children,
-      state: {}
-    }
-  })
-  return fn
-}
+      state: {},
+    };
+  });
+  return fn;
+};
 
 watch(selectedSpace, (newSpat) => {
-  flatNest.value = {} // TODO:
-  flatNest.value = buildFlatnest()
-})
+  newFolder.value.trail = '/';
+  newFile.value.trail = '/';
+  flatNest.value = {}; // TODO:
+  flatNest.value = buildFlatnest();
+});
 watch(selectedTrail, (newTrail) => {
-  newFolder.value.trail = newTrail
-  newFile.value.trail = newTrail
-})
+  newFolder.value.trail = newTrail;
+  newFile.value.trail = newTrail;
+});
 watch(troves, (newTroves) => {
-  flatNest.value = {} // TODO:
-  flatNest.value = buildFlatnest()
-})
+  flatNest.value = {}; // TODO:
+  flatNest.value = buildFlatnest();
+});
 
 const theSelectedSpace = computed(() => {
   if (!selectedSpace.value) {
-    return {}
+    return {};
   }
-  console.log('sel ', selectedSpace.value)
-  return troves.value[selectedSpace.value]
-})
+  console.log('sel ', selectedSpace.value);
+  return troves.value[selectedSpace.value];
+});
 
 const troveFolders = computed(() => {
   if (!selectedSpace.value) {
-    return []
+    return [];
   }
-  return Object.keys(theSelectedSpace.value.trove)
-})
+  return Object.keys(theSelectedSpace.value.trove);
+});
 
 const filesInFolder = computed(() => {
   if (!selectedSpace.value) {
-    return []
+    return [];
   }
-  return theSelectedSpace.value.trove[selectedTrail.value]
-})
+  return theSelectedSpace.value.trove[selectedTrail.value];
+});
 
 const theFile = (troveNode) => {
-  console.log('tn ', troveNode)
-  const id = Object.keys(troveNode)[0]
-  return troveNode[id]
-}
+  console.log('tn ', troveNode);
+  const id = Object.keys(troveNode)[0];
+  return troveNode[id];
+};
 
 const nest = computed(() => {
-  var nes = {}
+  var nes = {};
   troveFolders.value.forEach((path) => {
     path.split('/').reduce((r, e) => {
       // id: path, label: 'last name', nodes: object
       if (r[e]) {
-        return r[e].nodes
+        return r[e].nodes;
       } else {
-        return r[e] = {
+        return (r[e] = {
           id: path,
           label: e,
-          nodes: {}
-        }
+          nodes: {},
+        });
         // return r[e] = {}
       }
-    }, nes)
-  })
-  return nes
-})
+    }, nes);
+  });
+  return nes;
+});
 
 const startAirlock = (deskname: string) => {
-  store.dispatch(ActionTypes.AIRLOCK_OPEN, deskname)
-}
+  store.dispatch(ActionTypes.AIRLOCK_OPEN, deskname);
+};
 
 const closeAirlock = () => {
   // Maybe you want this.
-}
+};
 </script>
-
-
