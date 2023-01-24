@@ -9,14 +9,15 @@
         </option>
       </select>
     </div>
+
     <div class="px-2 py-2 ml-2 border rounded-md">
-      <div class="flex flex-row">
+      <div class="flex flex-row" v-if="selectedSpace">
         <div v-for="(t, i) in selectedTrail.split('/')" :key="i">
           <span class="mx-1 text-stone-500">/</span>
           <span
           @click="changeTrail(selectedTrail, i)"
           class="p-2 mr-2 cursor-pointer bg-stone-200 rounded-md text-stone-700">
-            {{ t }}
+            {{ t === '' ? '<root>' : t }}
           </span>
         </div>
       </div>
@@ -202,9 +203,11 @@
     <div class="pl-4 col-span-2">
       <div
         v-if="
+          (
           filesInFolder === undefined ||
           filesInFolder.length === 0 ||
           Object.keys(filesInFolder).length === 0
+          ) && foldersInFolder.length === 0
         "
       >
         This folder is empty
@@ -218,6 +221,21 @@
             <th>Kind</th>
           </thead>
           <tbody>
+            <tr v-for="fol in foldersInFolder">
+              <td>
+                <span
+                  class="text-blue-400 underline cursor-pointer"
+                  @click="openFolder(fol.ctrail)"
+                >{{ trimLeadingSlash(fol.display) }}
+                </span>
+              </td>
+              <td></td>
+              <td>
+              </td>
+              <td>
+                Folder
+              </td>
+            </tr>
             <tr v-for="f in filesInFolder">
               <td>
                 <a
@@ -302,16 +320,26 @@ const gotFocus = (node) => {
   selectedTrail.value = node.id;
 };
 
+const openFolder = (trail) => {
+  selectedTrail.value = trail
+}
+
 const changeTrail = (wholeTrail, index) => {
-  const newTrail = wholeTrail.split('/').slice(0, index+1).join('/')
-  selectedTrail.value = newTrail
+  console.log('wholeTrail ', wholeTrail)
+  console.log('i ', index)
+  if (index === 0) {
+    selectedTrail.value = "/"
+  } else {
+    const newTrail = wholeTrail.split('/').slice(0, index+1).join('/')
+    selectedTrail.value = newTrail
+  }
   Object.keys(flatNest.value).forEach((key) => {
     flatNest.value[key].state.opened = false
   })
-  const parent = flatNest.value[newTrail].parent
+  // const parent = flatNest.value[newTrail].parent
   // TODO: fix.
-  console.log('parent ', parent)
-  parent.state.opened = true
+  // console.log('parent ', parent)
+  // parent.state.opened = true
 }
 
 const doAddFolder = () => {
@@ -343,19 +371,38 @@ const buildFlatnest = () => {
   var fn = {};
   troveFolders.value.forEach((fullPath) => {
 
-    const children = troveFolders.value
-      .filter((fp) => {
-        const ourLength = fp.split('/').length
-        return (
-          fp.startsWith(fullPath) &&
-          ourLength - fullPath.split('/').length == 1
-        )
+    const text = fullPath.split('/')[fullPath.split('/').length - 1]
+    let displayText
+    if (text === ''){
+      displayText = '/'
+    } else {
+      displayText = text
+    }
 
-      })
-      .filter((fp) => fp !== fullPath);
+    let children
+    if (fullPath === '/') {
+      children = Array.from(
+        new Set(
+          troveFolders.value.map((fp) => {
+            return fp.split('/')[1]
+          }).filter((n) => n !== '')
+        )
+      )
+    } else {
+      children = troveFolders.value
+        .filter((fp) => {
+          const ourLength = fp.split('/').length
+          return (
+            fp.startsWith(fullPath) &&
+            ourLength - fullPath.split('/').length == 1
+          )
+
+        })
+        .filter((fp) => fp !== fullPath);
+    }
 
     fn[fullPath] = {
-      text: fullPath.split('/')[fullPath.split('/').length - 1],
+      text: displayText,
       children,
       state: {},
     };
@@ -400,31 +447,52 @@ const filesInFolder = computed(() => {
   return theSelectedSpace.value.trove[selectedTrail.value];
 });
 
+const foldersInFolder = computed(() => {
+  if (!selectedSpace.value) {
+    return []
+  }
+  return directChildrenOfTrail(selectedTrail.value)
+})
+
+const directChildrenOfTrail = (trail) => {
+  if (!selectedSpace.value) {
+    return []
+  }
+  if (!flatNest.value[trail]) {
+    return [{
+      display: 'something went wrong with the tree',
+      trail: '/',
+      ctrail: '/',
+    }]
+  }
+  return flatNest.value[trail].children.map((ctrail) => {
+    let name;
+    if (trail === '/') {
+      name = ctrail
+      ctrail = `${ trail }${ ctrail }`
+    } else {
+      name = ctrail.substring(trail.length, ctrail.length)
+    }
+    return {
+      display: name,
+      trail: trail,
+      ctrail
+    }
+  })
+}
+
+const trimLeadingSlash = (name) => {
+  if (name[0] === '/') {
+    return name.substring(1, name.length)
+  }
+  return name
+}
+
 const theFile = (troveNode) => {
   console.log('tn ', troveNode);
   const id = Object.keys(troveNode)[0];
   return troveNode[id];
 };
-
-const nest = computed(() => {
-  var nes = {};
-  troveFolders.value.forEach((path) => {
-    path.split('/').reduce((r, e) => {
-      // id: path, label: 'last name', nodes: object
-      if (r[e]) {
-        return r[e].nodes;
-      } else {
-        return (r[e] = {
-          id: path,
-          label: e,
-          nodes: {},
-        });
-        // return r[e] = {}
-      }
-    }, nes);
-  });
-  return nes;
-});
 
 const startAirlock = (deskname: string) => {
   store.dispatch(ActionTypes.AIRLOCK_OPEN, deskname);
