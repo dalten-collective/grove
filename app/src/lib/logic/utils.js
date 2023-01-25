@@ -1,5 +1,6 @@
 export function createStorageKey(name) {
-  return `~${window.ship}/${window.desk || 'trove'}/${name}`;
+  const desk = window?.desk?.length ? window.desk : 'trove';
+  return `~${window.ship}/${desk}/${name}`;
 }
 // for purging storage with version updates
 export function clearStorageMigration() {
