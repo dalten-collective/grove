@@ -1,7 +1,37 @@
 <template>
-  <div class="flex items-center">
+  <div class="flex items-center bg-stone-100">
+
+    <div class="px-2 py-2 my-2 ml-2 bg-white border border-stone-300 rounded-md"> <!-- path tray -->
+      <div class="flex flex-row" v-if="selectedSpace">
+        <div>
+          <span
+            @click="goToRoot()"
+            class="p-2 mr-2 rounded-lg cursor-pointer bg-stone-100 text-stone-700"
+          >
+          {{ selectedSpace.split('/')[1] }}
+          </span>
+        </div>
+
+        <div v-if="selectedTrail !== '/'" v-for="(t, i) in selectedTrail.split('/')" :key="i">
+          <div v-if="t === ''">
+          </div>
+          <div v-else>
+            <span class="mx-1 text-stone-400">/</span>
+            <span
+            @click="changeTrail(selectedTrail, i)"
+            class="p-2 mr-2 rounded-lg cursor-pointer bg-stone-100 text-stone-700">
+              {{ t === '' ? '<root>' : t }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="grid grid-cols-3 gap-4">
     <div>
-      <select class="p-3 rounded-md" @change="changeSpace($event, test)">
+      <select class="p-3 bg-white rounded-md" @change="changeSpace($event, test)">
         <option v-for="spat in Object.keys(troves)" :value="spat" :key="spat">
           {{
             `${spat.split('/')[0].substring(0, 7)}.../${spat.split('/')[1]}`
@@ -10,22 +40,7 @@
       </select>
     </div>
 
-    <div class="px-2 py-2 ml-2 border rounded-md">
-      <div class="flex flex-row" v-if="selectedSpace">
-        <div v-for="(t, i) in selectedTrail.split('/')" :key="i">
-          <span class="mx-1 text-stone-500">/</span>
-          <span
-          @click="changeTrail(selectedTrail, i)"
-          class="p-2 mr-2 cursor-pointer bg-stone-200 rounded-md text-stone-700">
-            {{ t === '' ? '<root>' : t }}
-          </span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="grid grid-cols-3 gap-4">
-    <div class="pr-4 border-r col-span-1">
+    <div class="pr-4 bg-white border-r col-span-1 rounded-md">
 
       <div class="flex flex-row">
         <button
@@ -318,6 +333,10 @@ const openFolder = (trail) => {
 const changeSpace = (evt) => {
   const spat = evt.target.value
   store.dispatch(ActionTypes.CURRENT_SPACE_SET, spat)
+}
+
+const goToRoot = () => {
+  store.dispatch(ActionTypes.CURRENT_TRAIL_SET, "/")
 }
 
 const changeTrail = (wholeTrail, index) => {
