@@ -32,6 +32,16 @@ export interface Actions {
     payload: string
   ): void;
 
+  [ActionTypes.CURRENT_SPACE_SET](
+    { commit }: AugmentedActionContext,
+    payload: T.Spat
+  ): void;
+
+  [ActionTypes.CURRENT_TRAIL_SET](
+    { commit }: AugmentedActionContext,
+    payload: string
+  ): void;
+
   [ActionTypes.EXAMPLE](
     { commit }: AugmentedActionContext,
     payload: string
@@ -105,6 +115,20 @@ export const actions: ActionTree<State, State> & Actions = {
       console.log('in action ', r)
       commit(MutationTypes.TROVE_STATE_SET, r.fact)
     })
+  },
+
+  [ActionTypes.CURRENT_SPACE_SET](
+    { commit, getters },
+    payload: T.Spat
+  ) {
+    commit(MutationTypes.CURRENT_SPACE_SET, payload)
+  },
+
+  [ActionTypes.CURRENT_TRAIL_SET](
+    { commit, getters },
+    payload: string
+  ) {
+    commit(MutationTypes.CURRENT_TRAIL_SET, payload)
   },
 
   [ActionTypes.INITIAL_SET](

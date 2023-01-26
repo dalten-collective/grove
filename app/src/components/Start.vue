@@ -1,7 +1,7 @@
 <template>
   <div class="flex items-center">
     <div>
-      <select class="p-3 rounded-md" v-model="selectedSpace">
+      <select class="p-3 rounded-md" @change="changeSpace($event, test)">
         <option v-for="spat in Object.keys(troves)" :value="spat" :key="spat">
           {{
             `${spat.split('/')[0].substring(0, 7)}.../${spat.split('/')[1]}`
@@ -213,46 +213,17 @@
         This folder is empty
       </div>
       <div v-else>
-        <table class="w-full" striped>
+        <table class="w-full">
           <thead>
             <th>Name</th>
             <th>Size</th>
             <th>Date</th>
             <th>Kind</th>
+            <th></th>
           </thead>
           <tbody>
-            <tr v-for="fol in foldersInFolder">
-              <td>
-                <span
-                  class="text-blue-400 underline cursor-pointer"
-                  @click="openFolder(fol.ctrail)"
-                >{{ trimLeadingSlash(fol.display) }}
-                </span>
-              </td>
-              <td></td>
-              <td>
-              </td>
-              <td>
-                Folder
-              </td>
-            </tr>
-            <tr v-for="f in filesInFolder">
-              <td>
-                <a
-                  :href="f.url"
-                  target="_blank"
-                  class="text-blue-400 underline"
-                  >{{ f.dat.title }}</a
-                >
-              </td>
-              <td>0</td>
-              <td>
-                {{ new Date(f.dat.from * 1000).toLocaleString() }}
-              </td>
-              <td>
-                {{ f.dat.extension }}
-              </td>
-            </tr>
+            <FolderRow v-for="f in foldersInFolder" :key="f" :folder="f" />
+            <FileRow v-for="(f, id) in filesInFolder" :key="id" :file="f" :fileID="id" :currentTrail="selectedTrail" />
           </tbody>
         </table>
       </div>
@@ -265,17 +236,26 @@ import { onMounted, onUnmounted, computed, ref, watch } from 'vue';
 import { useStore } from '@/store/store';
 import { ActionTypes } from '@/store/action-types';
 import { GetterTypes } from '@/store/getter-types';
+import { sigShip } from '@/helpers'
 
 import { addNode as troveAddNode } from '@/api/troveAPI';
 import { addFolder as troveAddFolder } from '@/api/troveAPI';
+
+import FileRow from '@/components/FileRow.vue';
+import FolderRow from '@/components/FolderRow.vue';
 
 import 'vue3-treeview/dist/style.css';
 import treeview from 'vue3-treeview';
 
 const store = useStore();
 
-const selectedSpace = ref('');
-const selectedTrail = ref('/');
+const selectedSpace = computed(() => {
+  return store.state.currentSpace
+})
+const selectedTrail = computed(() => {
+  return store.state.currentTrail
+})
+
 const newFile = ref({});
 const newFolder = ref({});
 const flatNest = ref({});
@@ -285,10 +265,13 @@ const addFolderMenu = ref(false);
 const somewhereElse = ref(false);
 
 const addNodeMenu = ref(false);
+const firstLoad = ref(false);
 
 const treeConfig = computed(() => {
   const manyRoots = new Set();
+  console.log('tf ', troveFolders.value)
   troveFolders.value.forEach((fullPath) => {
+    console.log('fp ', fullPath)
     manyRoots.add(`/${fullPath.split('/')[1]}`);
   });
   const roots = Array.from(manyRoots).filter((fp) => fp !== '/');
@@ -303,11 +286,19 @@ const treeConfig = computed(() => {
 const troves = computed(() => store.state.troves);
 
 onMounted(() => {
-  // TODO:
   const deskname = 'trove';
-  // TODO:
   startAirlock(deskname);
 });
+
+watch(troves, async (newTroves) => {
+  // Set 'our' space on first load.
+  if (newTroves && !firstLoad.value) {
+    const defaultSpat = `${ sigShip(window.ship) }/our`
+    store.dispatch(ActionTypes.CURRENT_SPACE_SET, defaultSpat)
+    firstLoad.value = true
+  }
+  // TODO: when using Realm, update the above to use the currently-selected space
+})
 
 onUnmounted(() => {
   // Maybe:
@@ -317,21 +308,26 @@ onUnmounted(() => {
 const gotFocus = (node) => {
   const path = node.id;
   console.log('focused path ', path);
-  selectedTrail.value = node.id;
+  store.dispatch(ActionTypes.CURRENT_TRAIL_SET, node.id)
 };
 
 const openFolder = (trail) => {
-  selectedTrail.value = trail
+  store.dispatch(ActionTypes.CURRENT_TRAIL_SET, trail)
+}
+
+const changeSpace = (evt) => {
+  const spat = evt.target.value
+  store.dispatch(ActionTypes.CURRENT_SPACE_SET, spat)
 }
 
 const changeTrail = (wholeTrail, index) => {
   console.log('wholeTrail ', wholeTrail)
   console.log('i ', index)
   if (index === 0) {
-    selectedTrail.value = "/"
+    store.dispatch(ActionTypes.CURRENT_TRAIL_SET, "/")
   } else {
     const newTrail = wholeTrail.split('/').slice(0, index+1).join('/')
-    selectedTrail.value = newTrail
+    store.dispatch(ActionTypes.CURRENT_TRAIL_SET, newTrail)
   }
   Object.keys(flatNest.value).forEach((key) => {
     flatNest.value[key].state.opened = false
@@ -364,7 +360,7 @@ const addFolder = () => {
 };
 
 const selectSpace = (spat) => {
-  selectedSpace.value = spat;
+  store.dispatch(ActionTypes.CURRENT_SPACE_SET, spat)
 };
 
 const buildFlatnest = () => {
@@ -416,10 +412,12 @@ watch(selectedSpace, (newSpat) => {
   flatNest.value = {}; // TODO:
   flatNest.value = buildFlatnest();
 });
+
 watch(selectedTrail, (newTrail) => {
   newFolder.value.trail = newTrail;
   newFile.value.trail = newTrail;
 });
+
 watch(troves, (newTroves) => {
   flatNest.value = {}; // TODO:
   flatNest.value = buildFlatnest();
@@ -429,7 +427,6 @@ const theSelectedSpace = computed(() => {
   if (!selectedSpace.value) {
     return {};
   }
-  console.log('sel ', selectedSpace.value);
   return troves.value[selectedSpace.value];
 });
 
@@ -458,6 +455,26 @@ const directChildrenOfTrail = (trail) => {
   if (!selectedSpace.value) {
     return []
   }
+  if (!flatNest.value) {
+    return []
+  }
+
+  if (trail === '/') {
+    const children = Array.from(
+      new Set(
+        Object.keys(flatNest.value).map(k => k.split('/')[1])
+      )
+    )
+    console.log('chil ', children)
+    return children.map((c) => {
+      return {
+        display: c,
+        trail: `/${c}`,
+        ctrail: `/${c}`,
+      }
+    })
+  }
+
   if (!flatNest.value[trail]) {
     return [{
       display: 'something went wrong with the tree',

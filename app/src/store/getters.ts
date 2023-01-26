@@ -8,6 +8,8 @@ import * as L from '@/types/loading-types'
 export type Getters = {
   [GetterTypes.EXAMPLE_WITH_ARG](state: State): (arg: string) => string | null
 
+  [GetterTypes.TREE_CONFIG](state: State): {}
+
   [GetterTypes.ELEMENT_INITIAL](state: State): (uie: L.UIElement) => boolean
   [GetterTypes.ELEMENT_LOADING](state: State): (uie: L.UIElement) => boolean
   [GetterTypes.ELEMENT_SUCCESS](state: State): (uie: L.UIElement) => boolean
@@ -21,6 +23,26 @@ export const getters: GetterTree<State, State> & Getters = {
   [GetterTypes.EXAMPLE_WITH_ARG]: (state) => (arg: string) => {
     // look something up in state
     return 'found it'
+  },
+
+  [GetterTypes.TREE_CONFIG]: (state) => {
+    // TODO: Fix
+    if (state.troves.length === 0) {
+      return {}
+    }
+    const theSelectedSpace = state.troves[state.currentSpace];
+    const troveFolders = Object.keys(theSelectedSpace.trove);
+
+    const manyRoots = new Set();
+    troveFolders.forEach((fullPath) => {
+      manyRoots.add(`/${fullPath.split('/')[1]}`);
+    });
+    const roots = Array.from(manyRoots).filter((fp) => fp !== '/');
+    return {
+      disabled: false,
+      roots,
+      padding: 25,
+    };
   },
 
   [GetterTypes.ELEMENT_INITIAL]: (state) => (uie: L.UIElement): boolean => {

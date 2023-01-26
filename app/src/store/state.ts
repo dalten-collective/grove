@@ -12,6 +12,10 @@ export const state = {
   exampleThings: [] as Array<T.Thing>,
   loadingStates: uiElementLoadingState as L.UILoaderState,
   troves: [],
+  currentSpace: '' as T.Spat,
+  currentTrail: '/',
+  currentTree: {},
+  currentTreeConfig: {},
 }
 
 export type State = typeof state
