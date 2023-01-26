@@ -910,7 +910,7 @@
             trove-fact+!>([p.f %rem-folder from.q.f])
         ==
       =+  tuv=(~(lop of `trove`tov) from.q.f)
-      =+  pre=/[(head from.q.f)]
+      =+  pre=/[(rear from.q.f)]
       |-
       ?~  held
         ^+  to
@@ -918,7 +918,6 @@
       =+  nex=`path`:(welp to.q.f pre p.i.held)
       =.  tuv
         (~(put of `trove`tuv) [nex q.i.held])
-      ~&  >>  [%tuv tuv]
       =?    rag
           !?=(~ (~(get by rag) (welp from.q.f p.i.held)))
         =+  hav=(~(got by rag) (welp from.q.f p.i.held))
@@ -928,7 +927,6 @@
           (~(del by rag) (welp from.q.f p.i.held))
         %.  [(welp to.q.f p.i.held) hav]
         ~(put by `regs`(~(del by rag) (welp from.q.f p.i.held)))
-      ~&  >>  [%nex nex]
       =/  read=[? ? ?]
         =+  red=~(has in read.folder:(to-perm nex))
         [(red %member) (red %admin) (red %moderator)]
