@@ -238,6 +238,8 @@
       :~  type+s/'FACT'
           face+s/'MOVE_NODE'
       ::
+        :-  %fact
+        %-  pairs
         :~  space+s/(spat p.f)
         ::
             :-  %mov
