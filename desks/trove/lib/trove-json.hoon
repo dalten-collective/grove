@@ -233,7 +233,22 @@
         ==
       ==
     ::
-      %move-node  !!
+        %move-node
+      %-  pairs
+      :~  type+s/'FACT'
+          face+s/'MOVE_NODE'
+      ::
+        :~  space+s/(spat p.f)
+        ::
+            :-  %mov
+            %+  frond  %node
+            %-  pairs
+            :~  id+s/(scot %uv id.q.f)
+                from+s/(trail from.q.f)
+                to+s/(trail to.q.f)
+            ==
+        ==
+      ==
     ::
         %edit-node
       %-  pairs
