@@ -345,7 +345,7 @@ export const useStore = createStore(
   }),
   // {},
   {
-    name: createStorageKey('trove-local'),
+    name: createStorageKey('local'),
     version: 0.2,
     migrate: clearStorageMigration,
     partialize: (state) => ({
