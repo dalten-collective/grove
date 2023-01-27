@@ -1,3 +1,43 @@
+//
+//   import { PutObjectCommand } from '@aws-sdk/client-s3';
+//   import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
+//
+//   const command = new PutObjectCommand({
+//     Bucket: s3.configuration.currentBucket,
+//     Key: key,
+//     Body: file,
+//     ContentType: file.type,
+//     ContentLength: file.size,
+//     ACL: 'public-read',
+//   });
+//   const url = await getSignedUrl(client, command);
+//   client
+//     .send(command)
+//     .then(() => {
+//       setFileStatus([key, 'success']);
+//       setFileURL([key, url.split('?')[0]]);
+//     })
+//     .catch((error) => {
+//       setFileStatus([key, 'error']);
+//       setErrorMessage([
+//         key,
+//         `S3 upload error: ${error.message}, check your S3 configuration.`,
+//       ]);
+//       console.log({ error });
+//     });
+// },
+
+      // const input = document.createElement('input');
+      // input.type = 'file';
+      // input.multiple = true;
+      // input.id = fileId;
+      // input.accept = 'image/*,video/*,audio/*';
+      // input.addEventListener('change', (e) => {
+      //   onFiles(e);
+      // });
+      // input.click();
+
+
 // import { useCallback, useEffect, useState } from 'react';
 // import keyBy from 'lodash/keyBy';
 // import map from 'lodash/map';

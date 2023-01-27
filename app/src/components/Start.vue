@@ -262,7 +262,7 @@
 
             <button
               data-tooltip-target="s3-tip" data-tooltip-placement="bottom"
-              @click=""
+              @click="draftingUpload = !draftingUpload"
               :disabled="uploadDisabled"
               class="p-1 mr-1 hover:bg-sky-100 rounded-md opacity-70"
               :class="uploadDisabled ? 'hover:bg-transparent' : ''"
@@ -271,7 +271,7 @@
   <path stroke-linecap="round" stroke-linejoin="round" d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z" />
 </svg>
             </button>
-            <div v-if="!s3Ready" id="s3-tip" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg opacity-0 shadow-sm tooltip dark:bg-gray-700">
+            <div v-show="!s3Ready" id="s3-tip" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg opacity-0 shadow-sm tooltip dark:bg-gray-700">
       S3 not configured
     <div class="tooltip-arrow" data-popper-arrow></div>
 </div>
@@ -340,6 +340,8 @@
             class="col-span-9"
           >
             <AddFolderRow class="grid-span-5" v-if="draftingFolder" @cancel-new-folder="draftingFolder = false" />
+            <AddS3FileRow class="grid-span-5" v-if="draftingUpload" @cancel-upload="draftingUpload = false" />
+
             <div class="w-full mx-auto mt-40 text-center h-100">
               <div class="text-lg text-stone-400">
                 This folder is empty
@@ -349,6 +351,7 @@
 
           <div v-else class="grid grid-cols-9 gap-4">
             <AddFolderRow v-if="draftingFolder" @cancel-new-folder="draftingFolder = false" />
+            <AddS3FileRow v-if="draftingUpload" @cancel-upload="draftingUpload = false" />
             <FolderRow v-for="f in foldersInFolder" :key="f" :folder="f" />
             <FileRow v-for="(f, id) in filesInFolder" :key="id" :file="f" :fileID="id" :currentTrail="selectedTrail" />
           </div>
@@ -374,7 +377,7 @@ import { initTooltips } from 'flowbite';
 import FileRow from '@/components/FileRow.vue';
 import FolderRow from '@/components/FolderRow.vue';
 import AddFolderRow from '@/components/AddFolderRow.vue';
-
+import AddS3FileRow from '@/components/AddS3FileRow.vue';
 
 import 'vue3-treeview/dist/style.css';
 import treeview from 'vue3-treeview';
@@ -395,6 +398,7 @@ const menuShown = ref(false);
 const changingSpace = ref(false);
 
 const draftingFolder = ref(false);
+const draftingUpload = ref(false);
 const s3Loading = ref(false);
 
 const addFolderMenu = ref(false);
