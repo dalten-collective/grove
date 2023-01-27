@@ -82,7 +82,11 @@ export async function uploadFile(file, troveConfig, s3Config, store) {
 
   const signedUrl = await getSignedUrl(s3Client, command);
 
-  return fetch(signedUrl, { method: 'PUT', body: file.file })
+  // must set acl on fetch-style request (vs s3Client 'send))
+  const headers = new Headers({
+    'x-amz-acl': 'public-read'
+  })
+  return fetch(signedUrl, { method: 'PUT', body: file.file, headers })
     .then((r) => {
       const response = true
       // update file status for preview:
