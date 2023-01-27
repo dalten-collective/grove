@@ -1,15 +1,23 @@
 <template>
   <div class="col-span-3">
-    <div class="flex cursor-pointer"
-      @click="openFolder(folder.ctrail)"
-    >
-        <span class="mr-1">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 text-stone-500">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12.75V12A2.25 2.25 0 014.5 9.75h15A2.25 2.25 0 0121.75 12v.75m-8.69-6.44l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z" />
-      </svg>
+    <div class="flex cursor-pointer" @click="openFolder(folder.ctrail)">
+      <span class="mr-1">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="w-6 h-6 text-stone-500"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M2.25 12.75V12A2.25 2.25 0 014.5 9.75h15A2.25 2.25 0 0121.75 12v.75m-8.69-6.44l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z"
+          />
+        </svg>
       </span>
-      <span
-        class="text-blue-400 underline"
+      <span class="text-blue-400 underline"
         >{{ trimLeadingSlash(folder.display) }}
       </span>
     </div>
@@ -18,30 +26,123 @@
   <div class="col-span-2 text-stone-700"></div>
   <div class="col-span-2 text-stone-700">Folder</div>
   <div class="col-span-1 text-stone-700">
-    <span @click="menuOpen = !menuOpen" class="cursor-pointer">...</span>
+    <div>
+      <button
+        :data-popover-target="`folderContextMenu-${folderHash}`"
+        data-popover-placement="left"
+        class="cursor-pointer"
+      >
+        . . .
+      </button>
+    </div>
+    <div
+      data-popover
+      :id="`folderContextMenu-${folderHash}`"
+      role="tooltip"
+      class="absolute z-10 invisible inline-block px-2 py-4 bg-white border border-gray-200 rounded-lg opacity-0 text-stone-500 transition-opacity duration-300 shadow-sm dark:text-gray-400 dark:border-gray-600 dark:bg-gray-800"
+    >
+      <div class="px-2 py-2">
+        <ul>
+          <li class="mb-2">
+            <button
+              @click="moveFolder"
+              :data-modal-target="`moveModal-${folderHash}`"
+              :data-modal-toggle="`moveModal-${folderHash}`"
+              class=""
+              type="button"
+            >
+              Move
+            </button>
+          </li>
+
+          <li>
+            <button
+              @click="deleteFolder()"
+              type="button"
+              class="text-red-500 cursor-pointer"
+            >
+              Delete
+            </button>
+          </li>
+        </ul>
+      </div>
+      <div data-popper-arrow></div>
+    </div>
   </div>
 
-  <div v-if="menuOpen" style="position: absolute">
-    <div
-      style="position: relative"
-      class="p-4 bg-white border shadow-md rounded-md"
-    >
-      <ul>
-        <li>
-          <span
-            @click="deleteFolder()"
-            class="text-red-500 underline cursor-pointer"
-            >delete</span
+  <div
+    :id="`moveModal-${folderHash}`"
+    tabindex="-1"
+    aria-hidden="true"
+    class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-modal md:h-full text-stone-700"
+  >
+    <div class="relative w-full h-full max-w-2xl md:h-auto">
+      <!-- Modal content -->
+      <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+        <!-- Modal header -->
+        <div
+          class="flex items-start justify-between p-4 rounded-t dark:border-gray-600"
+        >
+          <h3 class="text-xl font-semibold text-stone-700 dark:text-white">
+            Move folder
+          </h3>
+          <button
+            type="button"
+            class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
+            :data-modal-hide="`moveModal-${folderHash}`"
           >
-        </li>
-        <li>
-          <span
-            @click="moveFolder()"
-            class="text-blue-500 underline cursor-pointer"
-            >move</span
+            <svg
+              aria-hidden="true"
+              class="w-5 h-5"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                clip-rule="evenodd"
+              ></path>
+            </svg>
+            <span class="sr-only">Close modal</span>
+          </button>
+        </div>
+        <!-- Modal body -->
+        <div class="p-6 space-y-6">
+          <div v-if="!moveTo">Choose a new path:</div>
+          <div v-else>
+            moving {{ folder.display }} to {{ moveTo }}
+          </div>
+          <treeview
+            class="text-stone-700"
+            @nodeFocus="gotFocus($event)"
+            :nodes="flatNest"
+            :config="treeConfig"
+          />
+        </div>
+        <!-- Modal footer -->
+        <div
+          class="flex items-center p-6 border-gray-200 rounded-b space-x-2 dark:border-gray-600"
+        >
+          <button
+            :disabled="!moveTo"
+            @click="doMoveFolder"
+            :data-modal-hide="`moveModal-${folderHash}`"
+            type="button"
+            class="border border-blue-400 px-2 py-1.5 rounded-md"
           >
-        </li>
-      </ul>
+            Move
+          </button>
+          <button
+            @click="resetMove"
+            :data-modal-hide="`moveModal-${folderHash}`"
+            type="button"
+            class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-md border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600"
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -77,6 +178,36 @@ import { deleteFolder as troveDeleteFolder } from '@/api/troveAPI';
 import { moveFolder as troveMoveFolder } from '@/api/troveAPI';
 import { addFolder as troveAddFolder } from '@/api/troveAPI';
 
+import {
+  initAccordions,
+  initCarousels,
+  initCollapses,
+  initDials,
+  initDismisses,
+  initDrawers,
+  initDropdowns,
+  initModals,
+  initPopovers,
+  initTabs,
+  initTooltips,
+} from 'flowbite';
+
+onMounted(() => {
+  initAccordions();
+  initCarousels();
+  initCollapses();
+  initDials();
+  initDismisses();
+  initDrawers();
+  initDropdowns();
+  initModals();
+  initPopovers();
+  initTabs();
+  initTooltips();
+});
+
+import md5 from 'md5';
+
 interface Props {
   folder: object;
 }
@@ -94,13 +225,16 @@ const menuOpen = ref(false);
 const moving = ref(false);
 const moveTo = ref('');
 
+const folderHash = computed(() => {
+  return md5(props.folder.ctrail);
+});
+
 const deleteFolder = () => {
   troveDeleteFolder(currentSpace.value, props.folder.ctrail);
 };
 
 const moveFolder = () => {
   buildNest();
-  moving.value = true;
 };
 
 const doMoveFolder = () => {

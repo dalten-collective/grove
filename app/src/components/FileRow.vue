@@ -72,7 +72,7 @@
 
           <li>
             <button @click="deleteNode()" type="button"
-              class="text-red-500 underline cursor-pointer"
+              class="text-red-500 cursor-pointer"
             >
               Delete
             </button>
