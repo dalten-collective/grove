@@ -1,7 +1,7 @@
 <template>
-  <div class="flex items-center">
+  <div class="grid grid-cols-3 gap-4">
 
-    <div class="px-2 py-2 my-2 bg-white border border-stone-300 rounded-md"> <!-- path tray -->
+    <div class="px-2 py-2 my-2 bg-white border col-start-2 col-span-2 border-stone-300 rounded-md"> <!-- path tray -->
       <div class="flex flex-row" v-if="selectedSpace">
         <div>
           <span
@@ -31,10 +31,10 @@
 
   <div class="grid grid-cols-3 gap-4">
     <div class="pr-4 bg-white border border-stone-300 col-span-1 rounded-md h-[90vh]">
-      <div class="pl-2 mt-2 mb-20">
+      <div class="pl-2 mt-2 mb-24">
 
-        <div class="px-2 mb-4 bg-white" :class="changingSpace ? 'rounded-lg shadow-md' : ''" style="position: absolute" >
-          <div class="flex flex-row items-center cursor-pointer" :class="changingSpace ? 'opacity-30' : ''" @click="changingSpace = true">
+        <div class="px-1 mb-4 bg-white" :class="changingSpace ? 'rounded-lg shadow-md' : ''" style="position: absolute" >
+          <div class="flex flex-row items-center p-1 cursor-pointer rounded-md hover:outline hover:outline-sky-100" :class="changingSpace ? 'opacity-30' : ''" @click="changingSpace = true">
             <div class="w-12 h-12 border rounded-md">
               <div class="my-auto text-center">
                 <span class="text-xl">~</span>
@@ -54,7 +54,7 @@
             <div v-if="changingSpace" class="mb-4 bg-white" style="position: relative; z-index: 50;" >
               <div v-for="spat in Object.keys(troves)" :key="spat">
 
-              <div class="flex flex-row items-center px-2 mb-2 rounded-md hover:outline hover:outline-blue-100 hover:shadow-md" :class="spat === selectedSpace ? 'outline outline-blue-400' : ''">
+              <div class="flex flex-row items-center px-2 mb-2 rounded-md hover:outline hover:outline-sky-100" :class="spat === selectedSpace ? 'outline outline-sky-500' : ''">
 
                   <div class="w-12 h-12 border rounded-md">
                     <div class="my-auto text-center">
@@ -78,12 +78,15 @@
 
       </div>
 
-      <div class="flex flex-row">
+      <div class="flex flex-row px-4">
         <button
           @click="menuShown = !menuShown"
-          class="p-2 px-4 border shadow-md rounded-md"
+          class="p-1 bg-sky-100 rounded-md hover:shadow-md opacity-70"
         >
-          +
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6 text-sky-600">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+</svg>
+
         </button>
       </div>
 
@@ -242,8 +245,9 @@
         </div>
       </div>
 
-      <div>
+      <div class="px-3 mt-6">
         <treeview
+          class="cursor-pointer"
           @nodeFocus="gotFocus($event)"
           :nodes="flatNest"
           :config="treeConfig"
@@ -327,11 +331,32 @@ const treeConfig = computed(() => {
     manyRoots.add(`/${fullPath.split('/')[1]}`);
   });
   const roots = Array.from(manyRoots).filter((fp) => fp !== '/');
-  console.log('roots ', roots);
   return {
     disabled: false,
     roots,
     padding: 25,
+    closedIcon: {
+      type: "shape",
+      fill: "none",
+      viewBox: "0 0 24 24",
+      strokeWidth: 2,
+      stroke: "rgb(120 113 108)",
+      className: "w-6 h-6",
+      strokeLinecap: "round",
+      strokeLinejoin: "round",
+      draw: "M8.25 4.5l7.5 7.5-7.5 7.5",
+    },
+    openedIcon: {
+      type: "shape",
+      fill: "none",
+      viewBox: "0 0 24 24",
+      strokeWidth: 2,
+      stroke: "rgb(120 113 108)",
+      className: "w-6 h-6",
+      strokeLinecap: "round",
+      strokeLinejoin: "round",
+      draw: "M19.5 8.25l-7.5 7.5-7.5-7.5",
+    }
   };
 });
 
