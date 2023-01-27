@@ -12,6 +12,7 @@
     "@urbit/http-api": "^2.1.0",
     "click-outside-vue3": "^4.0.1",
     "core-js": "^3.8.3",
+    "flowbite": "^1.6.3",
     "lodash": "^4.17.21",
     "vue": "^3.2.25",
     "vue-router": "^4.1.6",

@@ -1,7 +1,7 @@
 <template>
   <div class="grid grid-cols-3 gap-4">
 
-    <div class="px-2 py-2 my-2 bg-white border col-start-2 col-span-2 border-stone-300 rounded-md"> <!-- path tray -->
+    <div class="px-4 py-2 my-2 bg-white border col-start-2 col-span-2 border-stone-300 rounded-md"> <!-- path tray -->
       <div class="flex flex-row" v-if="selectedSpace">
         <div>
           <span
@@ -255,7 +255,7 @@
       </div>
     </div>
 
-    <div class="pl-4 bg-white border col-span-2 rounded-md border-stone-300">
+    <div class="px-4 bg-white border col-span-2 rounded-md border-stone-300">
       <div
         v-if="
           (
@@ -267,20 +267,79 @@
       >
         This folder is empty
       </div>
+
       <div v-else>
-        <table class="w-full">
-          <thead>
-            <th>Name</th>
-            <th>Size</th>
-            <th>Date</th>
-            <th>Kind</th>
-            <th></th>
-          </thead>
-          <tbody>
+        <div class="flex flex-row justify-between px-2 pt-2 my-2">
+          <div>
+
+            <button
+              @click=""
+              class="p-1 mr-1 hover:bg-sky-100 rounded-md opacity-70"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 text-sky-600">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z" />
+</svg>
+            </button>
+
+            <button
+              @click=""
+              class="p-1 mr-1 hover:bg-sky-100 rounded-md opacity-70"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 text-sky-600">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" />
+</svg>
+            </button>
+
+            <button
+              @click=""
+              class="p-1 hover:bg-sky-100 rounded-md opacity-70"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 text-sky-600">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M12 10.5v6m3-3H9m4.06-7.19l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z" />
+</svg>
+            </button>
+
+          </div>
+
+          <div>
+
+            <button
+              @click=""
+              class="p-1 mr-1 hover:bg-stone-100 rounded-md opacity-70"
+            >
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zM3.75 12h.007v.008H3.75V12zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm-.375 5.25h.007v.008H3.75v-.008zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+</svg>
+            </button>
+
+            <button
+              @click=""
+              class="p-1 hover:bg-stone-100 rounded-md opacity-70"
+            >
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" />
+</svg>
+
+            </button>
+
+          </div>
+        </div>
+
+        <div>
+          <div class="pb-1 mb-2 border-b text-stone-700 grid grid-cols-9 gap-2">
+            <div class="col-span-3">Name</div>
+            <div class="col-span-1">Size</div>
+            <div class="col-span-2">Date Uploaded</div>
+            <div class="col-span-2">Kind</div>
+            <div class="col-span-1"></div>
+          </div>
+
+          <div class="grid grid-cols-9 gap-2">
             <FolderRow v-for="f in foldersInFolder" :key="f" :folder="f" />
             <FileRow v-for="(f, id) in filesInFolder" :key="id" :file="f" :fileID="id" :currentTrail="selectedTrail" />
-          </tbody>
-        </table>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
@@ -492,11 +551,13 @@ const buildFlatnest = () => {
 };
 
 watch(selectedSpace, (newSpat) => {
+  store.dispatch(ActionTypes.CURRENT_TRAIL_SET, '/')
   newFolder.value.trail = '/';
   newFile.value.trail = '/';
   flatNest.value = {}; // TODO:
   flatNest.value = buildFlatnest();
 });
+
 
 watch(selectedTrail, (newTrail) => {
   newFolder.value.trail = newTrail;
@@ -610,8 +671,10 @@ const closeAirlock = () => {
   .v-leave-active {
     transition: opacity 0.25s ease;
   }
+
   .v-enter-from,
   .v-leave-to {
     opacity: 0;
   }
+
 </style>
