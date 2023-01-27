@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <router-view />
+  <div class="h-full bg-stone-100">
+    <router-view class="container mx-auto" />
   </div>
 </template>
 

@@ -11,6 +11,22 @@ export const sigShip = (ship: string | T.Ship): T.Ship => {
   return `~${ship}`;
 }
 
+export const trimShip = (ship: string) => {
+  const len = ship.length
+  if (len > 11) {
+    return `${ ship.substring(0, 14) }...${ ship.substring(len - 13, len) }`
+  }
+  return ship
+}
+
+export const shipInSpat = (spat: T.Spat): T.Ship => {
+  return spat.split('/')[0]
+}
+
+export const spaceInSpat = (spat: T.Spat): T.Space => {
+  return spat.split('/')[1]
+}
+
 export const nowToUd = (): string => {
   return decToUd(unixToDa(Date.now()).toString())
 }

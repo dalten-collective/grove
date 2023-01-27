@@ -4,8 +4,8 @@ export interface AgentSubscription {
 }
 
 export type Ship = `~${ string }`
-
-export type Spat = `${ Ship }/${ string }`
+export type Space = string
+export type Spat = `${ Ship }/${ Space }`
 
 export interface Thing {
   key: 'value'

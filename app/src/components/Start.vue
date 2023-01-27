@@ -1,7 +1,7 @@
 <template>
-  <div class="flex items-center bg-stone-100">
+  <div class="flex items-center">
 
-    <div class="px-2 py-2 my-2 ml-2 bg-white border border-stone-300 rounded-md"> <!-- path tray -->
+    <div class="px-2 py-2 my-2 bg-white border border-stone-300 rounded-md"> <!-- path tray -->
       <div class="flex flex-row" v-if="selectedSpace">
         <div>
           <span
@@ -30,17 +30,53 @@
   </div>
 
   <div class="grid grid-cols-3 gap-4">
-    <div>
-      <select class="p-3 bg-white rounded-md" @change="changeSpace($event, test)">
-        <option v-for="spat in Object.keys(troves)" :value="spat" :key="spat">
-          {{
-            `${spat.split('/')[0].substring(0, 7)}.../${spat.split('/')[1]}`
-          }}
-        </option>
-      </select>
-    </div>
+    <div class="pr-4 bg-white border border-stone-300 col-span-1 rounded-md h-[90vh]">
+      <div class="pl-2 mt-2 mb-20">
 
-    <div class="pr-4 bg-white border-r col-span-1 rounded-md">
+        <div class="px-2 mb-4 bg-white" :class="changingSpace ? 'rounded-lg shadow-md' : ''" style="position: absolute" >
+          <div class="flex flex-row items-center cursor-pointer" :class="changingSpace ? 'opacity-30' : ''" @click="changingSpace = true">
+            <div class="w-12 h-12 border rounded-md">
+              <div class="my-auto text-center">
+                <span class="text-xl">~</span>
+              </div>
+            </div>
+            <div class="flex flex-col py-1 ml-2">
+              <div class="text-stone-500">
+              {{ trimShip(shipInSpat(selectedSpace)) }}
+              </div>
+              <div class="text-lg">
+              {{ spaceInSpat(selectedSpace) }}
+              </div>
+            </div>
+          </div>
+
+          <Transition>
+            <div v-if="changingSpace" class="mb-4 bg-white" style="position: relative; z-index: 50;" >
+              <div v-for="spat in Object.keys(troves)" :key="spat">
+
+              <div class="flex flex-row items-center px-2 mb-2 rounded-md hover:outline hover:outline-blue-100 hover:shadow-md" :class="spat === selectedSpace ? 'outline outline-blue-400' : ''">
+
+                  <div class="w-12 h-12 border rounded-md">
+                    <div class="my-auto text-center">
+                      <span class="text-xl">~</span>
+                    </div>
+                  </div>
+                  <div class="flex flex-col py-1 mb-2 ml-2 cursor-pointer rounded-md" @click="changeSpace(spat)">
+                    <div class="text-stone-500">
+                    {{ trimShip(shipInSpat(spat)) }}
+                    </div>
+                    <div class="text-lg">
+                    {{ spaceInSpat(spat) }}
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </Transition>
+        </div>
+
+      </div>
 
       <div class="flex flex-row">
         <button
@@ -215,7 +251,7 @@
       </div>
     </div>
 
-    <div class="pl-4 col-span-2">
+    <div class="pl-4 bg-white border col-span-2 rounded-md border-stone-300">
       <div
         v-if="
           (
@@ -251,7 +287,7 @@ import { onMounted, onUnmounted, computed, ref, watch } from 'vue';
 import { useStore } from '@/store/store';
 import { ActionTypes } from '@/store/action-types';
 import { GetterTypes } from '@/store/getter-types';
-import { sigShip } from '@/helpers'
+import { sigShip, trimShip, shipInSpat, spaceInSpat } from '@/helpers'
 
 import { addNode as troveAddNode } from '@/api/troveAPI';
 import { addFolder as troveAddFolder } from '@/api/troveAPI';
@@ -275,6 +311,7 @@ const newFile = ref({});
 const newFolder = ref({});
 const flatNest = ref({});
 const menuShown = ref(false);
+const changingSpace = ref(false);
 
 const addFolderMenu = ref(false);
 const somewhereElse = ref(false);
@@ -330,9 +367,13 @@ const openFolder = (trail) => {
   store.dispatch(ActionTypes.CURRENT_TRAIL_SET, trail)
 }
 
-const changeSpace = (evt) => {
-  const spat = evt.target.value
+const changeSpace = (spat) => {
   store.dispatch(ActionTypes.CURRENT_SPACE_SET, spat)
+  changingSpace.value = false
+  // When using select:
+  // const spat = evt.target.value
+  // store.dispatch(ActionTypes.CURRENT_SPACE_SET, spat)
+  // changingSpace.value = false
 }
 
 const goToRoot = () => {
@@ -538,3 +579,14 @@ const closeAirlock = () => {
   // Maybe you want this.
 };
 </script>
+
+<style scoped>
+  .v-enter-active,
+  .v-leave-active {
+    transition: opacity 0.25s ease;
+  }
+  .v-enter-from,
+  .v-leave-to {
+    opacity: 0;
+  }
+</style>

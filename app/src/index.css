@@ -2,6 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+  height: 100%;
+}
+
+body {
+  height: 100%;
+}
+
+#app {
+  height: 100%;
+}
+
 .your-class-here {
   @apply text-red-400;
 }
