@@ -64,6 +64,17 @@
     >
       <div class="px-2 py-2">
         <ul>
+          <li class="w-20 mb-2">
+            <div v-if="copied" class="w-20">
+              Copied!
+            </div>
+            <div v-else class="w-20">
+              <button @click="copyLink" class="" type="button">
+              Copy link
+              </button>
+            </div>
+          </li>
+
           <li class="mb-2">
             <button @click="moveNode" :data-modal-target="`moveModal-${ fileHash }`" :data-modal-toggle="`moveModal-${ fileHash }`" class="" type="button">
             Move
@@ -199,6 +210,7 @@ const currentSpace = computed(() => {
 const menuOpen = ref(false);
 const moving = ref(false);
 const moveTo = ref('');
+const copied = ref(false)
 
 const fileType = computed(() => {
   const result = filetypes[props.file.dat.extension];
@@ -216,6 +228,15 @@ const fileHash = computed(() => {
 const deleteNode = () => {
   troveDeleteNode(currentSpace.value, props.currentTrail, props.fileID);
 };
+
+const copyLink = () => {
+  const link = props.file.url
+  navigator.clipboard.writeText(link);
+  copied.value = true
+  window.setTimeout(() => {
+    copied.value = false
+  }, 500)
+}
 
 const moveNode = () => {
   buildNest();
