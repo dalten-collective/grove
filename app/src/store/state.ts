@@ -16,6 +16,7 @@ export const state = {
   currentTrail: '/',
   currentTree: {},
   currentTreeConfig: {},
+  s3Config: { currentBucket: '', buckets: [], region: '' },
 }
 
 export type State = typeof state

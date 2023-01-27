@@ -91,7 +91,7 @@
       </div>
 
       <div
-        v-if="menuShown"
+        v-if="false && menuShown"
         class="absolute p-4 bg-white shadow-md"
         style="width: 200px; height: 100px; z-index: 100"
       >
@@ -261,13 +261,21 @@
           <div>
 
             <button
+              data-tooltip-target="s3-tip" data-tooltip-placement="bottom"
               @click=""
+              :disabled="uploadDisabled"
               class="p-1 mr-1 hover:bg-sky-100 rounded-md opacity-70"
+              :class="uploadDisabled ? 'hover:bg-transparent' : ''"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 text-sky-600">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6" :class="uploadDisabled ? 'text-stone-300' : 'text-sky-600'">
   <path stroke-linecap="round" stroke-linejoin="round" d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z" />
 </svg>
             </button>
+            <div v-if="!s3Ready" id="s3-tip" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg opacity-0 shadow-sm tooltip dark:bg-gray-700">
+      S3 not configured
+    <div class="tooltip-arrow" data-popper-arrow></div>
+</div>
+
 
             <button
               @click="addFolder"
@@ -360,10 +368,13 @@ import { sigShip, trimShip, shipInSpat, spaceInSpat } from '@/helpers'
 
 import { addNode as troveAddNode } from '@/api/troveAPI';
 import { addFolder as troveAddFolder } from '@/api/troveAPI';
+import { hasS3Settings } from '@/api/settingsAPI';
+import { initTooltips } from 'flowbite';
 
 import FileRow from '@/components/FileRow.vue';
 import FolderRow from '@/components/FolderRow.vue';
 import AddFolderRow from '@/components/AddFolderRow.vue';
+
 
 import 'vue3-treeview/dist/style.css';
 import treeview from 'vue3-treeview';
@@ -384,12 +395,23 @@ const menuShown = ref(false);
 const changingSpace = ref(false);
 
 const draftingFolder = ref(false);
+const s3Loading = ref(false);
 
 const addFolderMenu = ref(false);
 const somewhereElse = ref(false);
 
 const addNodeMenu = ref(false);
 const firstLoad = ref(false);
+
+const uploadDisabled = computed(() => {
+  console.log('l ', s3Loading.value)
+  console.log('r ', !s3Ready.value)
+  return s3Loading.value || !s3Ready.value
+})
+
+const s3Ready = computed(() => {
+  return store.getters[GetterTypes.S3_READY]
+})
 
 const treeConfig = computed(() => {
   const manyRoots = new Set();
@@ -431,8 +453,10 @@ const treeConfig = computed(() => {
 const troves = computed(() => store.state.troves);
 
 onMounted(() => {
+  initTooltips();
   const deskname = 'trove';
   startAirlock(deskname);
+  checkS3()
 });
 
 watch(troves, async (newTroves) => {
@@ -455,6 +479,10 @@ onUnmounted(() => {
   // Maybe:
   // closeAirlock()
 });
+
+const checkS3 = () => {
+  store.dispatch(ActionTypes.CONNECT_S3)
+}
 
 const gotFocus = (node) => {
   const path = node.id;

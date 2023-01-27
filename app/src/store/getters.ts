@@ -9,6 +9,8 @@ export type Getters = {
   [GetterTypes.EXAMPLE_WITH_ARG](state: State): (arg: string) => string | null
 
   [GetterTypes.TREE_CONFIG](state: State): {}
+  [GetterTypes.CURRENT_S3_BUCKET](state: State): string
+  [GetterTypes.S3_READY](state: State): boolean
 
   [GetterTypes.ELEMENT_INITIAL](state: State): (uie: L.UIElement) => boolean
   [GetterTypes.ELEMENT_LOADING](state: State): (uie: L.UIElement) => boolean
@@ -23,6 +25,13 @@ export const getters: GetterTree<State, State> & Getters = {
   [GetterTypes.EXAMPLE_WITH_ARG]: (state) => (arg: string) => {
     // look something up in state
     return 'found it'
+  },
+
+  [GetterTypes.CURRENT_S3_BUCKET]: (state) => {
+    return state.s3Config.currentBucket
+  },
+  [GetterTypes.S3_READY]: (state) => {
+    return state.s3Config.currentBucket !== ''
   },
 
   [GetterTypes.TREE_CONFIG]: (state) => {

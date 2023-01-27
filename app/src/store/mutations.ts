@@ -11,6 +11,11 @@ export type Mutations<S = State> = {
     payload: string
   ): void;
 
+  [MutationTypes.S3_CONFIG_SET](
+    state: S,
+    payload: {},
+  ): void;
+
   [MutationTypes.CURRENT_SPACE_SET](
     state: S,
     payload: T.Spat
@@ -50,6 +55,13 @@ export const mutations: MutationTree<State> & Mutations = {
   ) {
     // update state
     // state.somethign = payload
+  },
+
+  [MutationTypes.S3_CONFIG_SET](
+    state,
+    payload: {}
+  ) {
+    state.s3Config = payload;
   },
 
   [MutationTypes.CURRENT_SPACE_SET](
