@@ -475,7 +475,12 @@ watch(troves, async (newTroves) => {
 
 watch(draftingFolder, (val) => {
   if (!val) {
+  }
+})
 
+watch(draftingUpload, (val) => {
+  if (!val) {
+    store.dispatch(ActionTypes.INITIAL_SET, 's3UploadButton')
   }
 })
 
