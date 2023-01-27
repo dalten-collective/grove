@@ -270,7 +270,7 @@
             </button>
 
             <button
-              @click=""
+              @click="addFolder"
               class="p-1 mr-1 hover:bg-sky-100 rounded-md opacity-70"
             >
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 text-sky-600">
@@ -279,7 +279,7 @@
             </button>
 
             <button
-              @click=""
+              @click="draftingFolder = !draftingFolder"
               class="p-1 hover:bg-sky-100 rounded-md opacity-70"
             >
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 text-sky-600">
@@ -320,6 +320,7 @@
             <div class="col-span-1"></div>
           </div>
 
+
           <div
             v-if="
               (
@@ -328,7 +329,9 @@
               Object.keys(filesInFolder).length === 0
               ) && foldersInFolder.length === 0
             "
+            class="col-span-9"
           >
+            <AddFolderRow class="grid-span-5" v-if="draftingFolder" @cancel-new-folder="draftingFolder = false" />
             <div class="w-full mx-auto mt-40 text-center h-100">
               <div class="text-lg text-stone-400">
                 This folder is empty
@@ -337,6 +340,7 @@
           </div>
 
           <div v-else class="grid grid-cols-9 gap-4">
+            <AddFolderRow v-if="draftingFolder" @cancel-new-folder="draftingFolder = false" />
             <FolderRow v-for="f in foldersInFolder" :key="f" :folder="f" />
             <FileRow v-for="(f, id) in filesInFolder" :key="id" :file="f" :fileID="id" :currentTrail="selectedTrail" />
           </div>
@@ -359,6 +363,7 @@ import { addFolder as troveAddFolder } from '@/api/troveAPI';
 
 import FileRow from '@/components/FileRow.vue';
 import FolderRow from '@/components/FolderRow.vue';
+import AddFolderRow from '@/components/AddFolderRow.vue';
 
 import 'vue3-treeview/dist/style.css';
 import treeview from 'vue3-treeview';
@@ -377,6 +382,8 @@ const newFolder = ref({});
 const flatNest = ref({});
 const menuShown = ref(false);
 const changingSpace = ref(false);
+
+const draftingFolder = ref(false);
 
 const addFolderMenu = ref(false);
 const somewhereElse = ref(false);
@@ -436,6 +443,12 @@ watch(troves, async (newTroves) => {
     firstLoad.value = true
   }
   // TODO: when using Realm, update the above to use the currently-selected space
+})
+
+watch(draftingFolder, (val) => {
+  if (!val) {
+
+  }
 })
 
 onUnmounted(() => {
