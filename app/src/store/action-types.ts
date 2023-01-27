@@ -12,4 +12,5 @@ export enum ActionTypes {
   LOADING_SET = 'LOADING_SET',
   SUCCESS_SET = 'SUCCESS_SET',
   ERROR_SET   = 'ERROR_SET',
+  DISABLED_SET   = 'DISABLED_SET',
 }

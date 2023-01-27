@@ -70,6 +70,10 @@ export interface Actions {
     { commit }: AugmentedActionContext,
     payload: L.UIElement
   ): void;
+  [ActionTypes.DISABLED_SET](
+    { commit }: AugmentedActionContext,
+    payload: L.UIElement
+  ): void;
 
   // Add more here.
 }
@@ -85,6 +89,16 @@ export const actions: ActionTree<State, State> & Actions = {
         ctx.commit(
           MutationTypes.S3_CONFIG_SET,
           subscriptionData['s3-update'].configuration
+        );
+      }
+
+      if (
+        's3-update' in subscriptionData &&
+        'credentials' in subscriptionData['s3-update']
+      ) {
+        ctx.commit(
+          MutationTypes.S3_CREDENTIALS_SET,
+          subscriptionData['s3-update'].credentials
         );
       }
     });
@@ -118,8 +132,6 @@ export const actions: ActionTree<State, State> & Actions = {
 
   [ActionTypes.EXAMPLE]({ commit, getters }, payload: string) {
     console.log('dispatching EXAMPLE action...');
-    console.log('getters ', getters); // Access to getters
-    commit(MutationTypes.EXAMPLE, 'test');
   },
 
   [ActionTypes.SCRY_STATE]({ commit, getters }, payload: string) {
@@ -164,6 +176,14 @@ export const actions: ActionTree<State, State> & Actions = {
 
   [ActionTypes.ERROR_SET]({ commit }, payload: L.UIElement) {
     const currentState: L.LoaderState = L.loaderStates.error;
+    commit(MutationTypes.LOADING_STATE_SET, {
+      uiElement: payload,
+      currentState,
+    });
+  },
+
+  [ActionTypes.DISABLED_SET]({ commit }, payload: L.UIElement) {
+    const currentState: L.LoaderState = L.loaderStates.disabled;
     commit(MutationTypes.LOADING_STATE_SET, {
       uiElement: payload,
       currentState,

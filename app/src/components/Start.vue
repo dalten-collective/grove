@@ -320,7 +320,7 @@
         </div>
 
         <div>
-          <div class="pb-1 mb-2 border-b text-stone-700 grid grid-cols-9 gap-2">
+          <div class="pb-1 mb-4 border-b text-stone-700 grid grid-cols-9 gap-2">
             <div class="col-span-3">Name</div>
             <div class="col-span-1">Size</div>
             <div class="col-span-2">Date Uploaded</div>
@@ -339,8 +339,8 @@
             "
             class="col-span-9"
           >
-            <AddFolderRow class="grid-span-5" v-if="draftingFolder" @cancel-new-folder="draftingFolder = false" />
-            <AddS3FileRow class="grid-span-5" v-if="draftingUpload" @cancel-upload="draftingUpload = false" />
+            <AddFolderRow class="col-span-5" v-if="draftingFolder" @cancel-new-folder="draftingFolder = false" />
+            <AddS3FileRow v-if="draftingUpload" @cancel-upload="draftingUpload = false" />
 
             <div class="w-full mx-auto mt-40 text-center h-100">
               <div class="text-lg text-stone-400">

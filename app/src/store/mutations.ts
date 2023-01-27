@@ -15,6 +15,10 @@ export type Mutations<S = State> = {
     state: S,
     payload: {},
   ): void;
+  [MutationTypes.S3_CREDENTIALS_SET](
+    state: S,
+    payload: {},
+  ): void;
 
   [MutationTypes.CURRENT_SPACE_SET](
     state: S,
@@ -62,6 +66,12 @@ export const mutations: MutationTree<State> & Mutations = {
     payload: {}
   ) {
     state.s3Config = payload;
+  },
+  [MutationTypes.S3_CREDENTIALS_SET](
+    state,
+    payload: {}
+  ) {
+    state.s3Credentials = payload;
   },
 
   [MutationTypes.CURRENT_SPACE_SET](

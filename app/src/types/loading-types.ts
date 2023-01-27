@@ -1,9 +1,10 @@
 export type LoaderState =
-  'initial' | 'loading' | 'success' | 'error'
+  'initial' | 'loading' | 'success' | 'error' | 'disabled'
 
 export type UIElement =
   'yourElementHere' |
-  'anotherElement'
+  'anotherElement' |
+  's3UploadButton'
 
 export interface UILoader {
   [key: string]: LoaderState
@@ -20,5 +21,6 @@ export const loaderStates: UILoader = {
   initial: 'initial',
   loading: 'loading',
   success: 'success',
-  error: 'error'
+  error: 'error',
+  disabled: 'disabled'
 }

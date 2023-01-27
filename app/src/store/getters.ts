@@ -16,6 +16,7 @@ export type Getters = {
   [GetterTypes.ELEMENT_LOADING](state: State): (uie: L.UIElement) => boolean
   [GetterTypes.ELEMENT_SUCCESS](state: State): (uie: L.UIElement) => boolean
   [GetterTypes.ELEMENT_ERROR]  (state: State): (uie: L.UIElement) => boolean
+  [GetterTypes.ELEMENT_DISABLED]  (state: State): (uie: L.UIElement) => boolean
   [GetterTypes.ELEMENT_STATUS_MAP]  (state: State, getters: Getters): (uie: L.UIElement) => L.StatusMap
 
   // Add more here.
@@ -66,12 +67,16 @@ export const getters: GetterTree<State, State> & Getters = {
   [GetterTypes.ELEMENT_ERROR]: (state) => (uie: L.UIElement): boolean => {
     return state.loadingStates[uie] === L.loaderStates.error
   },
-  [GetterTypes.ELEMENT_STATUS_MAP]: (getters) => (uie: L.UIElement): L.StatusMap => {
+  [GetterTypes.ELEMENT_DISABLED]: (state) => (uie: L.UIElement): boolean => {
+    return state.loadingStates[uie] === L.loaderStates.disabled
+  },
+  [GetterTypes.ELEMENT_STATUS_MAP]: (state, getters) => (uie: L.UIElement): L.StatusMap => {
     return {
       initial: getters.ELEMENT_INITIAL(uie),
       loading: getters.ELEMENT_LOADING(uie),
       success: getters.ELEMENT_SUCCESS(uie),
       error: getters.ELEMENT_ERROR(uie),
+      disabled: getters.ELEMENT_DISABLED(uie),
     }
   },
 

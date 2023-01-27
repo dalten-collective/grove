@@ -6,6 +6,7 @@ import { loaderStates } from "@/types/loading-types";
 const uiElementLoadingState: L.UILoaderState = {
   yourElementHere: loaderStates.initial,
   anotherElement: loaderStates.initial,
+  s3UploadButton: loaderStates.initial,
 }
 
 export const state = {
@@ -17,6 +18,7 @@ export const state = {
   currentTree: {},
   currentTreeConfig: {},
   s3Config: { currentBucket: '', buckets: [], region: '' },
+  s3Credentials: { endpoint: '', accessKeyId: '', secretAccessKey: '' },
 }
 
 export type State = typeof state
