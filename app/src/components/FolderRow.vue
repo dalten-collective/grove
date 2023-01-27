@@ -238,6 +238,13 @@ const moveFolder = () => {
 };
 
 const doMoveFolder = () => {
+  if (!moveTo.value) {
+    return
+  }
+  if (moveTo.value === props.folder.ctrail) {
+    console.log('cannot move a folder into itself')
+    return
+  }
   troveMoveFolder(currentSpace.value, props.folder.ctrail, moveTo.value);
 };
 
