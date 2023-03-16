@@ -1,23 +1,23 @@
 # JSON responses and request structures
 
 ## General Overview
-- Trove State
-  * Trove maintains, per Space (read group) you're aware of, the following:
+- grove State
+  * grove maintains, per group (read group) you're aware of, the following:
     - **Moderators** - a set of ships who are members w/ elevated permissions
-      > NOTE: "Administrators" and "Members" are defined by Spaces, and get scried in for front end display
+      > NOTE: "Administrators" and "Members" are defined by groups, and get scried in for front end display
     - **Regulations** - a series of rules for who can do what, per file (see permission object)
-    - **Trove** - A folder/file structure
+    - **grove** - A folder/file structure
 
-- Trove Pokes
-  * Pokes all take a `trove-action` mark, and are sent as a `[space poke]` pair.
-  * To identify which spaces are available, review the initial state or scry `/x/hosts/json`
+- grove Pokes
+  * Pokes all take a `grove-action` mark, and are sent as a `[group poke]` pair.
+  * To identify which groups are available, review the initial state or scry `/x/hosts/json`
 
   - Moderation - These must be members, just another permission class
-    - `add-moderators` adds moderators to the trove, these must be members
-    - `rem-moderators` removes moderators from a trove
+    - `add-moderators` adds moderators to the grove, these must be members
+    - `rem-moderators` removes moderators from a grove
 
   - Errata
-    - `repeat` copy one file to another space/folder location (or same space, different folder)
+    - `repeat` copy one file to another group/folder location (or same group, different folder)
     - `reperm` repermissions a folder and handles cascade effects
     - `rehome` 
       * REHOME is a Front End Activity.
@@ -42,15 +42,15 @@
   * returns the state, as on initial subscription
 
 - `/x/hosts/json`
-  * returns all spaces you know about that may or may not have active troves (they get bunted just to keep up to speed, but may not have files - I can change this to whether you have an active subscription - let me know if you need that)
+  * returns all groups you know about that may or may not have active groves (they get bunted just to keep up to speed, but may not have files - I can change this to whether you have an active subscription - let me know if you need that)
   * response:
   
   ```json
-  [ "~zod/test", "~wet/this", "~rabsef-bicrym/my-trove" ]
+  [ "~zod/test", "~wet/this", "~rabsef-bicrym/my-grove" ]
   ```
 
-- `/x/team/<host-ship>/<space-name>/json`
-  * you must provide the ship name and space name
+- `/x/team/<host-ship>/<group-name>/json`
+  * you must provide the ship name and group name
   * response:
 
   ```json
@@ -81,9 +81,9 @@
   ]
   ```
 
-- `/x/regs/<host-ship>/<space-name>/json`
+- `/x/regs/<host-ship>/<group-name>/json`
   * **NOTE:** Probably don't use this - just use /folder/perms, below
-  * you must provide the ship name and space name
+  * you must provide the ship name and group name
   * response:
 
   ```json
@@ -94,8 +94,8 @@
   }
   ```
 
-- `/x/folder/<host-ship>/<space-name>/<folder-path>/json`
-  * you must provide the ship name, space name **AND** folder path
+- `/x/folder/<host-ship>/<group-name>/<folder-path>/json`
+  * you must provide the ship name, group name **AND** folder path
   * response:
 
     either:
@@ -114,10 +114,10 @@
     ```
 
 
-- `/x/folder/perms/<host-ship>/<space-name>/<folder-path>/json`
+- `/x/folder/perms/<host-ship>/<group-name>/<folder-path>/json`
   > NOTE: AKA PERMISSION OBJECT
 
-  * you must provide the ship name, space name **AND** folder path
+  * you must provide the ship name, group name **AND** folder path
   * response:
 
   ```json
@@ -141,7 +141,7 @@
   }
   ```
 
-- `/x/node/<host-ship>/<space-name>/<file-id>/<folder-path>/json`
+- `/x/node/<host-ship>/<group-name>/<file-id>/<folder-path>/json`
   > NOTE: AKA NODE OBJECT
 
   * you have to provide all that shit
@@ -178,7 +178,7 @@ On initial subscription:
 // initial subscription / full state
 {
   "version" : "0",
-  "troves" : 
+  "groves" : 
     {
       "~zod/test" : 
         {
@@ -189,7 +189,7 @@ On initial subscription:
               "/folder-one" : {<permisison object>},
               "/folder-one/sub-folder" : {<permission object>}
             },
-          "trove" : 
+          "grove" : 
             {
               "0v12345.abcde" : { <node object> }
             }
@@ -198,20 +198,20 @@ On initial subscription:
 }
 ```
 
-> NOTE: From time to time you may receive updates to underlying data about a space that are "radical" and require just simply replacing the data you have - these are called `start`s. These happen when someone creates a new trove after installing, or when someone repermissions some deep folder. They look like this:
+> NOTE: From time to time you may receive updates to underlying data about a group that are "radical" and require just simply replacing the data you have - these are called `start`s. These happen when someone creates a new grove after installing, or when someone repermissions some deep folder. They look like this:
 
 ```json
 {
   "add" : {
-    "trove" : {
-      "space" : "~zod/new-trove",
+    "grove" : {
+      "group" : "~zod/new-grove",
       "regs" : 
         {
           "/" : { <permission object> },
           "/folder-one" : {<permisison object>},
           "/folder-one/sub-folder" : {<permission object>}
         },
-      "trove" : 
+      "grove" : 
         {
           "0v12345.abcde" : { <node object> }
         }
@@ -221,18 +221,18 @@ On initial subscription:
 ```
 
 
-## Spaces Removed
+## groups Removed
 
-From time to time, a space may be removed - meaning you lost access or deleted it, if it was your own. This will be automatically handled by the backend. The frontend will get a:
+From time to time, a group may be removed - meaning you lost access or deleted it, if it was your own. This will be automatically handled by the backend. The frontend will get a:
 
 ```json
 {
   "remove" :
-    { "space-path" : "~sampel-palnet/test-space" }
+    { "group-gone" : "~sampel-palnet/test-group" }
 }
 ```
 
-On this event, rescry the state or delete the trove or otherwise identify that this trove ceased to exist, for the user (be it their own or someone elses, same result).
+On this event, rescry the state or delete the grove or otherwise identify that this grove ceased to exist, for the user (be it their own or someone elses, same result).
 
 ## Requests / Pokes / Scries
 
@@ -241,7 +241,7 @@ All pokes will be of the form:
 ```javascript
 urbitAPI      // however you've instantiated the object
     .poke({
-      app: "trove",
+      app: "grove",
       mark: "some-mark-name",
       json: { }, // some json here
     })
@@ -251,13 +251,13 @@ The `json` entry above should take one of the following forms:
 
 ### Add Moderators
 
-mark: `trove-action`
+mark: `grove-action`
 
 > User must be the host
 
 ```json
 {
-  "space" : "~sampel-palnet/some-space-name",
+  "group" : "~sampel-palnet/some-group-name",
   "poke" : { "add-moderators" : ["~zod", "~wet"] }
 }
 ```
@@ -266,10 +266,10 @@ Will return (on original subscription socket)
 
 ```json
 {
-  "space" : "~sampel-palnet/some-space-name",
+  "group" : "~sampel-palnet/some-group-name",
   "add" : {
     "team" : {
-      "moderators" : ["~zod" "~wet"],  // NOTE: if you send me non-members, they will be removed here - so if you sent ~rabsef and ~rabsef wasn't part of this trove, he won't become a moderator and you'll get an empty set back.
+      "moderators" : ["~zod" "~wet"],  // NOTE: if you send me non-members, they will be removed here - so if you sent ~rabsef and ~rabsef wasn't part of this grove, he won't become a moderator and you'll get an empty set back.
     }
   }
 }
@@ -278,13 +278,13 @@ Will return (on original subscription socket)
 
 ### Rem Moderators
 
-mark: `trove-action`
+mark: `grove-action`
 
 > User must be the host
 
 ```json
 {
-  "space" : "~sampel-palnet/some-space-name",
+  "group" : "~sampel-palnet/some-group-name",
   "poke" : { "rem-moderators" : ["~zod", "~wet"] }
 }
 ```
@@ -293,7 +293,7 @@ Will return (on original subscription socket)
 
 ```json
 {
-  "space" : "~sampel-palnet/some-space-name",
+  "group" : "~sampel-palnet/some-group-name",
   "rem" : {
     "team" : {
       "moderators" : ["~zod" "~wet"],
@@ -305,11 +305,11 @@ Will return (on original subscription socket)
 
 ### Add file (node == file)
 
-mark: `trove-action`
+mark: `grove-action`
 
 ```json
 {
-  "space" : "~sampel-palnet/some-space-name",
+  "group" : "~sampel-palnet/some-group-name",
   "poke" : {
     "add-node" : {
       "trail" : "/path/for/file",
@@ -332,7 +332,7 @@ Will return (on original subscription socket)
 
 ```json
 {
-  "space" : "~sampel-palnet/some-space-name",
+  "group" : "~sampel-palnet/some-group-name",
   "add" : {
     "node" : {
       "trail" : "/path/for/file",
@@ -357,13 +357,13 @@ Will return (on original subscription socket)
 
 ### Remove file (node == file)
 
-mark: `trove-action`
+mark: `grove-action`
 
 > ID must exist, User must have `delete:file` permissions @ that folder
 
 ```json
 {
-  "space" : "~sampel-palnet/some-space-name",
+  "group" : "~sampel-palnet/some-group-name",
   "poke" : {
     "rem-node" : {
       "id" : "0v12345.abcde",
@@ -377,7 +377,7 @@ Will return (on original subscription socket)
 
 ```json
 {
-  "space" : "~sampel-palnet/some-space-name",
+  "group" : "~sampel-palnet/some-group-name",
   "rem" : {
     "node" : {
       "trail" : "/path/for/file",
@@ -390,13 +390,13 @@ Will return (on original subscription socket)
 
 ### Edit file (node == file)
 
-mark: `trove-action`
+mark: `grove-action`
 
 > ID must exist, User must have `edit:file` permissions @ that folder
 
 ```json
 {
-  "space" : "~sampel-palnet/some-space-name",
+  "group" : "~sampel-palnet/some-group-name",
   "poke" : {
     "edit-node" : {
       "id" : "0v12345.abcde",
@@ -412,7 +412,7 @@ Will return (on original subscription socket)
 
 ```json
 {
-  "space" : "~sampel-palnet/some-space-name",
+  "group" : "~sampel-palnet/some-group-name",
   "upd" : {
     "node" : {
       "id" : "0v12345.abcde",
@@ -426,14 +426,14 @@ Will return (on original subscription socket)
 
 ### Move file (node == file)
 
-mark: `trove-action`
+mark: `grove-action`
 
 > ID must exist, User must have `move:file` perms @ `from`, `add:file` perms @ `to`.
 > `to` must already exist
 
 ```json
 {
-  "space" : "~sampel-palnet/some-space-name",
+  "group" : "~sampel-palnet/some-group-name",
   "poke" : {
     "move-node" : {
       "id" : "0v12345.abcde",
@@ -450,13 +450,13 @@ Returns Add Nodes and Remove Nodes as appropriate.
 
 ### Add folder
 
-mark: `trove-action`
+mark: `grove-action`
 
 Include a `pur` object to set permissions on creation:
 
 ```json
 {
-  "space" : "~sampel-palnet/some-space-name",
+  "group" : "~sampel-palnet/some-group-name",
   "poke" : {
     "add-folder" : {
       "trail" : "/path/for/file",
@@ -472,7 +472,7 @@ pass a `null` for `pur`:
 
 ```json
 {
-  "space" : "~sampel-palnet/some-space-name",
+  "group" : "~sampel-palnet/some-group-name",
   "poke" : {
     "add-folder" : {
       "trail" : "/path/for/file",
@@ -488,7 +488,7 @@ Will return
 
 ```json
 {
-  "space" : "~sampel-palnet/some-space-name",
+  "group" : "~sampel-palnet/some-group-name",
   "add" : {
     "folder" : {
       "trail" : "/path/for/file",
@@ -501,11 +501,11 @@ Will return
 
 ### Remove folder
 
-mark: `trove-action`
+mark: `grove-action`
 
 ```json
 {
-  "space" : "~sampel-palnet/some-space-name",
+  "group" : "~sampel-palnet/some-group-name",
   "poke" : {
     "rem-folder" : "/path/to/delete"
   }
@@ -516,7 +516,7 @@ Will return
 
 ```json
 {
-  "space" : "~sampel-palnet/some-space-name",
+  "group" : "~sampel-palnet/some-group-name",
   "rem" : {
     "folder" : { "trail" : "/path/for/file" }
   }
@@ -526,11 +526,11 @@ Will return
 
 ### Move folder
 
-mark: `trove-action`
+mark: `grove-action`
 
 ```json
 {
-  "space" : "~sampel-palnet/some-space-name",
+  "group" : "~sampel-palnet/some-group-name",
   "poke" : {
     "rem-folder" : {
       "from" : "/path/to/folder",
@@ -548,17 +548,17 @@ Returns `add-node` `rem-folder` and `add-folder` as appropriate
 
 > Must have `add:files` permissions in the destination
 
-mark: `trove-action`
+mark: `grove-action`
 
 ```json
 {
-  "space" : "~sampel-palnet/some-space-name",
+  "group" : "~sampel-palnet/some-group-name",
   "poke" : {
     "repeat" : {
       "id" : "0v12345.abcde",
       "trail" : "/path/to/file",
       "to" : {
-        "space" : "~zod/other-space",
+        "group" : "~zod/other-group",
         "trail" : "/some/path/here"
       }
     }
@@ -574,11 +574,11 @@ Returns `add-node`s as appropriate.
 
 > Must have `ch-mode:folder` permissions (by default, only owner)
 
-mark: `trove-action`
+mark: `grove-action`
 
 ```json
 {
-  "space" : "~sampel-palnet/some-space-name",
+  "group" : "~sampel-palnet/some-group-name",
   "poke" : {
     "reperm" : {
       "trail" : "/path/to/file",
