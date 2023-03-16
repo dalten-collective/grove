@@ -1,14 +1,14 @@
-/-  t=trove
-/+  t-j=trove-json
-|_  larch=trove:t
+/-  g=grove
+/+  g-j=grove-json
+|_  larch=grove:g
 ++  grad  %noun
 ++  grow
   |%
   ++  noun  larch
-  ++  json  (tree:enjs:t-j larch)
+  ++  json  (tree:enjs:g-j larch)
   --
 ++  grab
   |%
-  ++  noun  trove:t
+  ++  noun  grove:g
   --
 --

@@ -1,14 +1,14 @@
-/-  t=trove
-/+  t-j=trove-json
-|_  tam=team:t
+/-  g=grove
+/+  g-j=grove-json
+|_  tam=team:g
 ++  grad  %noun
 ++  grow
   |%
   ++  noun  tam
-  ++  json  a/(turn tam team:enjs:t-j)
+  ++  json  a/(turn tam team:enjs:g-j)
   --
 ++  grab
   |%
-  ++  noun  (list team:t)
+  ++  noun  (list team:g)
   --
 --

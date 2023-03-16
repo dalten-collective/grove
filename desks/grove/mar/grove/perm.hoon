@@ -1,14 +1,14 @@
-/-  t=trove
-/+  t-j=trove-json
-|_  purm=perm:t
+/-  g=grove
+/+  g-j=grove-json
+|_  purm=perm:g
 ++  grad  %noun
 ++  grow
   |%
   ++  noun  purm
-  ++  json  (perm:enjs:t-j purm)
+  ++  json  (perm:enjs:g-j purm)
   --
 ++  grab
   |%
-  ++  noun  perm:t
+  ++  noun  perm:g
   --
 --

@@ -1,14 +1,14 @@
-/-  t=trove
-/+  t-j=trove-json
-|_  rag=regs:t
+/-  g=grove
+/+  g-j=grove-json
+|_  rag=regs:g
 ++  grad  %noun
 ++  grow
   |%
   ++  noun  rag
-  ++  json  (regs:enjs:t-j rag)
+  ++  json  (regs:enjs:g-j rag)
   --
 ++  grab
   |%
-  ++  noun  regs:t
+  ++  noun  regs:g
   --
 --

@@ -6,9 +6,9 @@
   ++  noun  gon
   ++  json
     |=  go=[%del (pair ship term)]
-    %-  pairs
+    %-  pairs:enjs:format
     =-  remove+-
-    %+  frond  %group-gone
+    %+  frond:enjs:format  %group-gone
     s+(spat /(scot %p p.gon)/(scot %tas q.gon))
   --
 ::

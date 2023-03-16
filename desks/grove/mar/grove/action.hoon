@@ -1,15 +1,15 @@
-/-  t=trove
-/+  t-j=trove-json
-|_  pact=action:poke:t
+/-  g=grove
+/+  g-j=grove-json
+|_  pact=action:poke:g
 ++  grad  %noun
 ++  grow
   |%
   ++  noun  pact
-  ++  json  (fact:enjs:t-j `fact:t`pact)
+  ++  json  (fact:enjs:g-j `fact:g`pact)
   --
 ++  grab
   |%
-  ++  noun  action:poke:t
-  ++  json  action:dejs:t-j
+  ++  noun  action:poke:g
+  ++  json  action:dejs:g-j
   --
 --

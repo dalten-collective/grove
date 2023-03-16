@@ -1,14 +1,14 @@
-/-  t=trove
-/+  t-j=trove-json
-|_  fuct=fact:t
+/-  g=grove
+/+  g-j=grove-json
+|_  fuct=fact:g
 ++  grad  %noun
 ++  grow
   |%
   ++  noun  fuct
-  ++  json  (fact:enjs:t-j fuct)
+  ++  json  (fact:enjs:g-j fuct)
   --
 ++  grab
   |%
-  ++  noun  fact:t
+  ++  noun  fact:g
   --
 --
