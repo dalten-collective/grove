@@ -8,7 +8,7 @@
     |=  go=[%del (pair ship term)]
     %-  pairs
     =-  remove+-
-    %+  frond  %space-path
+    %+  frond  %group-gone
     s+(spat /(scot %p p.gon)/(scot %tas q.gon))
   --
 ::
