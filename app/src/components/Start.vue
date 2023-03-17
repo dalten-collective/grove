@@ -1,10 +1,18 @@
 <template>
     <div class="block mt-2 col-span-3 lg:hidden"> <!-- small space-changer -->
       <div class="pr-4 bg-white border border-stone-300 col-span-1 rounded-md">
-        <div class="pl-2 mt-2 mb-24" style="position: relative;">
+        <div class="pl-2 my-2" style="position: relative;">
 
-          <div class="w-full px-1 mb-4 bg-white" :class="changingSpace ? 'rounded-lg shadow-md' : ''" style="position: absolute" >
-            <div class="flex flex-row items-center w-full p-1 cursor-pointer rounded-md hover:outline hover:outline-sky-100" :class="changingSpace ? 'opacity-30' : ''" @click="changingSpace = true">
+        <div class="text-center">
+        <select class="w-full px-4 py-4 text-center cursor-pointer rounded-md border-stone-300" v-model="changedSpat">
+          <option v-for="spat in Object.keys(groves)">
+            {{ spat }}
+          </option>
+        </select>
+      </div>
+
+          <div v-if="false" class="w-full px-1 mb-4 bg-white" :class="changingSpace ? 'rounded-lg shadow-md' : ''" style="position: absolute" >
+            <div class="flex flex-row items-center w-full p-1 cursor-pointer rounded-md hover:outline hover:outline-sky-100" :class="changingSpace ? 'opacity-30' : ''" @click="changingSpace = !changingSpacee">
               <div class="w-12 h-12 border rounded-md">
                 <div class="my-auto text-center">
                   <span class="text-xl">~</span>
@@ -51,7 +59,7 @@
 
   <div class="grid grid-cols-3 gap-4">
 
-  <div class="flex flex-col items-center justify-center py-2 text-sm">
+  <div class="flex flex-col items-center justify-center py-2 text-sm md:col-span-1 col-span-3">
     <div>
       <span class="text-stone-400">This is alpha software.</span>
     </div>
@@ -89,10 +97,17 @@
 
   <div class="grid grid-cols-3 gap-4">
     <div class="pr-4 bg-white border border-stone-300 col-span-1 rounded-md h-[90vh] hidden lg:block">
-      <div class="pl-2 mt-2 mb-24">
+      <div class="pl-2 mt-2 mb-12">
+        <div class="text-center">
+        <select class="w-full px-4 py-4 text-center cursor-pointer rounded-md border-stone-300" v-model="changedSpat">
+          <option v-for="spat in Object.keys(groves)">
+            {{ spat }}
+          </option>
+        </select>
+      </div>
 
-        <div class="px-1 mb-4 bg-white" :class="changingSpace ? 'rounded-lg shadow-md' : ''" style="position: absolute" >
-          <div class="flex flex-row items-center p-1 cursor-pointer rounded-md hover:outline hover:outline-sky-100" :class="changingSpace ? 'opacity-30' : ''" @click="changingSpace = true">
+        <div v-if="false" class="px-1 mb-4 bg-white" :class="changingSpace ? 'rounded-lg shadow-md' : ''" style="position: absolute" >
+          <div class="flex flex-row items-center p-1 cursor-pointer rounded-md hover:outline hover:outline-sky-100" :class="changingSpace ? 'opacity-30' : ''" @click="changingSpace = !changingSpacee">
             <div class="w-12 h-12 border rounded-md">
               <div class="my-auto text-center">
                 <span class="text-xl">~</span>
@@ -352,6 +367,8 @@ const tileView = ref(false)
 const addNodeMenu = ref(false);
 const firstLoad = ref(false);
 
+const changedSpat = ref('');
+
 const uploadDisabled = computed(() => {
   return s3Loading.value || !s3Ready.value
 })
@@ -359,6 +376,7 @@ const uploadDisabled = computed(() => {
 const s3Ready = computed(() => {
   return store.getters[GetterTypes.S3_READY]
 })
+
 
 const treeConfig = computed(() => {
   const manyRoots = new Set();
@@ -395,7 +413,9 @@ const treeConfig = computed(() => {
   };
 });
 
-const groves = computed(() => store.state.groves);
+const groves = computed(() => {
+  return store.state.groves
+});
 
 onMounted(() => {
   initTooltips();
@@ -405,6 +425,10 @@ onMounted(() => {
   const lsTileView = localStorage.getItem('groveCurrentView')
   tileView.value = (lsTileView === 'tile')
 });
+
+watch(changedSpat, (newSpat) => {
+  changeSpace(newSpat)
+})
 
 watch(tileView, async (tileViewSet) => {
   if (tileViewSet) {
@@ -422,6 +446,7 @@ watch(groves, async (newGroves) => {
     const firstGrove = Object.keys(newGroves)[0]
     const defaultSpat = firstGrove
     // TODO: what about when you have no groups??
+    changedSpat.value = defaultSpat
     store.dispatch(ActionTypes.CURRENT_SPACE_SET, defaultSpat)
     firstLoad.value = true
   }
