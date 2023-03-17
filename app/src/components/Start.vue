@@ -51,6 +51,15 @@
 
   <div class="grid grid-cols-3 gap-4">
 
+  <div class="flex flex-col items-center justify-center py-2 text-sm">
+    <div>
+      <span class="text-stone-400">This is alpha software.</span>
+    </div>
+    <div>
+      <span class="text-stone-400">Quartus loves you.</span>
+    </div>
+  </div>
+
     <div class="px-4 py-2 my-2 bg-white border lg:col-start-2 lg:col-span-2 col-span-3 border-stone-300 rounded-md"> <!-- path tray -->
       <div class="flex flex-row" v-if="selectedSpace">
         <div>
