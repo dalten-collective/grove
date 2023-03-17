@@ -19,7 +19,7 @@ const routes: Array<RouteRecordRaw> = [
 ];
 
 const router = createRouter({
-  history: createWebHistory('/apps/trove'),
+  history: createWebHistory('/apps/grove'),
   routes,
 });
 

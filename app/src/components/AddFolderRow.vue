@@ -60,7 +60,7 @@ import { GetterTypes } from '@/store/getter-types';
 import { sigShip } from '@/helpers';
 import { initTooltips } from 'flowbite';
 
-import { addFolder as troveAddFolder } from '@/api/troveAPI';
+import { addFolder as groveAddFolder } from '@/api/groveAPI';
 
 const emit = defineEmits(['cancelNewFolder'])
 
@@ -87,7 +87,7 @@ const addFolder = () => {
     trail: currentTrail.value,
     name: folderName.value,
   }
-  troveAddFolder(currentSpace.value, folder);
+  groveAddFolder(currentSpace.value, folder);
   folderName.value = ''
 };
 

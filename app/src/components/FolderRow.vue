@@ -177,9 +177,9 @@ import { sigShip } from '@/helpers';
 import 'vue3-treeview/dist/style.css';
 import treeview from 'vue3-treeview';
 
-import { deleteFolder as troveDeleteFolder } from '@/api/troveAPI';
-import { moveFolder as troveMoveFolder } from '@/api/troveAPI';
-import { addFolder as troveAddFolder } from '@/api/troveAPI';
+import { deleteFolder as groveDeleteFolder } from '@/api/groveAPI';
+import { moveFolder as groveMoveFolder } from '@/api/groveAPI';
+import { addFolder as groveAddFolder } from '@/api/groveAPI';
 
 import {
   initAccordions,
@@ -233,7 +233,7 @@ const folderHash = computed(() => {
 });
 
 const deleteFolder = () => {
-  troveDeleteFolder(currentSpace.value, props.folder.ctrail);
+  groveDeleteFolder(currentSpace.value, props.folder.ctrail);
 };
 
 const moveFolder = () => {
@@ -248,7 +248,7 @@ const doMoveFolder = () => {
     console.log('cannot move a folder into itself')
     return
   }
-  troveMoveFolder(currentSpace.value, props.folder.ctrail, moveTo.value);
+  groveMoveFolder(currentSpace.value, props.folder.ctrail, moveTo.value);
 };
 
 const trimLeadingSlash = (name) => {
@@ -270,7 +270,7 @@ const buildNest = () => {
 // TODO: de-dupe
 const buildFlatnest = () => {
   var fn = {};
-  troveFolders.value.forEach((fullPath) => {
+  groveFolders.value.forEach((fullPath) => {
     const text = fullPath.split('/')[fullPath.split('/').length - 1];
     let displayText;
     if (text === '') {
@@ -283,7 +283,7 @@ const buildFlatnest = () => {
     if (fullPath === '/') {
       children = Array.from(
         new Set(
-          troveFolders.value
+          groveFolders.value
             .map((fp) => {
               return fp.split('/')[1];
             })
@@ -291,7 +291,7 @@ const buildFlatnest = () => {
         )
       );
     } else {
-      children = troveFolders.value
+      children = groveFolders.value
         .filter((fp) => {
           const ourLength = fp.split('/').length;
           return (
@@ -313,7 +313,7 @@ const buildFlatnest = () => {
 // TODO: de-dupe
 const treeConfig = computed(() => {
   const manyRoots = new Set();
-  troveFolders.value.forEach((fullPath) => {
+  groveFolders.value.forEach((fullPath) => {
     manyRoots.add(`/${fullPath.split('/')[1]}`);
   });
   const roots = Array.from(manyRoots).filter((fp) => fp !== '/');
@@ -325,11 +325,11 @@ const treeConfig = computed(() => {
   };
 });
 // TODO: de-dupe
-const troveFolders = computed(() => {
+const groveFolders = computed(() => {
   if (!selectedSpace.value) {
     return [];
   }
-  return Object.keys(theSelectedSpace.value.trove);
+  return Object.keys(theSelectedSpace.value.grove);
 });
 // TODO: de-dupe
 const selectedSpace = computed(() => {
@@ -340,9 +340,9 @@ const theSelectedSpace = computed(() => {
   if (!selectedSpace.value) {
     return {};
   }
-  return troves.value[selectedSpace.value];
+  return groves.value[selectedSpace.value];
 });
-const troves = computed(() => store.state.troves);
+const groves = computed(() => store.state.groves);
 
 const gotFocus = (node) => {
   console.log('focused ', node);

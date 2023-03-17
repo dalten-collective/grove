@@ -44,7 +44,7 @@ export type Mutations<S = State> = {
     payload: { uiElement: L.UIElement, currentState: L.LoaderState }
   ): void;
 
-  [MutationTypes.TROVE_STATE_SET](
+  [MutationTypes.GROVE_STATE_SET](
     state: S,
     payload
   ): void;
@@ -108,11 +108,11 @@ export const mutations: MutationTree<State> & Mutations = {
     state.loadingStates[payload.uiElement] = payload.currentState
   },
 
-  [MutationTypes.TROVE_STATE_SET](
+  [MutationTypes.GROVE_STATE_SET](
     state,
     payload
   ) {
-    state.troves = payload.troves
+    state.groves = payload.groves
   },
 
   // Add more here

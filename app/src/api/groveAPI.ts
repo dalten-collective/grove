@@ -2,7 +2,7 @@ import urbitAPI from "./urbitAPI";
 
 export function scryState() {
   return urbitAPI.scry({
-    app: 'trove',
+    app: 'grove',
     path: "/state"
   }).then((r) => {
     console.log('scry r ', r)
@@ -31,8 +31,8 @@ export function addNode(space, file) {
   }
   return urbitAPI
     .poke({
-      app: 'trove',
-      mark: 'trove-action',
+      app: 'grove',
+      mark: 'grove-action',
       json
     })
     .then((r) => {
@@ -51,8 +51,8 @@ export function deleteNode(space, trail, id) {
   }
   return urbitAPI
     .poke({
-      app: 'trove',
-      mark: 'trove-action',
+      app: 'grove',
+      mark: 'grove-action',
       json
     })
     .then((r) => {
@@ -68,8 +68,8 @@ export function deleteFolder(space, trail) {
   }
   return urbitAPI
     .poke({
-      app: 'trove',
-      mark: 'trove-action',
+      app: 'grove',
+      mark: 'grove-action',
       json
     })
     .then((r) => {
@@ -89,8 +89,8 @@ export function addFolder(space, folder) {
   }
   return urbitAPI
     .poke({
-      app: 'trove',
-      mark: 'trove-action',
+      app: 'grove',
+      mark: 'grove-action',
       json
     })
     .then((r) => {
@@ -111,8 +111,8 @@ export function moveNode(space, id, fromTrail, toTrail) {
   }
   return urbitAPI
     .poke({
-      app: 'trove',
-      mark: 'trove-action',
+      app: 'grove',
+      mark: 'grove-action',
       json
     })
     .then((r) => {
@@ -131,8 +131,8 @@ export function moveFolder(space, fromTrail, toTrail) {
   }
   return urbitAPI
     .poke({
-      app: 'trove',
-      mark: 'trove-action',
+      app: 'grove',
+      mark: 'grove-action',
       json
     })
     .then((r) => {

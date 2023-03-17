@@ -10,7 +10,7 @@ import * as L from '@/types/loading-types';
 
 import airlock from '@/api';
 import { subscribeToS3 } from '@/api/settingsAPI';
-import { scryState as tScryState } from '@/api/troveAPI';
+import { scryState as tScryState } from '@/api/groveAPI';
 
 type AugmentedActionContext = {
   commit<K extends keyof Mutations>(
@@ -111,7 +111,7 @@ export const actions: ActionTree<State, State> & Actions = {
       // Main all-responses-handler
       (data: T.GallResponse) => {
         if (data.face === 'INITIAL_STATE') {
-          commit(MutationTypes.TROVE_STATE_SET, data.fact);
+          commit(MutationTypes.GROVE_STATE_SET, data.fact);
         } else {
           // TODO: handle specific responses
           dispatch(ActionTypes.SCRY_STATE);
@@ -137,7 +137,7 @@ export const actions: ActionTree<State, State> & Actions = {
   [ActionTypes.SCRY_STATE]({ commit, getters }, payload: string) {
     tScryState().then((r) => {
       console.log('in action ', r);
-      commit(MutationTypes.TROVE_STATE_SET, r.fact);
+      commit(MutationTypes.GROVE_STATE_SET, r.fact);
     });
   },
 

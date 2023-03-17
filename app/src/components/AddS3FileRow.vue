@@ -109,7 +109,7 @@ import useFileList from '@/compositions/file-list';
 
 import  createUploader  from  '@/compositions/file-uploader'
 
-import { addFolder as troveAddFolder } from '@/api/troveAPI';
+import { addFolder as groveAddFolder } from '@/api/groveAPI';
 import {current} from 'immer';
 
 const { files, addFiles, removeFile } = useFileList();

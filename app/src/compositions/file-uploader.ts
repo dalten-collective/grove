@@ -3,14 +3,14 @@ import { S3Client, PutObjectCommand, S3ClientConfig } from '@aws-sdk/client-s3';
 import { S3Credentials } from '@urbit/api';
 import { dateToDa, deSig } from '@urbit/api';
 
-import { addNode as troveAddNode } from "@/api/troveAPI"
+import { addNode as groveAddNode } from "@/api/groveAPI"
 import {ActionTypes} from '@/store/action-types';
 
 export function prefixEndpoint(endpoint: string) {
   return endpoint.match(/https?:\/\//) ? endpoint : `https://${endpoint}`;
 }
 
-function saveToTrove(space, trail, fileObject, store) {
+function saveToGrove(space, trail, fileObject, store) {
   if (!space || !trail || !('file' in fileObject)) {
     return
   }
@@ -30,17 +30,17 @@ function saveToTrove(space, trail, fileObject, store) {
     name = fileObject.file.file.name.split('.')[0]
   }
 
-  const troveFile = {
+  const groveFile = {
     trail: trail,
     url: fileObject.publicURL,
     name,
     extension,
   }
-  troveAddNode(space, troveFile);
+  groveAddNode(space, groveFile);
 }
 
-export async function uploadFile(file, troveConfig, s3Config, store) {
-  const { trail, space } = troveConfig
+export async function uploadFile(file, groveConfig, s3Config, store) {
+  const { trail, space } = groveConfig
 
   const bucket = s3Config.config.currentBucket
   const accessKeyId = s3Config.credentials.accessKeyId
@@ -92,7 +92,7 @@ export async function uploadFile(file, troveConfig, s3Config, store) {
       // update file status for preview:
       file.status = response
       const publicURL = signedUrl.split('?')[0]
-      saveToTrove(space, trail, { file, publicURL }, store)
+      saveToGrove(space, trail, { file, publicURL }, store)
       return r
     })
     .catch((error: any) => {
@@ -111,13 +111,13 @@ export function uploadFiles(files, space, s3Config, store) {
     });
 }
 
-export default function createUploader(troveConfig, s3Config, store) {
+export default function createUploader(groveConfig, s3Config, store) {
   return {
     uploadFile: function (file) {
-      return uploadFile(file, troveConfig, s3Config, store);
+      return uploadFile(file, groveConfig, s3Config, store);
     },
     uploadFiles: function (files) {
-      return uploadFiles(files, troveConfig, s3Config, store);
+      return uploadFiles(files, groveConfig, s3Config, store);
     },
   };
 }

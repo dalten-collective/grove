@@ -52,7 +52,7 @@
 
           <Transition>
             <div v-if="changingSpace" class="mb-4 bg-white" style="position: relative; z-index: 50;" >
-              <div v-for="spat in Object.keys(troves)" :key="spat">
+              <div v-for="spat in Object.keys(groves)" :key="spat">
 
               <div class="flex flex-row items-center px-2 mb-2 rounded-md hover:outline hover:outline-sky-100" :class="spat === selectedSpace ? 'outline outline-sky-500' : ''">
 
@@ -369,8 +369,8 @@ import { ActionTypes } from '@/store/action-types';
 import { GetterTypes } from '@/store/getter-types';
 import { sigShip, trimShip, shipInSpat, spaceInSpat } from '@/helpers'
 
-import { addNode as troveAddNode } from '@/api/troveAPI';
-import { addFolder as troveAddFolder } from '@/api/troveAPI';
+import { addNode as groveAddNode } from '@/api/groveAPI';
+import { addFolder as groveAddFolder } from '@/api/groveAPI';
 import { hasS3Settings } from '@/api/settingsAPI';
 import { initTooltips } from 'flowbite';
 
@@ -419,8 +419,8 @@ const s3Ready = computed(() => {
 
 const treeConfig = computed(() => {
   const manyRoots = new Set();
-  console.log('tf ', troveFolders.value)
-  troveFolders.value.forEach((fullPath) => {
+  console.log('tf ', groveFolders.value)
+  groveFolders.value.forEach((fullPath) => {
     console.log('fp ', fullPath)
     manyRoots.add(`/${fullPath.split('/')[1]}`);
   });
@@ -454,18 +454,18 @@ const treeConfig = computed(() => {
   };
 });
 
-const troves = computed(() => store.state.troves);
+const groves = computed(() => store.state.groves);
 
 onMounted(() => {
   initTooltips();
-  const deskname = 'trove';
+  const deskname = 'grove';
   startAirlock(deskname);
   checkS3()
 });
 
-watch(troves, async (newTroves) => {
+watch(groves, async (newGroves) => {
   // Set 'our' space on first load.
-  if (newTroves && !firstLoad.value) {
+  if (newGroves && !firstLoad.value) {
     const defaultSpat = `${ sigShip(window.ship) }/our`
     store.dispatch(ActionTypes.CURRENT_SPACE_SET, defaultSpat)
     firstLoad.value = true
@@ -545,12 +545,12 @@ const doAddNode = () => {
 };
 
 const addNode = () => {
-  troveAddNode(selectedSpace.value, newFile.value);
+  groveAddNode(selectedSpace.value, newFile.value);
   addNodeMenu.value = false;
   somewhereElse.value = false;
 };
 const addFolder = () => {
-  troveAddFolder(selectedSpace.value, newFolder.value);
+  groveAddFolder(selectedSpace.value, newFolder.value);
   addFolderMenu.value = false;
   somewhereElse.value = false;
 };
@@ -561,7 +561,7 @@ const selectSpace = (spat) => {
 
 const buildFlatnest = () => {
   var fn = {};
-  troveFolders.value.forEach((fullPath) => {
+  groveFolders.value.forEach((fullPath) => {
 
     const text = fullPath.split('/')[fullPath.split('/').length - 1]
     let displayText
@@ -575,13 +575,13 @@ const buildFlatnest = () => {
     if (fullPath === '/') {
       children = Array.from(
         new Set(
-          troveFolders.value.map((fp) => {
+          groveFolders.value.map((fp) => {
             return fp.split('/')[1]
           }).filter((n) => n !== '')
         )
       )
     } else {
-      children = troveFolders.value
+      children = groveFolders.value
         .filter((fp) => {
           const ourLength = fp.split('/').length
           return (
@@ -616,7 +616,7 @@ watch(selectedTrail, (newTrail) => {
   newFile.value.trail = newTrail;
 });
 
-watch(troves, (newTroves) => {
+watch(groves, (newGroves) => {
   flatNest.value = {}; // TODO:
   flatNest.value = buildFlatnest();
 });
@@ -625,21 +625,21 @@ const theSelectedSpace = computed(() => {
   if (!selectedSpace.value) {
     return {};
   }
-  return troves.value[selectedSpace.value];
+  return groves.value[selectedSpace.value];
 });
 
-const troveFolders = computed(() => {
+const groveFolders = computed(() => {
   if (!selectedSpace.value) {
     return [];
   }
-  return Object.keys(theSelectedSpace.value.trove);
+  return Object.keys(theSelectedSpace.value.grove);
 });
 
 const filesInFolder = computed(() => {
   if (!selectedSpace.value) {
     return [];
   }
-  return theSelectedSpace.value.trove[selectedTrail.value];
+  return theSelectedSpace.value.grove[selectedTrail.value];
 });
 
 const foldersInFolder = computed(() => {
@@ -703,10 +703,10 @@ const trimLeadingSlash = (name) => {
   return name
 }
 
-const theFile = (troveNode) => {
-  console.log('tn ', troveNode);
-  const id = Object.keys(troveNode)[0];
-  return troveNode[id];
+const theFile = (groveNode) => {
+  console.log('tn ', groveNode);
+  const id = Object.keys(groveNode)[0];
+  return groveNode[id];
 };
 
 const startAirlock = (deskname: string) => {

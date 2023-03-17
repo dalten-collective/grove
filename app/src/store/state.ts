@@ -12,7 +12,7 @@ const uiElementLoadingState: L.UILoaderState = {
 export const state = {
   exampleThings: [] as Array<T.Thing>,
   loadingStates: uiElementLoadingState as L.UILoaderState,
-  troves: [],
+  groves: [],
   currentSpace: '' as T.Spat,
   currentTrail: '/',
   currentTree: {},

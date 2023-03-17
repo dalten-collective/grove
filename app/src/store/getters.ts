@@ -37,14 +37,14 @@ export const getters: GetterTree<State, State> & Getters = {
 
   [GetterTypes.TREE_CONFIG]: (state) => {
     // TODO: Fix
-    if (state.troves.length === 0) {
+    if (state.groves.length === 0) {
       return {}
     }
-    const theSelectedSpace = state.troves[state.currentSpace];
-    const troveFolders = Object.keys(theSelectedSpace.trove);
+    const theSelectedSpace = state.groves[state.currentSpace];
+    const groveFolders = Object.keys(theSelectedSpace.grove);
 
     const manyRoots = new Set();
-    troveFolders.forEach((fullPath) => {
+    groveFolders.forEach((fullPath) => {
       manyRoots.add(`/${fullPath.split('/')[1]}`);
     });
     const roots = Array.from(manyRoots).filter((fp) => fp !== '/');
