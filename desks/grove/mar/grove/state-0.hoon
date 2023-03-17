@@ -1,7 +1,7 @@
 /-  g=grove
 /+  g-j=grove-json
 =/  state-0
-  $:(%0 (map flag.g [mods regs grove]:g))
+  $:(%0 (map flag:g [mods:g regs:g grove:g]))
 |_  state=state-0
 ++  grad  %noun
 ++  grow
