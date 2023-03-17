@@ -7,6 +7,7 @@ const uiElementLoadingState: L.UILoaderState = {
   yourElementHere: loaderStates.initial,
   anotherElement: loaderStates.initial,
   s3UploadButton: loaderStates.initial,
+  s3UploadProgress: loaderStates.initial,
 }
 
 export const state = {

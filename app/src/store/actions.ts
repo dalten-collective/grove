@@ -81,7 +81,6 @@ export interface Actions {
 export const actions: ActionTree<State, State> & Actions = {
   [ActionTypes.CONNECT_S3](ctx) {
     subscribeToS3((subscriptionData) => {
-      console.log('in action ', subscriptionData);
       if (
         's3-update' in subscriptionData &&
         'configuration' in subscriptionData['s3-update']
@@ -131,12 +130,10 @@ export const actions: ActionTree<State, State> & Actions = {
   },
 
   [ActionTypes.EXAMPLE]({ commit, getters }, payload: string) {
-    console.log('dispatching EXAMPLE action...');
   },
 
   [ActionTypes.SCRY_STATE]({ commit, getters }, payload: string) {
     tScryState().then((r) => {
-      console.log('in action ', r);
       commit(MutationTypes.GROVE_STATE_SET, r.fact);
     });
   },
@@ -147,6 +144,11 @@ export const actions: ActionTree<State, State> & Actions = {
 
   [ActionTypes.CURRENT_TRAIL_SET]({ commit, getters }, payload: string) {
     commit(MutationTypes.CURRENT_TRAIL_SET, payload);
+  },
+
+  [ActionTypes.GO_TO_PARENT]({ commit, getters }, payload: string) {
+    const parentFolder = getters.PARENT_FOLDER
+    commit(MutationTypes.CURRENT_TRAIL_SET, parentFolder);
   },
 
   [ActionTypes.INITIAL_SET]({ commit }, payload: L.UIElement) {

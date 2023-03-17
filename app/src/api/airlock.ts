@@ -15,7 +15,6 @@ export function openAirlockTo(
       app: agent,
       path: "/web-ui", // TODO: set to your endpoint
       event: (data) => {
-        console.log('REMOVEME: gall response ', data)
         onEvent(data);
       },
     })

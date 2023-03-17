@@ -34,3 +34,13 @@ export const nowToUd = (): string => {
 export const secondsToUd = (sects: number): string => {
   return decToUd(unixToDa(sects).toString())
 }
+
+export const validHepName = (name: string): boolean => {
+  if (name === '') {
+    return false
+  }
+  return (
+      /^[\w-]+$/.test(name)  &&  // kebab-kase only
+      /^[a-zA-Z].*$/.test(name)  // cannot start with a number
+    )
+}

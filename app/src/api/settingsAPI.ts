@@ -6,7 +6,6 @@ export function subscribeToS3(onEvent) {
     app: 's3-store',
     path: '/all',
     event: (data) => {
-      console.log('s3 result ', data)
       onEvent(data)
     }
   })

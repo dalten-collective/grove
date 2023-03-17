@@ -5,14 +5,13 @@ export function scryState() {
     app: 'grove',
     path: "/state"
   }).then((r) => {
-    console.log('scry r ', r)
     return r
   })
 }
 
 export function addNode(space, file) {
   const json = {
-    group: space,
+    space,
     poke: {
       'add-node': {
         trail: file.trail,
@@ -41,7 +40,7 @@ export function addNode(space, file) {
 
 export function deleteNode(space, trail, id) {
   const json = {
-    group: space,
+    space,
     poke: {
       'rem-node': {
         id,
@@ -61,7 +60,7 @@ export function deleteNode(space, trail, id) {
 
 export function deleteFolder(space, trail) {
   const json = {
-    group: space,
+    space,
     poke: {
       'rem-folder': trail,
     }
@@ -78,7 +77,7 @@ export function deleteFolder(space, trail) {
 
 export function addFolder(space, folder) {
   const json = {
-    group: space,
+    space,
     poke: {
       'add-folder': {
         trail: folder.trail,
@@ -100,7 +99,7 @@ export function addFolder(space, folder) {
 
 export function moveNode(space, id, fromTrail, toTrail) {
   const json = {
-    group: space,
+    space,
     poke: {
       'move-node': {
         id,
@@ -121,7 +120,7 @@ export function moveNode(space, id, fromTrail, toTrail) {
 
 export function moveFolder(space, fromTrail, toTrail) {
   const json = {
-    group: space,
+    space,
     poke: {
       'move-folder': {
         from: fromTrail,

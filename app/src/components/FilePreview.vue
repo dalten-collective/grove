@@ -104,4 +104,5 @@ const isImg = (file) => {
   }
   return false;
 };
+
 </script>

@@ -4,7 +4,8 @@ export type LoaderState =
 export type UIElement =
   'yourElementHere' |
   'anotherElement' |
-  's3UploadButton'
+  's3UploadButton' |
+  's3UploadProgress'
 
 export interface UILoader {
   [key: string]: LoaderState

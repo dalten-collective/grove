@@ -269,13 +269,6 @@ const doMoveNode = () => {
   resetMove()
 };
 
-const moveClickOutside = () => {
-  console.log('clicked outside move');
-};
-const menuClickOutside = () => {
-  console.log('clicked outside menu');
-};
-
 ////
 const flatNest = ref({});
 const buildNest = () => {
@@ -331,7 +324,6 @@ const treeConfig = computed(() => {
     manyRoots.add(`/${fullPath.split('/')[1]}`);
   });
   const roots = Array.from(manyRoots).filter((fp) => fp !== '/');
-  console.log('roots ', roots);
   return {
     disabled: false,
     roots,
@@ -359,7 +351,6 @@ const theSelectedSpace = computed(() => {
 const groves = computed(() => store.state.groves);
 
 const gotFocus = (node) => {
-  console.log('focused ', node);
   moveTo.value = node.id;
 };
 </script>

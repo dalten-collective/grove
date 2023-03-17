@@ -1,5 +1,5 @@
 <template>
-  <div class="col-span-5">
+  <div class="col-span-9">
     <div class="flex">
       <span
         class="inline-flex items-center px-3 text-sm text-gray-900 border border-r-0 border-gray-300 bg-stone-200 rounded-l-md dark:bg-stone-600 dark:text-stone-400 dark:border-gray-600"
@@ -20,13 +20,16 @@
         </svg>
       </span>
 
+      <div class="flex flex-col w-full">
       <input
         type="text"
         id="folder-name"
         v-model="folderName"
         class="rounded-none rounded-r-lg bg-stone-100 border border-gray-300 text-stone-900 focus:ring-stone-500 focus:border-stone-500 block flex-1 min-w-0 w-full text-sm p-2.5 dark:bg-stone-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-stone-500 dark:focus:border-stone-500"
+        :class="errors ? 'border-red-500' : ''"
         placeholder="folder-name"
       />
+      </div>
 
     <button
       class="px-2 ml-2 text-green-400 bg-green-100 hover:text-green-500 hover:bg-green-200 rounded-md opacity-70"
@@ -47,9 +50,17 @@
 
         </button>
     </div>
+
+    <div class="mt-2 text-center">
+      <p v-if="errors" class="text-red-500">
+        {{ errorMsg }}
+      </p>
+      <p v-else class="text-stone-400">
+        Create a new folder at this location
+      </p>
+    </div>
   </div>
 
-  <div class="col-span-4"></div>
 </template>
 
 <script setup lang="ts">
@@ -59,6 +70,8 @@ import { ActionTypes } from '@/store/action-types';
 import { GetterTypes } from '@/store/getter-types';
 import { sigShip } from '@/helpers';
 import { initTooltips } from 'flowbite';
+
+import { validHepName } from '@/helpers'
 
 import { addFolder as groveAddFolder } from '@/api/groveAPI';
 
@@ -72,6 +85,9 @@ interface Props {
 }
 const props = defineProps<Props>();
 
+const errors = ref(false)
+const errorMsg = ref('')
+
 const store = useStore();
 const currentSpace = computed(() => {
   return store.state.currentSpace;
@@ -82,13 +98,29 @@ const currentTrail = computed(() => {
 
 const folderName = ref('')
 
+watch(folderName, (val) => {
+  if (val) {
+    errors.value = false
+    errorMsg.value = ''
+  }
+})
+
 const addFolder = () => {
+  if (!validHepName(folderName.value)) {
+    errors.value = true
+    errorMsg.value = 'Invalid folder name'
+    folderName.value = ''
+    return
+  }
+
+  const name = folderName.value.toLowerCase()
+
   const folder = {
     trail: currentTrail.value,
-    name: folderName.value,
+    name
   }
   groveAddFolder(currentSpace.value, folder);
-  folderName.value = ''
+  stopDraftingFolder()
 };
 
 const stopDraftingFolder = () => {

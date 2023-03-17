@@ -104,10 +104,11 @@ export async function uploadFile(file, groveConfig, s3Config, store) {
 
 export function uploadFiles(files, space, s3Config, store) {
   store.dispatch(ActionTypes.LOADING_SET, 's3UploadButton')
+    store.dispatch(ActionTypes.LOADING_SET, 's3UploadProgress')
   return Promise.all(files.map((file) => uploadFile(file, space, s3Config, store)))
     .then((r) => {
       store.dispatch(ActionTypes.DISABLED_SET, 's3UploadButton')
-      // TODO: store.dispatch(ActionTypes.S3_UPLOAD_DONE) // close + reset s3upload row
+      store.dispatch(ActionTypes.SUCCESS_SET, 's3UploadProgress')
     });
 }
 

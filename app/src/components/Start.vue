@@ -1,7 +1,57 @@
 <template>
+    <div class="block mt-2 col-span-3 lg:hidden"> <!-- small space-changer -->
+      <div class="pr-4 bg-white border border-stone-300 col-span-1 rounded-md">
+        <div class="pl-2 mt-2 mb-24" style="position: relative;">
+
+          <div class="w-full px-1 mb-4 bg-white" :class="changingSpace ? 'rounded-lg shadow-md' : ''" style="position: absolute" >
+            <div class="flex flex-row items-center w-full p-1 cursor-pointer rounded-md hover:outline hover:outline-sky-100" :class="changingSpace ? 'opacity-30' : ''" @click="changingSpace = true">
+              <div class="w-12 h-12 border rounded-md">
+                <div class="my-auto text-center">
+                  <span class="text-xl">~</span>
+                </div>
+              </div>
+              <div class="flex flex-col py-1 ml-2">
+                <div class="text-stone-500">
+                {{ trimShip(shipInSpat(selectedSpace)) }}
+                </div>
+                <div class="text-lg">
+                {{ spaceInSpat(selectedSpace) }}
+                </div>
+              </div>
+            </div>
+
+            <Transition>
+              <div v-if="changingSpace" class="mb-4 bg-white" style="position: relative; z-index: 50;" >
+                <div v-for="spat in Object.keys(groves)" :key="spat">
+
+                <div class="flex flex-row items-center px-2 mb-2 rounded-md hover:outline hover:outline-sky-100" :class="spat === selectedSpace ? 'outline outline-sky-500' : ''">
+
+                    <div class="w-12 h-12 border rounded-md">
+                      <div class="my-auto text-center">
+                        <span class="text-xl">~</span>
+                      </div>
+                    </div>
+                    <div class="flex flex-col w-full py-1 mb-2 ml-2 cursor-pointer rounded-md" @click="changeSpace(spat)">
+                      <div class="text-stone-500">
+                      {{ trimShip(shipInSpat(spat)) }}
+                      </div>
+                      <div class="text-lg">
+                      {{ spaceInSpat(spat) }}
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+            </Transition>
+          </div>
+        </div>
+      </div>
+    </div>
+
   <div class="grid grid-cols-3 gap-4">
 
-    <div class="px-4 py-2 my-2 bg-white border col-start-2 col-span-2 border-stone-300 rounded-md"> <!-- path tray -->
+    <div class="px-4 py-2 my-2 bg-white border lg:col-start-2 lg:col-span-2 col-span-3 border-stone-300 rounded-md"> <!-- path tray -->
       <div class="flex flex-row" v-if="selectedSpace">
         <div>
           <span
@@ -26,11 +76,10 @@
         </div>
       </div>
     </div>
-
   </div>
 
   <div class="grid grid-cols-3 gap-4">
-    <div class="pr-4 bg-white border border-stone-300 col-span-1 rounded-md h-[90vh]">
+    <div class="pr-4 bg-white border border-stone-300 col-span-1 rounded-md h-[90vh] hidden lg:block">
       <div class="pl-2 mt-2 mb-24">
 
         <div class="px-1 mb-4 bg-white" :class="changingSpace ? 'rounded-lg shadow-md' : ''" style="position: absolute" >
@@ -75,174 +124,6 @@
             </div>
           </Transition>
         </div>
-
-      </div>
-
-      <div class="flex flex-row px-4">
-        <button
-          @click="menuShown = !menuShown"
-          class="p-1 bg-sky-100 rounded-md hover:shadow-md opacity-70"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6 text-sky-600">
-  <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-</svg>
-
-        </button>
-      </div>
-
-      <div
-        v-if="false && menuShown"
-        class="absolute p-4 bg-white shadow-md"
-        style="width: 200px; height: 100px; z-index: 100"
-      >
-        <div>
-          <span
-            class="text-blue-500 underline cursor-pointer"
-            @click="doAddFolder"
-            >New Folder</span
-          >
-        </div>
-        <div>
-          <span class="text-blue-500 underline cursor-pointer" @click="doAddNode"
-            >New File</span
-          >
-        </div>
-      </div>
-
-      <div
-        v-if="addFolderMenu"
-        class="absolute p-4 bg-white shadow-md w-34 h-34"
-        style="z-index: 100"
-      >
-        <div>
-          <div class="mb-2">
-            <input
-              hidden
-              type="text"
-              disabled
-              placeholder="/"
-              v-model="newFolder.trail"
-            />
-            <span class="pr-1 opacity-50">{{ newFolder.trail }}/</span
-            ><input
-              class="p-2 rounded-sm bg-stone-100"
-              type="text"
-              placeholder="folder name"
-              v-model="newFolder.name"
-            />
-            <button
-              @click="addFolder"
-              class="px-4 py-2 text-white bg-blue-500 shadow-md hover:shadow-lg hover:opacity-80 rounded-md"
-            >
-              Add Folder
-            </button>
-          </div>
-
-          <div class="flex flex-col">
-            <div class="flex flex-row justify-between">
-              <div>
-                <span
-                  class="text-green-500 underline cursor-pointer"
-                  @click="somewhereElse = !somewhereElse"
-                  >Change path...</span
-                >
-              </div>
-              <div>
-                <button
-                  class="px-4 py-2 text-white shadow-md bg-stone-400 hover:shadlow-lg hover:opacity-80 rounded-md"
-                  @click="addFolderMenu = false"
-                >
-                  cancel
-                </button>
-              </div>
-            </div>
-
-            <div v-if="somewhereElse">
-              <treeview
-                @nodeFocus="gotFocus($event)"
-                :nodes="flatNest"
-                :config="treeConfig"
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div
-        v-if="addNodeMenu"
-        class="absolute p-4 bg-white shadow-md w-34 h-34"
-        style="z-index: 100"
-      >
-        <div>
-          <div class="mb-2 grid grid-cols-2 gap-4">
-            <div>
-              <span
-                class="text-green-500 underline cursor-pointer"
-                @click="somewhereElse = !somewhereElse"
-                >Change path...</span
-              >
-            </div>
-            <div v-if="somewhereElse">
-              <treeview
-                @nodeFocus="gotFocus($event)"
-                :nodes="flatNest"
-                :config="treeConfig"
-              />
-            </div>
-          </div>
-
-          <div class="flex flex-col">
-            <input
-              hidden
-              type="text"
-              class="p-2 rounded-sm bg-stone-100"
-              placeholder="path"
-              v-model="newFile.trail"
-            />
-            <div class="flex flex-row items-center">
-              <span class="pr-1 opacity-50">{{ newFile.trail }}/</span>
-              <div class="grid grid-cols-3 gap-4">
-                <div class="col-span-2">
-                  <input
-                    type="text"
-                    class="p-2 mr-1 rounded-sm bg-stone-100"
-                    placeholder="filename"
-                    v-model="newFile.name"
-                  />
-                  <input
-                    type="text"
-                    class="p-2 rounded-sm bg-stone-100"
-                    placeholder="extension"
-                    v-model="newFile.extension"
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div class="mt-2">
-              <input
-                type="text"
-                class="p-2 rounded-sm bg-stone-100"
-                placeholder="url"
-                v-model="newFile.url"
-              />
-            </div>
-          </div>
-          <div class="flex flex-row justify-end">
-            <button
-              @click="addNode"
-              class="px-4 py-2 text-white bg-blue-500 shadow-md hover:shadow-lg hover:opacity-80 rounded-md"
-            >
-              Add File
-            </button>
-            <button
-              class="px-4 py-2 text-white shadow-md bg-stone-400 hover:shadlow-lg hover:opacity-80 rounded-md"
-              @click="addNodeMenu = false"
-            >
-              cancel
-            </button>
-          </div>
-        </div>
       </div>
 
       <div class="px-3 mt-6">
@@ -255,9 +136,9 @@
       </div>
     </div>
 
-    <div class="px-4 bg-white border col-span-2 rounded-md border-stone-300">
+    <div class="px-4 bg-white border lg:col-span-2 col-span-3 rounded-md border-stone-300"> <!-- right -->
       <div>
-        <div class="flex flex-row justify-between px-2 pt-2 my-2">
+        <div class="flex flex-row justify-between pt-2 my-2">
           <div>
 
             <button
@@ -278,7 +159,7 @@
 
 
             <button
-              @click="addFolder"
+              @click="draftingNode = !draftingNode"
               class="p-1 mr-1 hover:bg-sky-100 rounded-md opacity-70"
             >
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 text-sky-600">
@@ -294,13 +175,11 @@
   <path stroke-linecap="round" stroke-linejoin="round" d="M12 10.5v6m3-3H9m4.06-7.19l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z" />
 </svg>
             </button>
-
           </div>
 
           <div>
-
             <button
-              @click=""
+              @click="tileView = false"
               class="p-1 mr-1 hover:bg-stone-100 rounded-md opacity-70"
             >
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
@@ -309,7 +188,7 @@
             </button>
 
             <button
-              @click=""
+              @click="tileView = true"
               class="p-1 hover:bg-stone-100 rounded-md opacity-70"
             >
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
@@ -319,43 +198,91 @@
           </div>
         </div>
 
-        <div>
-          <div class="pb-1 mb-4 border-b text-stone-700 grid grid-cols-9 gap-2">
-            <div class="col-span-3">Name</div>
-            <div class="col-span-1">Size</div>
-            <div class="col-span-2">Date Uploaded</div>
-            <div class="col-span-2">Kind</div>
-            <div class="col-span-1"></div>
-          </div>
+        <div class="h-[80vh]" style="overflow-y: scroll">
+          <div v-if="!tileView">
+            <div>
+              <div class="pb-1 mb-4 border-b text-stone-700 grid grid-cols-9 gap-2">
+                <div class="col-span-3">Name</div>
+                <div class="col-span-1">Size</div>
+                <div class="col-span-2">Date Uploaded</div>
+                <div class="col-span-2">Kind</div>
+                <div class="col-span-1"></div>
+              </div>
 
 
-          <div
-            v-if="
-              (
-              filesInFolder === undefined ||
-              filesInFolder.length === 0 ||
-              Object.keys(filesInFolder).length === 0
-              ) && foldersInFolder.length === 0
-            "
-            class="col-span-9"
-          >
-            <AddFolderRow class="col-span-5" v-if="draftingFolder" @cancel-new-folder="draftingFolder = false" />
-            <AddS3FileRow v-if="draftingUpload" @cancel-upload="draftingUpload = false" />
+              <div
+                v-if="
+                  (
+                  filesInFolder === undefined ||
+                  filesInFolder.length === 0 ||
+                  Object.keys(filesInFolder).length === 0
+                  ) && foldersInFolder.length === 0
+                "
+                class="col-span-9"
+              >
+                <AddNodeRow v-if="draftingNode" @cancel-new-node="draftingNode = false" />
+                <AddFolderRow class="col-span-5" v-if="draftingFolder" @cancel-new-folder="draftingFolder = false" />
+                <AddS3FileRow v-if="draftingUpload" @cancel-upload="draftingUpload = false" />
+                <BackFolderRow class="mb-2 mr-2" v-if="selectedTrail !== '/'"/>
 
-            <div class="w-full mx-auto mt-40 text-center h-100">
-              <div class="text-lg text-stone-400">
-                This folder is empty
+                <div class="w-full mx-auto mt-40 text-center h-100">
+                  <div class="text-lg text-stone-400">
+                    This folder is empty
+                  </div>
+                </div>
+              </div>
+
+              <div v-else class="grid grid-cols-9 gap-4">
+                <BackFolderRow v-if="selectedTrail !== '/'"/>
+                <AddNodeRow v-if="draftingNode" @cancel-new-node="draftingNode = false" />
+                <AddFolderRow v-if="draftingFolder" @cancel-new-folder="draftingFolder = false" />
+                <AddS3FileRow v-if="draftingUpload" @cancel-upload="draftingUpload = false" />
+                <FolderRow v-for="f in foldersInFolder" :key="f" :folder="f" />
+                <FileRow v-for="(f, id) in filesInFolder" :key="id" :file="f" :fileID="id" :currentTrail="selectedTrail" />
               </div>
             </div>
           </div>
 
-          <div v-else class="grid grid-cols-9 gap-4">
-            <AddFolderRow v-if="draftingFolder" @cancel-new-folder="draftingFolder = false" />
-            <AddS3FileRow v-if="draftingUpload" @cancel-upload="draftingUpload = false" />
-            <FolderRow v-for="f in foldersInFolder" :key="f" :folder="f" />
-            <FileRow v-for="(f, id) in filesInFolder" :key="id" :file="f" :fileID="id" :currentTrail="selectedTrail" />
+          <div v-if="tileView" class="mt-2">
+            <div
+              v-if="
+                (
+                filesInFolder === undefined ||
+                filesInFolder.length === 0 ||
+                Object.keys(filesInFolder).length === 0
+                ) && foldersInFolder.length === 0
+              "
+              class=""
+            >
+              <AddNodeRow v-if="draftingNode" @cancel-new-node="draftingNode = false" />
+              <AddFolderRow class="col-span-5" v-if="draftingFolder" @cancel-new-folder="draftingFolder = false" />
+              <AddS3FileRow v-if="draftingUpload" @cancel-upload="draftingUpload = false" />
+              <BackFolderTile v-if="selectedTrail !== '/'" />
+
+
+              <div class="w-full mx-auto mt-40 text-center h-100">
+                <div class="text-lg text-stone-400">
+                  This folder is empty
+                </div>
+              </div>
+            </div>
+
+            <div v-else>
+              <AddNodeRow v-if="draftingNode" @cancel-new-node="draftingNode = false" />
+              <AddFolderRow v-if="draftingFolder" @cancel-new-folder="draftingFolder = false" />
+              <AddS3FileRow v-if="draftingUpload" @cancel-upload="draftingUpload = false" />
+
+              <div class="flex flex-row flex-wrap">
+                <BackFolderTile class="mb-2 mr-2" v-if="selectedTrail !== '/'"/>
+                <FolderTile class="mb-2 mr-2" v-for="f in foldersInFolder" :key="f" :folder="f" />
+              </div>
+              <div class="flex flex-row flex-wrap">
+                <FileTile class="mb-2" v-for="(f, id) in filesInFolder" :key="id" :file="f" :fileID="id" :currentTrail="selectedTrail" />
+              </div>
+            </div>
           </div>
-        </div>
+
+        </div> <!-- right -->
 
       </div>
     </div>
@@ -376,8 +303,14 @@ import { initTooltips } from 'flowbite';
 
 import FileRow from '@/components/FileRow.vue';
 import FolderRow from '@/components/FolderRow.vue';
+import BackFolderRow from '@/components/BackFolderRow.vue';
+import FileTile from '@/components/FileTile.vue';
+import FolderTile from '@/components/FolderTile.vue';
+import BackFolderTile from '@/components/BackFolderTile.vue';
+
 import AddFolderRow from '@/components/AddFolderRow.vue';
 import AddS3FileRow from '@/components/AddS3FileRow.vue';
+import AddNodeRow from '@/components/AddNodeRow.vue';
 
 import 'vue3-treeview/dist/style.css';
 import treeview from 'vue3-treeview';
@@ -399,17 +332,18 @@ const changingSpace = ref(false);
 
 const draftingFolder = ref(false);
 const draftingUpload = ref(false);
+const draftingNode = ref(false);
 const s3Loading = ref(false);
 
 const addFolderMenu = ref(false);
 const somewhereElse = ref(false);
 
+const tileView = ref(false)
+
 const addNodeMenu = ref(false);
 const firstLoad = ref(false);
 
 const uploadDisabled = computed(() => {
-  console.log('l ', s3Loading.value)
-  console.log('r ', !s3Ready.value)
   return s3Loading.value || !s3Ready.value
 })
 
@@ -419,9 +353,7 @@ const s3Ready = computed(() => {
 
 const treeConfig = computed(() => {
   const manyRoots = new Set();
-  console.log('tf ', groveFolders.value)
   groveFolders.value.forEach((fullPath) => {
-    console.log('fp ', fullPath)
     manyRoots.add(`/${fullPath.split('/')[1]}`);
   });
   const roots = Array.from(manyRoots).filter((fp) => fp !== '/');
@@ -461,12 +393,26 @@ onMounted(() => {
   const deskname = 'grove';
   startAirlock(deskname);
   checkS3()
+  const lsTileView = localStorage.getItem('groveCurrentView')
+  tileView.value = (lsTileView === 'tile')
 });
+
+watch(tileView, async (tileViewSet) => {
+  if (tileViewSet) {
+    localStorage.setItem('groveCurrentView', 'tile')
+  } else {
+    localStorage.setItem('groveCurrentView', 'list')
+  }
+})
 
 watch(groves, async (newGroves) => {
   // Set 'our' space on first load.
   if (newGroves && !firstLoad.value) {
-    const defaultSpat = `${ sigShip(window.ship) }/our`
+    // const defaultSpat = `${ sigShip(window.ship) }/our`
+    console.log('newgrsoves ', newGroves)
+    const firstGrove = Object.keys(newGroves)[0]
+    const defaultSpat = firstGrove
+    // TODO: what about when you have no groups??
     store.dispatch(ActionTypes.CURRENT_SPACE_SET, defaultSpat)
     firstLoad.value = true
   }
@@ -495,7 +441,6 @@ const checkS3 = () => {
 
 const gotFocus = (node) => {
   const path = node.id;
-  console.log('focused path ', path);
   store.dispatch(ActionTypes.CURRENT_TRAIL_SET, node.id)
 };
 
@@ -517,8 +462,6 @@ const goToRoot = () => {
 }
 
 const changeTrail = (wholeTrail, index) => {
-  console.log('wholeTrail ', wholeTrail)
-  console.log('i ', index)
   if (index === 0) {
     store.dispatch(ActionTypes.CURRENT_TRAIL_SET, "/")
   } else {
@@ -530,7 +473,6 @@ const changeTrail = (wholeTrail, index) => {
   })
   // const parent = flatNest.value[newTrail].parent
   // TODO: fix.
-  // console.log('parent ', parent)
   // parent.state.opened = true
 }
 
@@ -663,7 +605,6 @@ const directChildrenOfTrail = (trail) => {
         Object.keys(flatNest.value).map(k => k.split('/')[1])
       )
     )
-    console.log('chil ', children)
     return children.map((c) => {
       return {
         display: c,
@@ -704,7 +645,6 @@ const trimLeadingSlash = (name) => {
 }
 
 const theFile = (groveNode) => {
-  console.log('tn ', groveNode);
   const id = Object.keys(groveNode)[0];
   return groveNode[id];
 };

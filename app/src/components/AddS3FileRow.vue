@@ -90,6 +90,11 @@
         </button>
 
       </div>
+      <div class="mt-2 text-center">
+        <p class="text-stone-400">
+          Upload files in this folder
+        </p>
+      </div>
     </FileDrop>
   </div>
 
@@ -161,6 +166,16 @@ const { uploadFiles } = createUploader(
   },
   store
 )
+
+const uploadProgress = computed(() => {
+  return store.getters[GetterTypes.ELEMENT_STATUS_MAP]('s3UploadProgress')
+})
+
+watch(uploadProgress, (val) => {
+  if (val.success) {
+    emit('cancelUpload');
+  }
+})
 
 const stopDraftingUpload = () => {
   emit('cancelUpload');

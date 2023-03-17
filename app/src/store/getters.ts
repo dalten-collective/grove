@@ -11,6 +11,7 @@ export type Getters = {
   [GetterTypes.TREE_CONFIG](state: State): {}
   [GetterTypes.CURRENT_S3_BUCKET](state: State): string
   [GetterTypes.S3_READY](state: State): boolean
+  [GetterTypes.PARENT_FOLDER](state: State): string
 
   [GetterTypes.ELEMENT_INITIAL](state: State): (uie: L.UIElement) => boolean
   [GetterTypes.ELEMENT_LOADING](state: State): (uie: L.UIElement) => boolean
@@ -33,6 +34,19 @@ export const getters: GetterTree<State, State> & Getters = {
   },
   [GetterTypes.S3_READY]: (state) => {
     return state.s3Config.currentBucket !== ''
+  },
+  [GetterTypes.PARENT_FOLDER]: (state) => {
+    if (state.currentTrail === '/') {
+      return '/'
+    }
+    const trailArray = state.currentTrail.split('/')
+    const len = trailArray.length
+    const parent = trailArray.slice(0, len - 1)
+    const parentTrail = parent.join('/')
+    if (parentTrail === '') {
+      return '/'
+    }
+    return parentTrail
   },
 
   [GetterTypes.TREE_CONFIG]: (state) => {
