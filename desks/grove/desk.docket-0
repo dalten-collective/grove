@@ -1,10 +1,10 @@
-:~  title+'trove'
-    info+'group file drive'
+:~  title+'grove [alpha]'
+    info+'groups file drive'
     color+0xdc.dcdc
-    image+'https://lomder-librun.sfo3.digitaloceanspaces.com/tiles/trove.svg'
-    base+'trove'
-    glob-http+['https://freedom-club.sfo2.digitaloceanspaces.com/glob-0vevdqs.3e1o2.9hf79.gbhom.d8mvr.glob' 0vevdqs.3e1o2.9hf79.gbhom.d8mvr]
-    version+[0 0 9]
+    image+'https://freedom-club.sfo2.digitaloceanspaces.com/grove.png'
+    base+'grove'
+    glob-http+['https://freedom-club.sfo2.digitaloceanspaces.com/glob-0v6.2qroo.chvbj.3paet.09h3k.ormt2.glob' 0v6.2qroo.chvbj.3paet.09h3k.ormt2]
+    version+[0 1 0]
     website+'https://quartus.co'
     license+'REKT'
 ==

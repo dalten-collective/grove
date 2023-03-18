@@ -442,7 +442,7 @@ watch(groves, async (newGroves) => {
   // Set 'our' space on first load.
   if (newGroves && !firstLoad.value) {
     // const defaultSpat = `${ sigShip(window.ship) }/our`
-    console.log('newgrsoves ', newGroves)
+    console.log('newgroves ', newGroves)
     const firstGrove = Object.keys(newGroves)[0]
     const defaultSpat = firstGrove
     // TODO: what about when you have no groups??

@@ -1,8 +1,8 @@
-::  :trove|add-node [~zod %space] 'name' 'a description' 'url' '.pdf'
+::  :grove|add-node [~zod %space] 'name' 'a description' 'url' '.pdf'
 ::
 :-  %say
 |=  $:  [now=@da eny=@uvJ bec=beak]
-        spat=(pair ship cord)
+        flag=(pair ship term)
         trail=path
         title=@t
         desc=@t
@@ -10,6 +10,6 @@
         ext=cord
     ==
 =+  node
-  :-  ?:(=(p.bec p.spat) %record %remote)
+  :-  ?:(=(p.bec p.flag) %record %remote)
   [url [%0 now p.bec title desc ext]]
-[%trove-action spat %add (sham trail node) trail node]
+[%grove-action flag %add (sham trail node) trail node]
