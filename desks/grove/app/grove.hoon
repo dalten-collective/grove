@@ -154,7 +154,7 @@
     =+  gov=grove:(get [(slav %p host.pol) (slav %tas group.pol)])
     ``grove-tree+!>(`grove`(~(dip of `grove`gov) rest.pol))
   ==
-::  +peer: handle on-watch
+::  +peer: handle on-watch 
 ::
 ++  peer
   |=  pol=(pole knot)
@@ -186,10 +186,12 @@
         ?~(p.sig same (slog 'grove-panic-groups-nack' ~))
       ==
     ::
-        [%from host=@ name=@ rest=*]
+        [%from host=@ name=@ ~]
       =+  gop=[(slav %p host.pol) (slav %tas name.pol)]
       ?+    -.sig  `state
-        %kick  to-abet:to-view:to-your:(to-abed:to gop)
+          %kick
+        =.  src.bol  our.bol
+        to-abet:to-view:to-your:(to-abed:to gop)
       ::
           %watch-ack
         ?~  p.sig  `state
@@ -206,6 +208,8 @@
 ::
 ++  poke
   |=  [mar=mark vaz=vase]
+  ?:  ?=(%noun mar)
+    (emit %give %kick [/grove/(scot %p ~zod)/test/(scot %p ~wet)]~ ~)
   =^  cards  state
     ?+    mar  ~|(bad-grove-mark/mar !!)
         %grove-action
@@ -233,7 +237,7 @@
   ::  +go-tire: to-wire without the trouble of reaching
   ::
   ++  go-tire
-    =+((need gup) `path`/(scot %p p)/(scot %tas q)/(scot %p our.bol))
+    =+((need gup) `path`/(scot %p p)/(scot %tas q))
   ::  +go-show: send web-ui facts
   ::
   ++  go-show
@@ -281,12 +285,15 @@
       =+  der=[p.gop %grove]
       =+  hav=(~(got by mem) our.bol)
       =*  pem  ~(has in sects.hav)
-      ?.  &((pem %member) (gth ~2000.1.1 joined.hav))  go
+      ?.  (gth joined.hav *@da)
+        go
       ?:  %-  ~(has in wex.bol)
-          [[from+go-tire p.gop dap.bol] [%.y grove+go-tire]]
+          :-  [from+go-tire p.gop dap.bol]
+          [%.y (snoc go-tire (scot %p our.bol))]
         go
       %-  go-emit(groves (~(put by groves) gop ~ tru))
-      [%pass from+go-tire %agent der %watch grove+go-tire]
+      :^  %pass  from+go-tire  %agent
+      [der %watch grove+(snoc go-tire (scot %p our.bol))]
     ::
     :_  *grove
     ^-  regs
@@ -321,7 +328,7 @@
   ++  to-abet  ^-((quip card _state) [(flop caz) state])
   ++  to-show  |=(cag=cage (to-emit %give %fact [/web-ui]~ cag))
   ++  to-tire
-    =+((need gup) `path`/(scot %p p)/(scot %tas q)/(scot %p our.bol))
+    =+((need gup) `path`/(scot %p p)/(scot %tas q))
   ::  +pre-fix: is list prefix
   ++  pre-fix
     |=  [p=trail q=trail]
@@ -355,9 +362,9 @@
             [adm=(set @p) mem=(set @p)]
         ==
     =*  has  ~(has in s.v)
-    ?.  =(*@da t.v)  [adm mem]
+    ?:  =(*@da t.v)  [adm mem]
     :-  ?.((has %admin) adm (~(put in adm) k))
-    ?.(|((has %admin) (has %member)) mem (~(put in mem) k))
+    ?.(|((has %admin) (gth t.v *@da)) mem (~(put in mem) k))
   ::  +to-view: watch someone's grove
   ::
   ++  to-view
@@ -366,7 +373,8 @@
     =+  dok=[p.gap %grove]
     ?.  (~(has in ewe) %member)  to
     %-  to-emit
-    [%pass from+to-tire %agent dok %watch grove+to-tire]
+    :^  %pass  from+to-tire  %agent
+    [dok %watch grove+(snoc to-tire (scot %p our.bol))]
   ::  +to-perm: give trail, get last relevant permission
   ::
   ++  to-perm
@@ -436,7 +444,9 @@
     %=  to
         ewe
       =?    ewe
-          (~(has in admins) src.bol)
+          ?|  (~(has in admins) src.bol)
+              =(p:(need gup) src.bol)
+          ==
         (~(put in ewe) %admin)
       =?    ewe
           (~(has in members) src.bol)
