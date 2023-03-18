@@ -787,7 +787,6 @@
     ::
         %add-folder
       ?>  ((sane %tas) nam.q.f)
-      =.  trail.q.f  (snoc trail.q.f nam.q.f)
       =+  perms=(to-perm trail.q.f)
       ?>  ?|  =(~ (~(get of `grove`gov) trail.q.f))
               =(our.bol src.bol)
@@ -801,6 +800,7 @@
         ::  an instruction about their grove
         ?>  =(p.gap src.bol)
         %.  grove-fact+!>(`fact`[p.f q.f])
+        =.  trail.q.f  (snoc trail.q.f nam.q.f)
         %=    to-show
             groves
           %+  ~(put by groves)  gap
@@ -817,6 +817,7 @@
       ?>  ?~(p=pur.q.f & (fits perms u.p))
       =-  (to-show:- grove-fact+!>(f))
       %.  [read grove-fact+!>(f)]
+      =.  trail.q.f  (snoc trail.q.f nam.q.f)
       %=    to-cher
           groves
         %+  ~(put by groves)  gap
