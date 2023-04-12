@@ -31,4 +31,19 @@ body {
   @apply text-red-400;
 }
 
+input.vs__search {
+  @apply border-none;
+  @apply cursor-pointer;
+}
 
+.v-select {
+  @apply cursor-pointer;
+}
+
+.vs__dropdown-toggle {
+  @apply cursor-pointer !important;
+}
+
+ul.vs__dropdown-menu {
+  @apply p-2;
+}

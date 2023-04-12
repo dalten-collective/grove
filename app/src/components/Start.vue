@@ -4,12 +4,14 @@
         <div class="pl-2 my-2" style="position: relative;">
 
         <div class="text-center">
-        <select class="w-full px-4 py-4 text-center cursor-pointer rounded-md border-stone-300" v-model="changedSpat">
-          <option v-for="spat in Object.keys(groves)">
-            {{ spat }}
-          </option>
-        </select>
-      </div>
+          <v-select :clearable="false" :options="Object.keys(groves)" label="Group" v-model="changedSpat"
+            class="w-full px-4 py-4 text-center cursor-pointer rounded-md border-stone-300"
+          >
+            <template #list-header class="px-2">
+              Search for a Group...
+            </template>
+          </v-select>
+        </div>
 
           <div v-if="false" class="w-full px-1 mb-4 bg-white" :class="changingSpace ? 'rounded-lg shadow-md' : ''" style="position: absolute" >
             <div class="flex flex-row items-center w-full p-1 cursor-pointer rounded-md hover:outline hover:outline-sky-100" :class="changingSpace ? 'opacity-30' : ''" @click="changingSpace = !changingSpacee">
@@ -99,11 +101,14 @@
     <div class="pr-4 bg-white border border-stone-300 col-span-1 rounded-md h-[90vh] hidden lg:block">
       <div class="pl-2 mt-2 mb-12">
         <div class="text-center">
-        <select class="w-full px-4 py-4 text-center cursor-pointer rounded-md border-stone-300" v-model="changedSpat">
-          <option v-for="spat in Object.keys(groves)">
-            {{ spat }}
-          </option>
-        </select>
+
+        <v-select :clearable="false" :options="Object.keys(groves)" label="Group" v-model="changedSpat"
+          class="w-full px-4 py-4 text-center cursor-pointer rounded-md border-stone-300"
+        >
+          <template #list-header class="px-2">
+            Search for a Group...
+          </template>
+        </v-select>
       </div>
 
         <div v-if="false" class="px-1 mb-4 bg-white" :class="changingSpace ? 'rounded-lg shadow-md' : ''" style="position: absolute" >
@@ -314,6 +319,8 @@
 </template>
 
 <script setup lang="ts">
+import 'vue-select/dist/vue-select.css';
+
 import { onMounted, onUnmounted, computed, ref, watch } from 'vue';
 import { useStore } from '@/store/store';
 import { ActionTypes } from '@/store/action-types';
