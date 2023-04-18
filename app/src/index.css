@@ -1,0 +1,49 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  height: 100%;
+}
+
+body {
+  height: 100%;
+}
+
+#app {
+  height: 100%;
+}
+
+.truncate {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.truncate-break {
+  overflow-wrap: word-break;
+}
+
+.node-text {
+  @apply text-lg;
+}
+
+.your-class-here {
+  @apply text-red-400;
+}
+
+input.vs__search {
+  @apply border-none;
+  @apply cursor-pointer;
+}
+
+.v-select {
+  @apply cursor-pointer;
+}
+
+.vs__dropdown-toggle {
+  @apply cursor-pointer !important;
+}
+
+ul.vs__dropdown-menu {
+  @apply p-2;
+}

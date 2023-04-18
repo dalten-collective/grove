@@ -1,0 +1,19 @@
+::
+|_  gon=[%del (pair ship term)]
+++  grad  %noun
+++  grow
+  |%
+  ++  noun  gon
+  ++  json
+    |=  go=[%del (pair ship term)]
+    %-  pairs:enjs:format
+    =-  remove+-
+    %+  frond:enjs:format  %group-gone
+    s+(spat /(scot %p p.gon)/(scot %tas q.gon))
+  --
+::
+++  grab
+  |%
+  ++  noun  $:(%del (pair ship term))
+  --
+--
